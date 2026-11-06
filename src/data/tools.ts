@@ -25,7 +25,7 @@ export const SITE = {
   name: 'bildfix24',
   domain: null as string | null,
   url: import.meta.env.PUBLIC_SITE_URL ?? 'https://bildfix24.pages.dev',
-  email: 'kontakt@bildfix24.de',
+  email: 'oldniko117@gmail.com',
   tagline: 'Bildwerkzeuge direkt im Browser',
   description:
     'Kostenlose Bildwerkzeuge für Deutschland: Bilder zuschneiden, komprimieren, Größe ändern, konvertieren und Wasserzeichen hinzufügen. Ohne Upload, ohne Anmeldung.'
