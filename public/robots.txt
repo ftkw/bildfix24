@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://bildfix24.ftkw117.workers.dev/sitemap-index.xml

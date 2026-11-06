@@ -17,11 +17,14 @@ export interface Tool {
  * `domain`= erst setzen, wenn die Domain wirklich auf den Host zeigt. Dann erscheint
  *           sie automatisch als gedämpfte Endung im Logo, und ein Domainwechsel
  *           bleibt eine Einzeiler-Änderung statt einer Suche-Ersetzen-Aktion.
+ *
+ * Der Host kommt aus PUBLIC_SITE_URL (siehe astro.config.mjs), damit Code und
+ * Deployment-Adresse nicht auseinanderlaufen können.
  */
 export const SITE = {
   name: 'bildfix24',
   domain: null as string | null,
-  url: 'https://bildfix24.ftkw117.workers.dev',
+  url: import.meta.env.PUBLIC_SITE_URL ?? 'https://bildfix24.ftkw117.workers.dev',
   email: 'kontakt@bildfix24.de',
   tagline: 'Bildwerkzeuge direkt im Browser',
   description:
