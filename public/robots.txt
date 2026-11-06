@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://bildfix24.pages.dev/sitemap-index.xml

@@ -1,0 +1,159 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import ToolShell from '../components/ToolShell.astro';
+import Icon from '../components/Icon.astro';
+import { getTool } from '../data/tools';
+import { breadcrumbSchema, faqSchema, softwareSchema, type Crumb, type FaqItem } from '../lib/seo';
+
+const tool = getTool('resize');
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bildgröße ändern', href: '/bildgroesse-aendern/' }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Wie ändere ich die Bildgröße ohne Verzerrung?',
+    a: 'Lass die Option „Seitenverhältnis sperren“ aktiviert. Dann wird die Höhe automatisch mitberechnet, sobald du die Breite änderst – das Bild bleibt unverzerrt.'
+  },
+  {
+    q: 'Kann ich ein Bild auch vergrößern?',
+    a: 'Ja, bis zu 400 Prozent. Beachte, dass beim Vergrößern keine neuen Details entstehen. Für Druck oder große Displays ist es besser, mit einer höher aufgelösten Originaldatei zu arbeiten.'
+  },
+  {
+    q: 'Welche Maße sind für Social Media sinnvoll?',
+    a: 'Übliche Formate sind 1080 × 1080 Pixel für quadratische Beiträge, 1200 × 628 für Link-Vorschauen und 1080 × 1920 für Stories. Die Presets im Werkzeug setzen diese Werte mit einem Klick.'
+  },
+  {
+    q: 'Wird die Datei dabei kleiner?',
+    a: 'Meistens ja, weil weniger Pixel vorhanden sind. Die tatsächliche Dateigröße hängt aber auch vom Format und Inhalt ab. Für eine gezielte Reduktion nutze zusätzlich das Kompressions-Werkzeug.'
+  },
+  {
+    q: 'Werden meine Bilder hochgeladen?',
+    a: 'Nein. Die Skalierung erfolgt lokal über die Canvas-API im Browser. Es werden keine Bilddaten übertragen.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'Bildgröße ändern',
+    description:
+      'Bildgröße online ändern: Breite und Höhe in Pixeln oder Prozent anpassen, Seitenverhältnis sperren – ohne Upload.',
+    path: '/bildgroesse-aendern/'
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="Bildgröße ändern – Pixel & Prozent"
+  description="Bildgröße kostenlos ändern: Breite und Höhe in Pixeln oder Prozent anpassen, Seitenverhältnis sperren. Ohne Upload, direkt im Browser."
+  path="/bildgroesse-aendern/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="Bildgröße ändern"
+    lead="Passe Breite und Höhe exakt an – in Pixeln oder Prozent. Mit gesperrtem Seitenverhältnis bleibt das Bild unverzerrt."
+    toolKey="resize"
+    crumbs={crumbs}
+    faq={faq}
+    steps={[
+      { title: 'Bild auswählen', text: 'Datei hineinziehen oder anklicken. Die aktuellen Maße werden automatisch erkannt.' },
+      { title: 'Neue Maße eingeben', text: 'Trage Breite oder Höhe ein, nutze den Prozentregler oder wähle ein Preset. Das Seitenverhältnis bleibt auf Wunsch gesperrt.' },
+      { title: 'Anwenden und laden', text: 'Klicke auf „Größe anwenden“. Das skalierte Bild wird direkt heruntergeladen.' }
+    ]}
+  >
+    <div slot="tool" class="tool-panel">
+      <div class="dropzone" id="resize-zone">
+        <span class="dropzone__icon"><Icon name="resize" /></span>
+        <span class="dropzone__title">Bild hierher ziehen oder klicken</span>
+        <span class="dropzone__hint">JPG, PNG oder WebP · max. 30 MB</span>
+        <input type="file" id="resize-input" accept="image/png,image/jpeg,image/webp" aria-label="Bilddatei auswählen" />
+      </div>
+
+      <div id="resize-workspace" hidden>
+        <div class="preview">
+          <img id="resize-img" alt="Vorschau des Bildes" />
+        </div>
+
+        <p class="small muted mt-2" id="resize-original">Original: –</p>
+
+        <div class="controls controls--split">
+          <div class="field">
+            <label for="resize-width">Breite (px)</label>
+            <input type="number" id="resize-width" min="1" max="12000" step="1" inputmode="numeric" />
+          </div>
+          <div class="field">
+            <label for="resize-height">Höhe (px)</label>
+            <input type="number" id="resize-height" min="1" max="12000" step="1" inputmode="numeric" />
+          </div>
+        </div>
+
+        <div class="controls">
+          <label class="check">
+            <input type="checkbox" id="resize-lock" checked />
+            Seitenverhältnis sperren
+          </label>
+
+          <div class="field">
+            <label for="resize-percent">Skalierung <span class="field__value" id="resize-percent-value">100 %</span></label>
+            <input type="range" id="resize-percent" min="1" max="200" step="1" value="100" />
+          </div>
+
+          <div class="field">
+            <span class="field__label">Schnellauswahl</span>
+            <div class="segmented" id="resize-presets" role="group" aria-label="Größen-Presets">
+              <button type="button" data-w="1920" data-h="1080">1920 × 1080</button>
+              <button type="button" data-w="1200" data-h="628">1200 × 628</button>
+              <button type="button" data-w="1080" data-h="1080">1080 × 1080</button>
+              <button type="button" data-w="1080" data-h="1920">1080 × 1920</button>
+              <button type="button" data-w="800" data-h="800">800 × 800</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3" id="resize-actions">
+          <button class="btn btn--primary" id="resize-apply" type="button">Größe anwenden</button>
+          <a class="btn btn--download" id="resize-download" download hidden><Icon name="download" />Herunterladen</a>
+          <button class="btn btn--ghost" id="resize-reset" type="button">Anderes Bild</button>
+        </div>
+
+        <div class="result__stats mt-3" id="resize-stats" hidden></div>
+
+        <div class="preview preview--result mt-3" id="resize-result" hidden>
+          <span class="preview__badge"><Icon name="check" /><span id="resize-result-size">Ergebnis</span></span>
+          <img id="resize-result-img" alt="Vorschau des Bildes in der neuen Größe" />
+        </div>
+
+        <div class="notice mt-2" id="resize-notice" hidden role="status"></div>
+      </div>
+    </div>
+
+    <div class="prose mt-4">
+      <h2>Pixel, Prozent und Seitenverhältnis</h2>
+      <p>
+        Die Pixelmaße bestimmen, wie viele Bildpunkte tatsächlich gespeichert werden. Ein Bild mit
+        4000 × 3000 Pixeln enthält zwölf Millionen Bildpunkte – für eine Webseite ist das fast immer
+        zu viel. Sinnvoll ist meist eine Breite zwischen 1200 und 1920 Pixeln.
+      </p>
+      <h3>Verzerrung vermeiden</h3>
+      <p>
+        Wenn Breite und Höhe unabhängig geändert werden, entsteht schnell ein gestauchtes Motiv.
+        Deshalb ist „Seitenverhältnis sperren“ standardmäßig aktiv. Nur für gezielte Verzerrungen
+        solltest du die Sperre deaktivieren.
+      </p>
+      <p>
+        Nach dem Skalieren empfiehlt sich die <a href="/bild-komprimieren/">Kompression</a>, um die
+        Dateigröße weiter zu senken. Für einen anderen Ausschnitt nutze
+        <a href="/bild-zuschneiden/">Bild zuschneiden</a>.
+      </p>
+    </div>
+  </ToolShell>
+
+  <script>
+    import '../scripts/tools/resize';
+  </script>
+</BaseLayout>

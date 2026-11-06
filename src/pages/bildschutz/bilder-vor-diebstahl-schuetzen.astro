@@ -1,0 +1,140 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import { articleSchema, breadcrumbSchema, type Crumb } from '../../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Bildschutz', href: '/bildschutz/' },
+  { name: 'Bilder vor Diebstahl schützen', href: '/bildschutz/bilder-vor-diebstahl-schuetzen/' }
+];
+
+const published = '2026-11-01';
+---
+
+<BaseLayout
+  title="Bilder vor Diebstahl schützen – was hilft"
+  description="So schützt du Bilder vor unbefugter Nutzung: Wasserzeichen, reduzierte Auflösung, Metadaten und Monitoring. Mit praktischer Checkliste."
+  path="/bildschutz/bilder-vor-diebstahl-schuetzen/"
+  jsonLd={[
+    articleSchema({
+      headline: 'Bilder vor Diebstahl schützen – was wirklich hilft',
+      description:
+        'Praktischer Leitfaden zum Schutz von Bildern im Netz: Wasserzeichen, Auflösung, Metadaten, Monitoring und rechtliche Schritte.',
+      path: '/bildschutz/bilder-vor-diebstahl-schuetzen/',
+      datePublished: published
+    }),
+    breadcrumbSchema(crumbs)
+  ]}
+  ogType="article"
+>
+  <section class="section" style="padding-top: 2.2rem;">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+
+      <div class="prose">
+        <h1>Bilder vor Diebstahl schützen</h1>
+        <p class="lead">
+          Ein Bild ist kopiert, sobald es geladen wurde. Vollständigen Schutz gibt es nicht – aber es
+          gibt einen großen Unterschied zwischen „leicht zu stehlen“ und „zu aufwendig, um es zu
+          versuchen“.
+        </p>
+
+        <p class="small muted">Zuletzt aktualisiert: November 2026</p>
+
+        <h2>Warum Bilder überhaupt gestohlen werden</h2>
+        <p>
+          Die meisten Fälle sind keine gezielten Angriffe. Jemand sucht ein Bild für einen Blogbeitrag,
+          eine Präsentation oder einen Shop und nimmt das erstbeste Ergebnis einer Bildersuche.
+          Häufig ist den Personen nicht bewusst, dass sie damit Urheberrechte verletzen. Genau
+          deshalb ist die sichtbare Kennzeichnung so wichtig: Sie beseitigt die Ausrede der
+          Unwissenheit.
+        </p>
+
+        <h2>Was tatsächlich hilft</h2>
+
+        <h3>1. Wasserzeichen – sichtbar und schwer entfernbar</h3>
+        <p>
+          Ein Wasserzeichen ist die wirksamste einfache Maßnahme. Entscheidend ist die Platzierung:
+          Ein kleiner Schriftzug in der Ecke lässt sich wegschneiden. Ein Muster über die gesamte
+          Fläche zerstört das Motiv, wenn man es entfernen will. Für Portfolio-Seiten und
+          Kundenansichten ist das Kachelmuster deshalb die bessere Wahl.
+        </p>
+        <p>
+          Zum Setzen eines Wasserzeichens kannst du direkt unser
+          <a href="/wasserzeichen-hinzufuegen/">Wasserzeichen-Werkzeug</a> nutzen – die Verarbeitung
+          erfolgt lokal im Browser, das Bild wird nicht hochgeladen.
+        </p>
+
+        <h3>2. Nur die nötige Auflösung veröffentlichen</h3>
+        <p>
+          Für die Darstellung am Bildschirm reichen meist 1200 bis 1600 Pixel Breite. Wer die
+          Originaldatei mit 6000 Pixeln online stellt, liefert gleichzeitig eine druckfähige Vorlage
+          mit. Verkleinere Bilder vor dem Upload mit dem
+          <a href="/bildgroesse-aendern/">Größen-Werkzeug</a> und komprimiere sie anschließend.
+        </p>
+
+        <h3>3. Metadaten pflegen</h3>
+        <p>
+          In den EXIF- und IPTC-Daten lassen sich Urheber, Copyright-Hinweis und Nutzungsbedingungen
+          hinterlegen. Das verhindert keinen Diebstahl, liefert aber im Streitfall einen Nachweis und
+          ist bei professionellen Agenturen Standard.
+        </p>
+        <p>
+          Achtung: Beim Veröffentlichen solltest du gleichzeitig sensible Standortdaten entfernen.
+          EXIF-Daten können GPS-Koordinaten enthalten – ein Risiko, das viele unterschätzen.
+        </p>
+
+        <h3>4. Regelmäßig nach dem eigenen Bild suchen</h3>
+        <p>
+          Eine Rückwärtssuche zeigt, wo ein Bild im Netz auftaucht. Für einzelne Bilder reicht das
+          gelegentliche Prüfen; bei großen Portfolios lohnt sich ein automatisierter Dienst. Wichtig
+          ist, die eigene Originaldatei mit Zeitstempel aufzubewahren – sie ist der Nachweis für die
+          Urheberschaft.
+        </p>
+
+        <h2>Was wenig bringt</h2>
+        <ul>
+          <li>
+            <strong>Rechtsklick-Sperren:</strong> Sie lassen sich mit einem Screenshot oder über die
+            Entwicklertools umgehen und verschlechtern die Nutzerfreundlichkeit.
+          </li>
+          <li>
+            <strong>Bilder in Einzelbilder zerlegen:</strong> Aufwendig, fehleranfällig und für
+            Screenreader problematisch.
+          </li>
+          <li>
+            <strong>Nur ein Copyright-Zeichen im Footer:</strong> Es wird beim Kopieren des Bildes
+            nicht mitgenommen und erreicht niemanden.
+          </li>
+        </ul>
+
+        <h2>Checkliste vor der Veröffentlichung</h2>
+        <ol>
+          <li>Auflösung auf das tatsächlich benötigte Maß reduzieren</li>
+          <li>Wasserzeichen setzen – bei gefährdeten Bildern als Kachelmuster</li>
+          <li>Urhebervermerk in den Metadaten hinterlegen</li>
+          <li>Standortdaten entfernen, falls nicht erforderlich</li>
+          <li>Originaldatei mit Datum archivieren</li>
+          <li>Nutzungsbedingungen auf der eigenen Website verlinken</li>
+        </ol>
+
+        <blockquote>
+          <p>
+            Dieser Beitrag ist eine allgemeine Orientierung und keine Rechtsberatung. Bei konkreten
+            Rechtsstreitigkeiten wende dich an eine Anwältin oder einen Anwalt für Urheberrecht.
+          </p>
+        </blockquote>
+
+        <h2>Weiterlesen</h2>
+        <p>
+          Welche Rechte du als Urheber hast und was bei der Nutzung fremder Bilder gilt, erklärt der
+          Ratgeber <a href="/bildschutz/urheberrecht-bild/">Urheberrecht bei Bildern</a>.
+        </p>
+      </div>
+
+      <AdSlot />
+    </div>
+  </section>
+</BaseLayout>

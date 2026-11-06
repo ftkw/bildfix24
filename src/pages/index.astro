@@ -1,0 +1,221 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+import AdSlot from '../components/AdSlot.astro';
+import Faq from '../components/Faq.astro';
+import DotField from '../components/reactbits/DotField.jsx';
+import GradientText from '../components/reactbits/GradientText.jsx';
+import StarBorder from '../components/reactbits/StarBorder.jsx';
+import SpotlightCard from '../components/reactbits/SpotlightCard.jsx';
+import { tools, guides } from '../data/tools';
+import { faqSchema, organizationSchema, websiteSchema, type FaqItem } from '../lib/seo';
+
+const faq: FaqItem[] = [
+  {
+    q: 'Werden meine Bilder hochgeladen?',
+    a: 'Nein. Alle Werkzeuge arbeiten ausschließlich mit der Canvas-API im Browser. Die Bilddatei wird nicht an einen Server gesendet und nicht gespeichert. Du kannst das prüfen, indem du während der Nutzung die Netzwerkaktivität im Browser beobachtest.'
+  },
+  {
+    q: 'Ist bildfix24 wirklich kostenlos?',
+    a: 'Ja. Alle Werkzeuge sind kostenlos und ohne Anmeldung nutzbar. Die Seite finanziert sich über Werbung. Es gibt keine Begrenzung der Anzahl an Bearbeitungen und keine Funktion hinter einer Bezahlschranke.'
+  },
+  {
+    q: 'Welche Bildformate werden unterstützt?',
+    a: 'JPG, PNG und WebP. Als Ausgabe stehen je nach Werkzeug ebenfalls JPG, PNG und WebP zur Verfügung. Sehr große Dateien über 30 MB werden aus Rücksicht auf den Arbeitsspeicher abgelehnt.'
+  },
+  {
+    q: 'Setzt bildfix24 eigene Wasserzeichen in meine Bilder?',
+    a: 'Nein. Es werden ausschließlich die Wasserzeichen eingefügt, die du selbst festlegst – oder gar keine. Es gibt keine versteckten Markierungen und keine Qualitätsreduktion ohne deine Zustimmung.'
+  },
+  {
+    q: 'Funktioniert das auch auf dem Smartphone?',
+    a: 'Ja. Die Werkzeuge sind für Touch-Bedienung ausgelegt. Bei sehr großen Bildern kann die Verarbeitung auf älteren Geräten etwas dauern, da alles lokal berechnet wird.'
+  }
+];
+
+const jsonLd = [websiteSchema(), organizationSchema(), faqSchema(faq)];
+---
+
+<BaseLayout
+  title="Bildwerkzeuge kostenlos – ohne Upload"
+  description="Bilder zuschneiden, komprimieren, Größe ändern, konvertieren und Wasserzeichen hinzufügen. Kostenlos, ohne Anmeldung und ohne Upload – alles direkt im Browser."
+  path="/"
+  jsonLd={jsonLd}
+>
+  <section class="hero">
+    <DotField
+      client:visible
+      lightMode={true}
+      dotRadius={1.4}
+      dotSpacing={15}
+      gradientFrom="#5227ff"
+      gradientTo="#ff9ffc"
+      gradientAngle={120}
+      cursorRadius={220}
+      bulgeStrength={0.55}
+      glowIntensity={0.3}
+      baseOpacity={0.32}
+      speed={0.6}
+      interactive={true}
+    />
+
+    <div class="container">
+      <div class="hero__inner">
+        <span class="eyebrow"><Icon name="lock" size={14} /> Kein Upload · 100 % im Browser</span>
+
+        <h1 class="hero__title">
+          Bilder bearbeiten,<br />
+          <GradientText client:visible colors={['#5227ff', '#a855f7', '#ff9ffc']} animationSpeed={7} glow={0.25}>
+            ohne sie hochzuladen.
+          </GradientText>
+        </h1>
+
+        <p class="hero__lead">
+          Zuschneiden, komprimieren, Größe ändern, konvertieren und Wasserzeichen setzen – schnell,
+          kostenlos und ohne Anmeldung. Deine Bilder bleiben auf deinem Gerät.
+        </p>
+
+        <div class="hero__actions">
+          <StarBorder
+            client:visible
+            as="a"
+            href="/werkzeuge/"
+            theme="dark"
+            backgroundColor="#5227ff"
+            textColor="#ffffff"
+            borderColor="rgba(255,255,255,0.18)"
+            color="#ffffff"
+            trailColor="#ff9ffc"
+            radius={13}
+            thickness={1}
+            glow={0.35}
+            sparkle={false}
+            trailLength={0.45}
+            hover="lap"
+            duration={5}
+          >
+            Alle Werkzeuge
+          </StarBorder>
+          <a class="btn btn--ghost" href="/bild-komprimieren/">Bild komprimieren</a>
+        </div>
+
+        <ul class="hero__meta">
+          <li><Icon name="shield" size={17} /> Verarbeitung lokal im Browser</li>
+          <li><Icon name="euro" size={17} /> Kostenlos, ohne Konto</li>
+          <li><Icon name="bolt" size={17} /> Keine Wartezeit durch Upload</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="werkzeuge">
+    <div class="container">
+      <div class="row" style="justify-content: space-between; align-items: flex-end;">
+        <div>
+          <h2>Die wichtigsten Bildwerkzeuge</h2>
+          <p class="muted mb-0">Fünf Werkzeuge, die die meisten Aufgaben abdecken – ohne Installation.</p>
+        </div>
+        <a class="tool-card__link" href="/werkzeuge/">Alle ansehen</a>
+      </div>
+
+      <div class="grid grid--tools mt-3">
+        {tools.map(tool => (
+          <SpotlightCard
+            client:visible
+            theme="light"
+            className="tool-card"
+            spotlightColor="#5227ff"
+            intensity={0.1}
+            spotlightSize={260}
+            borderGlow={0.55}
+            proximity={100}
+          >
+            <span class="tool-card__icon"><Icon name={tool.icon} /></span>
+            <h3 class="tool-card__title">{tool.name}</h3>
+            <p class="tool-card__desc">{tool.short}</p>
+            <a class="tool-card__link" href={tool.href}>Werkzeug öffnen</a>
+          </SpotlightCard>
+        ))}
+        <a
+          class="tool-card tool-card--plain"
+          href="/werkzeuge/"
+          style="text-decoration: none; border-style: dashed; justify-content: center;"
+        >
+          <span class="tool-card__icon"><Icon name="sparkles" /></span>
+          <h3 class="tool-card__title">Alle Werkzeuge</h3>
+          <p class="tool-card__desc">Die komplette Übersicht mit allen Funktionen und Ratgebern.</p>
+          <span class="tool-card__link">Zur Übersicht</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--soft">
+    <div class="container">
+      <div class="narrow">
+        <h2>Warum bildfix24 anders ist</h2>
+        <p class="muted">
+          Die meisten Bildwerkzeuge laden deine Datei auf einen Server. Wir nicht. Das ist nicht nur
+          schneller, sondern auch der sauberste Weg in Sachen Datenschutz.
+        </p>
+      </div>
+
+      <div class="feature mt-3">
+        <div class="feature__item">
+          <Icon name="shield" />
+          <h3>Deine Datei bleibt bei dir</h3>
+          <p>Kein Upload, kein Server, keine Kopie in einer Datenbank. Die Verarbeitung endet, wenn du den Tab schließt.</p>
+        </div>
+        <div class="feature__item">
+          <Icon name="bolt" />
+          <h3>Kein Warten auf Uploads</h3>
+          <p>Große Dateien sind sofort verfügbar. Es gibt keine Warteschlange und keine Begrenzung pro Tag.</p>
+        </div>
+        <div class="feature__item">
+          <Icon name="scale" />
+          <h3>Transparente Ergebnisse</h3>
+          <p>Du siehst vor dem Download, wie groß die Datei wird. Keine versteckten Wasserzeichen, keine Überraschungen.</p>
+        </div>
+      </div>
+
+      <AdSlot />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="narrow">
+        <h2>Bilder schützen und Rechte kennen</h2>
+        <p class="muted">
+          Wer Bilder veröffentlicht, sollte wissen, wie sie geschützt werden können. Die Ratgeber
+          erklären die Grundlagen – ohne Rechtsberatung zu ersetzen.
+        </p>
+      </div>
+
+      <div class="grid grid--3 mt-3">
+        {guides.map(guide => (
+          <article class="tool-card tool-card--plain">
+            <span class="tool-card__icon"><Icon name="book" /></span>
+            <h3 class="tool-card__title">{guide.title}</h3>
+            <p class="tool-card__desc">{guide.desc}</p>
+            <a class="tool-card__link" href={guide.href}>Ratgeber lesen</a>
+          </article>
+        ))}
+        <article class="tool-card tool-card--plain">
+          <span class="tool-card__icon"><Icon name="watermark" /></span>
+          <h3 class="tool-card__title">Wasserzeichen hinzufügen</h3>
+          <p class="tool-card__desc">Text oder Logo als sichtbare Kennzeichnung – auch als Kachelmuster über das ganze Bild.</p>
+          <a class="tool-card__link" href="/wasserzeichen-hinzufuegen/">Werkzeug öffnen</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--soft">
+    <div class="container">
+      <div class="narrow">
+        <Faq items={faq} />
+      </div>
+    </div>
+  </section>
+</BaseLayout>

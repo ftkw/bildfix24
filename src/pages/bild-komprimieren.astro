@@ -1,0 +1,132 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import ToolShell from '../components/ToolShell.astro';
+import Icon from '../components/Icon.astro';
+import { getTool } from '../data/tools';
+import { breadcrumbSchema, faqSchema, softwareSchema, type Crumb, type FaqItem } from '../lib/seo';
+
+const tool = getTool('compress');
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bild komprimieren', href: '/bild-komprimieren/' }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Wie stark kann ich ein Bild komprimieren?',
+    a: 'Das hängt vom Motiv ab. Mit einer Qualitätsstufe von 70–80 Prozent lässt sich die Dateigröße bei Fotos häufig um 60–85 Prozent senken, ohne dass man den Unterschied auf dem Bildschirm sieht. Grafiken mit Text sollten vorsichtig komprimiert werden.'
+  },
+  {
+    q: 'Was ist besser: JPG oder WebP?',
+    a: 'WebP erzeugt bei gleicher Qualität meist kleinere Dateien als JPG und unterstützt zusätzlich Transparenz. Für Webseiten ist WebP die bessere Wahl. JPG bleibt sinnvoll, wenn eine Anwendung WebP nicht unterstützt.'
+  },
+  {
+    q: 'Verliere ich durch die Kompression Bildqualität?',
+    a: 'Bei JPG und WebP ja, aber oft unsichtbar. Die Qualitätsstufe bestimmt, wie viel Information verworfen wird. Du siehst die resultierende Dateigröße vor dem Download und kannst den Wert jederzeit anpassen.'
+  },
+  {
+    q: 'Werden meine Bilder hochgeladen?',
+    a: 'Nein. Die Kompression erfolgt lokal im Browser. Es findet kein Upload statt, daher ist das Werkzeug auch für vertrauliche Bilder geeignet.'
+  },
+  {
+    q: 'Warum ist die Datei bei PNG nicht kleiner geworden?',
+    a: 'PNG ist ein verlustfreies Format ohne Qualitätsstufe. Die Kompression hängt stark vom Bildinhalt ab. Für Fotos ist WebP oder JPG deutlich effizienter – wechsle dafür einfach das Ausgabeformat.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'Bild komprimieren',
+    description:
+      'Bilder im Browser komprimieren: Qualität einstellen, JPG oder WebP wählen und die Dateigröße vor dem Download vergleichen.',
+    path: '/bild-komprimieren/'
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="Bild komprimieren – Dateigröße reduzieren"
+  description="Bilder kostenlos komprimieren: Qualität einstellen, JPG oder WebP wählen und die Ersparnis sofort sehen. Ohne Upload, direkt im Browser."
+  path="/bild-komprimieren/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="Bild komprimieren"
+    lead="Reduziere die Dateigröße deiner Bilder deutlich – mit sichtbarem Vorher-Nachher-Vergleich. Ideal für Webseiten, E-Mail-Anhänge und Formulare mit Größenlimit."
+    toolKey="compress"
+    crumbs={crumbs}
+    faq={faq}
+    steps={[
+      { title: 'Bild auswählen', text: 'Datei hineinziehen oder anklicken. Unterstützt werden JPG, PNG und WebP bis 30 MB.' },
+      { title: 'Qualität und Format wählen', text: 'Verschiebe den Regler und beobachte, wie die geschätzte Dateigröße sinkt. WebP liefert meist die kleinste Datei.' },
+      { title: 'Herunterladen', text: 'Klicke auf „Komprimieren und herunterladen“. Die Originaldatei bleibt unverändert.' }
+    ]}
+  >
+    <div slot="tool" class="tool-panel">
+      <div class="dropzone" id="compress-zone">
+        <span class="dropzone__icon"><Icon name="compress" /></span>
+        <span class="dropzone__title">Bild hierher ziehen oder klicken</span>
+        <span class="dropzone__hint">JPG, PNG oder WebP · max. 30 MB</span>
+        <input type="file" id="compress-input" accept="image/png,image/jpeg,image/webp" aria-label="Bilddatei auswählen" />
+      </div>
+
+      <div id="compress-workspace" hidden>
+        <div class="preview">
+          <img id="compress-img" alt="Vorschau des zu komprimierenden Bildes" />
+        </div>
+
+        <div class="controls controls--split">
+          <div class="field" id="compress-quality-row">
+            <label for="compress-quality">Qualität <span class="field__value" id="compress-quality-value">80 %</span></label>
+            <input type="range" id="compress-quality" min="10" max="100" step="1" value="80" />
+          </div>
+          <div class="field">
+            <span class="field__label">Ausgabeformat</span>
+            <div class="segmented" id="compress-format" role="group" aria-label="Ausgabeformat">
+              <button type="button" data-format="image/jpeg" aria-pressed="true">JPG</button>
+              <button type="button" data-format="image/png" aria-pressed="false">PNG</button>
+              <button type="button" data-format="image/webp" aria-pressed="false">WebP</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3" id="compress-actions">
+          <button class="btn btn--primary" id="compress-apply" type="button">Komprimieren</button>
+          <a class="btn btn--download" id="compress-download" download hidden><Icon name="download" />Herunterladen</a>
+          <button class="btn btn--ghost" id="compress-reset" type="button">Anderes Bild</button>
+        </div>
+
+        <div class="result__stats mt-3" id="compress-stats" hidden></div>
+        <div class="notice mt-2" id="compress-notice" hidden role="status"></div>
+      </div>
+    </div>
+
+    <div class="prose mt-4">
+      <h2>Wie groß sollten Bilder im Web sein?</h2>
+      <p>
+        Als Faustregel gilt: Bilder für Webseiten sollten selten mehr als 200 KB wiegen. Für
+        E-Mail-Anhänge sind 1–2 MB pro Bild meist unproblematisch. Behördenportale und Formulare
+        begrenzen die Dateigröße häufig auf 2 MB oder weniger.
+      </p>
+      <h3>Qualität richtig wählen</h3>
+      <ul>
+        <li><strong>Fotos:</strong> 70–80 % – der Unterschied ist meist nicht sichtbar</li>
+        <li><strong>Screenshots mit Text:</strong> 85–95 %, sonst wird Schrift unscharf</li>
+        <li><strong>Grafiken mit Flächen:</strong> PNG oder WebP statt JPG verwenden</li>
+      </ul>
+      <p>
+        Wenn du zusätzlich die Abmessungen verkleinern möchtest, nutze zuerst
+        <a href="/bildgroesse-aendern/">Bildgröße ändern</a> und komprimiere danach. Das liefert in
+        der Regel die kleinste Datei bei guter Qualität.
+      </p>
+    </div>
+  </ToolShell>
+
+  <script>
+    import '../scripts/tools/compress';
+  </script>
+</BaseLayout>

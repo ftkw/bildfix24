@@ -1,0 +1,195 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import ToolShell from '../components/ToolShell.astro';
+import Icon from '../components/Icon.astro';
+import { getTool } from '../data/tools';
+import { breadcrumbSchema, faqSchema, softwareSchema, type Crumb, type FaqItem } from '../lib/seo';
+
+const tool = getTool('watermark');
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Wasserzeichen hinzufügen', href: '/wasserzeichen-hinzufuegen/' }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Wie schütze ich meine Bilder mit einem Wasserzeichen?',
+    a: 'Ein sichtbares Wasserzeichen mit Name, Website oder Logo macht klar, wer die Rechte am Bild hält. Es verhindert Diebstahl nicht vollständig, erhöht aber den Aufwand und erleichtert die Nachverfolgung. Für stark gefährdete Bilder ist ein Kachelmuster über die gesamte Fläche am wirksamsten.'
+  },
+  {
+    q: 'Was ist ein Kachelmuster?',
+    a: 'Beim Kachelmuster wird das Wasserzeichen mehrfach über das ganze Bild verteilt. Dadurch lässt es sich nicht einfach an einer Stelle wegschneiden, ohne das Motiv zu zerstören. Es ist die sicherste Variante für Vorschaubilder und Portfolio-Seiten.'
+  },
+  {
+    q: 'Kann ich mein eigenes Logo verwenden?',
+    a: 'Ja. Lade eine PNG-Datei mit transparentem Hintergrund hoch. Das Logo wird an der gewählten Position platziert und kann in Größe, Deckkraft und Drehung angepasst werden.'
+  },
+  {
+    q: 'Entfernt dieses Werkzeug Wasserzeichen?',
+    a: 'Nein – und das ist Absicht. Das Entfernen fremder Wasserzeichen kann Urheberrechte verletzen. Dieses Werkzeug fügt ausschließlich Wasserzeichen zu deinen eigenen Bildern hinzu.'
+  },
+  {
+    q: 'Wird mein Bild hochgeladen?',
+    a: 'Nein. Auch das Wasserzeichen wird lokal im Browser gesetzt. Es werden keine Bilddaten übertragen oder gespeichert.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'Wasserzeichen hinzufügen',
+    description:
+      'Wasserzeichen in Bilder einfügen: Text oder Logo, frei positionierbar oder als Kachelmuster – ohne Upload im Browser.',
+    path: '/wasserzeichen-hinzufuegen/'
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="Wasserzeichen hinzufügen – Text oder Logo"
+  description="Wasserzeichen kostenlos in Bilder einfügen: Text oder eigenes Logo, frei positionierbar oder als Kachelmuster. Ohne Upload, direkt im Browser."
+  path="/wasserzeichen-hinzufuegen/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="Wasserzeichen hinzufügen"
+    lead="Kennzeichne deine Bilder mit Text oder Logo – dezent in einer Ecke oder als Kachelmuster über die ganze Fläche. Alles bleibt auf deinem Gerät."
+    toolKey="watermark"
+    crumbs={crumbs}
+    faq={faq}
+    steps={[
+      { title: 'Bild auswählen', text: 'Ziehe dein Bild in das Feld. Du siehst sofort eine Vorschau mit Wasserzeichen.' },
+      { title: 'Wasserzeichen gestalten', text: 'Wähle Text oder Logo, Position, Größe, Deckkraft und Drehung. Die Vorschau aktualisiert sich live.' },
+      { title: 'Herunterladen', text: 'Klicke auf „Wasserzeichen setzen“ – das Bild wird in Originalauflösung gespeichert.' }
+    ]}
+  >
+    <div slot="tool" class="tool-panel">
+      <div class="dropzone" id="wm-zone">
+        <span class="dropzone__icon"><Icon name="watermark" /></span>
+        <span class="dropzone__title">Bild hierher ziehen oder klicken</span>
+        <span class="dropzone__hint">JPG, PNG oder WebP · max. 30 MB</span>
+        <input type="file" id="wm-input" accept="image/png,image/jpeg,image/webp" aria-label="Bilddatei auswählen" />
+      </div>
+
+      <div id="wm-workspace" hidden>
+        <div class="preview">
+          <canvas id="wm-canvas" aria-label="Vorschau mit Wasserzeichen"></canvas>
+        </div>
+
+        <div class="controls">
+          <div class="field">
+            <label for="wm-text">Wasserzeichen-Text</label>
+            <input type="text" id="wm-text" value="© bildfix24" maxlength="60" />
+          </div>
+
+          <div class="controls controls--split">
+            <div class="field">
+              <label for="wm-size">Größe <span class="field__value" id="wm-size-value">6 %</span></label>
+              <input type="range" id="wm-size" min="2" max="20" step="0.5" value="6" />
+            </div>
+            <div class="field">
+              <label for="wm-opacity">Deckkraft <span class="field__value" id="wm-opacity-value">80 %</span></label>
+              <input type="range" id="wm-opacity" min="10" max="100" step="1" value="80" />
+            </div>
+          </div>
+
+          <div class="controls controls--split">
+            <div class="field">
+              <label for="wm-color">Farbe</label>
+              <input type="color" id="wm-color" value="#ffffff" style="height: 42px; padding: 4px;" />
+            </div>
+            <div class="field">
+              <label for="wm-rotate">Drehung <span class="field__value" id="wm-rotate-value">0°</span></label>
+              <input type="range" id="wm-rotate" min="-45" max="45" step="1" value="0" />
+            </div>
+          </div>
+
+          <div class="field">
+            <span class="field__label" id="wm-position-label">Position</span>
+            <div
+              class="segmented"
+              id="wm-position"
+              role="group"
+              aria-labelledby="wm-position-label"
+              style="display:grid;grid-template-columns:repeat(3,56px);gap:4px;width:max-content"
+            >
+              <button type="button" data-pos="tl" aria-pressed="false" aria-label="Oben links">OL</button>
+              <button type="button" data-pos="tc" aria-pressed="false" aria-label="Oben Mitte">O</button>
+              <button type="button" data-pos="tr" aria-pressed="false" aria-label="Oben rechts">OR</button>
+              <button type="button" data-pos="ml" aria-pressed="false" aria-label="Mitte links">L</button>
+              <button type="button" data-pos="mc" aria-pressed="false" aria-label="Mitte">M</button>
+              <button type="button" data-pos="mr" aria-pressed="false" aria-label="Mitte rechts">R</button>
+              <button type="button" data-pos="bl" aria-pressed="false" aria-label="Unten links">UL</button>
+              <button type="button" data-pos="bc" aria-pressed="false" aria-label="Unten Mitte">U</button>
+              <button type="button" data-pos="br" aria-pressed="true" aria-label="Unten rechts">UR</button>
+            </div>
+          </div>
+
+          <label class="check">
+            <input type="checkbox" id="wm-tile" />
+            Als Kachelmuster über das gesamte Bild
+          </label>
+
+          <div class="field">
+            <span class="field__label">Eigenes Logo (optional, PNG mit Transparenz)</span>
+            <div class="row">
+              <label class="btn" style="position: relative; overflow: hidden;">
+                Logo wählen
+                <input
+                  type="file"
+                  id="wm-logo-input"
+                  accept="image/png,image/jpeg,image/webp"
+                  style="position: absolute; inset: 0; opacity: 0; cursor: pointer;"
+                />
+              </label>
+              <button class="btn btn--ghost" id="wm-logo-clear" type="button" hidden>Logo entfernen</button>
+            </div>
+            <p class="small muted mt-1" id="wm-logo-status">Kein Logo gewählt – es wird Text verwendet.</p>
+          </div>
+        </div>
+
+        <div class="row mt-3" id="wm-actions">
+          <button class="btn btn--primary" id="wm-apply" type="button">Wasserzeichen setzen</button>
+          <a class="btn btn--download" id="wm-download" download hidden><Icon name="download" />Herunterladen</a>
+          <button class="btn btn--ghost" id="wm-reset" type="button">Anderes Bild</button>
+        </div>
+
+        <div class="result__stats mt-3" id="wm-stats" hidden></div>
+        <div class="notice mt-2" id="wm-notice" hidden role="status"></div>
+      </div>
+    </div>
+
+    <div class="prose mt-4">
+      <h2>Bilder wirksam kennzeichnen</h2>
+      <p>
+        Sobald ein Bild im Netz steht, lässt es sich kopieren. Ein Wasserzeichen macht die Herkunft
+        sichtbar und schreckt Gelegenheitsdiebe ab. Entscheidend ist die Balance: gut sichtbar, aber
+        nicht so dominant, dass das Motiv leidet.
+      </p>
+      <h3>Welche Variante passt zu welchem Zweck?</h3>
+      <ul>
+        <li><strong>Dezent in der Ecke:</strong> Portfolio, Blogbeiträge, Social Media</li>
+        <li><strong>Kachelmuster:</strong> Vorschaubilder, Kundenansichten, Bilddatenbanken</li>
+        <li><strong>Logo statt Text:</strong> Unternehmen, Agenturen, wiederkehrende Markenkommunikation</li>
+      </ul>
+      <p>
+        Ergänzend erklärt der Ratgeber
+        <a href="/bildschutz/bilder-vor-diebstahl-schuetzen/">Bilder vor Diebstahl schützen</a>,
+        welche weiteren Maßnahmen sinnvoll sind – von Wasserzeichen bis zur Metadaten-Pflege.
+      </p>
+      <blockquote>
+        <p>
+          Hinweis: Dieses Werkzeug fügt Wasserzeichen ausschließlich hinzu. Es entfernt keine
+          Wasserzeichen aus fremden Bildern.
+        </p>
+      </blockquote>
+    </div>
+  </ToolShell>
+
+  <script>
+    import '../scripts/tools/watermark';
+  </script>
+</BaseLayout>

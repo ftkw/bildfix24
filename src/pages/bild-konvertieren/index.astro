@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+import ToolShell from '../../components/ToolShell.astro';
+import ConvertTool from '../../components/tools/ConvertTool.astro';
+import { getTool } from '../../data/tools';
+import { breadcrumbSchema, faqSchema, softwareSchema, type Crumb, type FaqItem } from '../../lib/seo';
+
+const tool = getTool('convert');
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bild konvertieren', href: '/bild-konvertieren/' }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Welche Formate kann ich umwandeln?',
+    a: 'JPG, PNG und WebP – in jede Richtung. Du kannst zum Beispiel ein JPG in PNG umwandeln, ein PNG in JPG oder ein beliebiges Bild als WebP speichern.'
+  },
+  {
+    q: 'Wann sollte ich PNG und wann JPG verwenden?',
+    a: 'PNG eignet sich für Grafiken mit scharfen Kanten, Text und Transparenz. JPG ist für Fotos besser, weil es deutlich kleinere Dateien erzeugt. WebP ist für Webseiten meist die beste Wahl.'
+  },
+  {
+    q: 'Was passiert mit transparenten Bereichen bei JPG?',
+    a: 'JPG kennt keine Transparenz. Beim Umwandeln von PNG zu JPG werden transparente Flächen weiß gefüllt. Das Werkzeug weist dich nach der Umwandlung darauf hin.'
+  },
+  {
+    q: 'Verliere ich beim Umwandeln Qualität?',
+    a: 'Bei JPG und WebP ist die Umwandlung verlustbehaftet, bei PNG verlustfrei. Über den Qualitätsregler bestimmst du, wie stark komprimiert wird. Für die Archivierung solltest du PNG wählen.'
+  },
+  {
+    q: 'Werden die Bilder hochgeladen?',
+    a: 'Nein. Die Umwandlung findet vollständig im Browser statt. Es werden keine Bilddaten an einen Server übertragen.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'Bild konvertieren',
+    description: 'Bilder kostenlos zwischen JPG, PNG und WebP umwandeln – ohne Upload, direkt im Browser.',
+    path: '/bild-konvertieren/'
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+
+const extraCrumbs: Crumb[] = [];
+---
+
+<BaseLayout
+  title="Bild konvertieren – JPG, PNG & WebP"
+  description="Bilder kostenlos umwandeln: JPG in PNG, PNG in JPG oder WebP. Ohne Upload, mit einstellbarer Qualität und direkt im Browser."
+  path="/bild-konvertieren/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="Bild konvertieren"
+    lead="Wandle Bilder zwischen JPG, PNG und WebP um – verlustfrei bei PNG, platzsparend bei JPG und WebP. Alles läuft lokal in deinem Browser."
+    toolKey="convert"
+    crumbs={crumbs}
+    faq={faq}
+    steps={[
+      { title: 'Bild auswählen', text: 'Ziehe die Datei in das Feld. Das erkannte Ausgangsformat wird im Formatauswahl angezeigt.' },
+      { title: 'Zielformat wählen', text: 'Entscheide dich für JPG, PNG oder WebP. Bei JPG und WebP kannst du zusätzlich die Qualität justieren.' },
+      { title: 'Umwandeln und laden', text: 'Ein Klick erzeugt die neue Datei – der Download startet sofort.' }
+    ]}
+  >
+    <div slot="tool">
+      <ConvertTool defaultFormat="image/webp" />
+    </div>
+
+    <div class="prose mt-4">
+      <h2>Das richtige Format für jeden Zweck</h2>
+      <p>
+        Jedes Format hat einen anderen Schwerpunkt. PNG speichert verlustfrei und unterstützt
+        Transparenz, wird bei Fotos aber sehr groß. JPG komprimiert stark und ist ideal für
+        Fotografien. WebP kombiniert beides und ist für Webseiten die effizienteste Wahl.
+      </p>
+      <h3>Typische Anwendungsfälle</h3>
+      <ul>
+        <li><strong>PNG:</strong> Logos, Screenshots, Grafiken mit Text, Bilder mit transparentem Hintergrund</li>
+        <li><strong>JPG:</strong> Fotos, E-Mail-Anhänge, Druckvorlagen ohne Transparenz</li>
+        <li><strong>WebP:</strong> Webseiten und Onlineshops – kleinere Dateien bei guter Qualität</li>
+      </ul>
+      <p>
+        Für gezielte Varianten gibt es eigene Seiten:
+        <a href="/bild-konvertieren/jpg-in-png/">JPG in PNG umwandeln</a> und
+        <a href="/bild-konvertieren/png-in-jpg/">PNG in JPG umwandeln</a>.
+      </p>
+    </div>
+  </ToolShell>
+</BaseLayout>

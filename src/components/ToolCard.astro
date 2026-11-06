@@ -1,0 +1,18 @@
+---
+import Icon from './Icon.astro';
+import type { Tool } from '../data/tools';
+
+interface Props {
+  tool: Tool;
+  plain?: boolean;
+}
+
+const { tool, plain = false } = Astro.props;
+---
+
+<article class={plain ? 'tool-card tool-card--plain' : 'tool-card'}>
+  <span class="tool-card__icon"><Icon name={tool.icon} /></span>
+  <h3 class="tool-card__title">{tool.name}</h3>
+  <p class="tool-card__desc">{tool.short}</p>
+  <a class="tool-card__link" href={tool.href}>Werkzeug öffnen</a>
+</article>

@@ -1,0 +1,74 @@
+---
+import { tools, guides, SITE } from '../data/tools';
+
+const year = new Date().getFullYear();
+// Endung nur zeigen, wenn sie auch wirklich ausgeliefert wird (siehe Header).
+const [brandName, brandTld] = SITE.domain ? SITE.domain.split(/\.(?=[^.]+$)/) : [SITE.name, null];
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="footer__grid">
+      <div class="footer__col footer__about">
+        <a class="brand" href="/">
+          <span class="brand__mark">◆</span>
+          <span>{brandName}{brandTld && <span class="brand__tld">.{brandTld}</span>}</span>
+        </a>
+        <p class="mt-2">
+          Kostenlose Bildwerkzeuge, die vollständig in deinem Browser laufen. Deine Bilder werden
+          nicht hochgeladen und nicht gespeichert.
+        </p>
+      </div>
+
+      <div class="footer__col">
+        <h3>Werkzeuge</h3>
+        <ul>
+          {tools.map(tool => (
+            <li><a href={tool.href}>{tool.name}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h3>Ratgeber</h3>
+        <ul>
+          <li><a href="/bildschutz/">Bildschutz</a></li>
+          {guides.map(guide => (
+            <li><a href={guide.href}>{guide.title}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="footer__col">
+        <h3>Rechtliches</h3>
+        <ul>
+          <li><a href="/impressum/">Impressum</a></li>
+          <li><a href="/datenschutz/">Datenschutz</a></li>
+          <li><a href="/ueber-uns/">Über uns</a></li>
+          <li><a href="/kontakt/">Kontakt</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer__bottom">
+      <span>© {year} {SITE.name} — Alle Werkzeuge laufen lokal in deinem Browser.</span>
+      <span>
+        Design-Komponenten: <a href="https://reactbits.dev" rel="noopener nofollow" target="_blank">React Bits</a>
+        (MIT + Commons Clause)
+      </span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer__about .brand__mark {
+    width: 26px;
+    height: 26px;
+    border-radius: 8px;
+    background: var(--brand-grad);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 12px;
+  }
+</style>

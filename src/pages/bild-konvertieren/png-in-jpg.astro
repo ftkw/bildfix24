@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+import ToolShell from '../../components/ToolShell.astro';
+import ConvertTool from '../../components/tools/ConvertTool.astro';
+import { breadcrumbSchema, faqSchema, softwareSchema, type Crumb, type FaqItem } from '../../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bild konvertieren', href: '/bild-konvertieren/' },
+  { name: 'PNG in JPG', href: '/bild-konvertieren/png-in-jpg/' }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Warum PNG in JPG umwandeln?',
+    a: 'JPG erzeugt bei Fotos deutlich kleinere Dateien als PNG. Für E-Mail-Anhänge, Formulare mit Größenlimit oder Webseiten ist das oft entscheidend.'
+  },
+  {
+    q: 'Was passiert mit transparenten Bereichen?',
+    a: 'JPG unterstützt keine Transparenz. Transparente Flächen werden beim Umwandeln weiß gefüllt. Wenn du die Transparenz behalten willst, nutze WebP oder bleib bei PNG.'
+  },
+  {
+    q: 'Wie stark wird die Datei kleiner?',
+    a: 'Bei Fotos häufig um 70–90 Prozent. Bei Grafiken mit großen einfarbigen Flächen fällt der Effekt geringer aus. Über den Qualitätsregler steuerst du das Verhältnis.'
+  },
+  {
+    q: 'Kann ich die Qualität einstellen?',
+    a: 'Ja. Der Regler reicht von 10 bis 100 Prozent. Für Fotos sind 80–90 Prozent ein guter Kompromiss aus Dateigröße und Bildqualität.'
+  },
+  {
+    q: 'Werden die Bilder hochgeladen?',
+    a: 'Nein. Die Umwandlung erfolgt lokal im Browser, ohne Übertragung an einen Server.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'PNG in JPG umwandeln',
+    description: 'PNG-Bilder kostenlos in JPG umwandeln und Dateigröße reduzieren – ohne Upload, direkt im Browser.',
+    path: '/bild-konvertieren/png-in-jpg/'
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="PNG in JPG umwandeln – Dateigröße senken"
+  description="PNG kostenlos in JPG umwandeln und die Dateigröße deutlich reduzieren. Qualität einstellbar, ohne Upload und ohne Anmeldung."
+  path="/bild-konvertieren/png-in-jpg/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="PNG in JPG umwandeln"
+    lead="Wandle PNG-Bilder in JPG um und reduziere die Dateigröße deutlich – ideal für E-Mail-Anhänge und Formulare mit Größenlimit."
+    toolKey="convert"
+    crumbs={crumbs}
+    faq={faq}
+    steps={[
+      { title: 'PNG auswählen', text: 'Ziehe die PNG-Datei in das Feld oder klicke darauf.' },
+      { title: 'JPG und Qualität wählen', text: 'JPG ist vorausgewählt. Stelle die Qualität ein – 80 bis 90 Prozent sind für Fotos meist optimal.' },
+      { title: 'Umwandeln und laden', text: 'Klicke auf „Umwandeln und herunterladen“ und speichere die JPG-Datei.' }
+    ]}
+  >
+    <div slot="tool">
+      <ConvertTool defaultFormat="image/jpeg" />
+    </div>
+
+    <div class="prose mt-4">
+      <h2>Transparenz, Qualität und Dateigröße</h2>
+      <p>
+        PNG-Dateien sind verlustfrei, werden bei Fotos aber schnell sehr groß. JPG komprimiert
+        deutlich stärker – dafür gibt es keine Transparenz. Beim Umwandeln werden transparente
+        Bereiche automatisch weiß gefüllt.
+      </p>
+      <h3>Empfohlene Werte</h3>
+      <ul>
+        <li><strong>Fotos:</strong> 80–90 Prozent Qualität</li>
+        <li><strong>Screenshots mit Text:</strong> 90–95 Prozent, sonst wird Schrift unscharf</li>
+        <li><strong>Nur zur Ansicht:</strong> 60–70 Prozent reichen häufig aus</li>
+      </ul>
+      <p>
+        Wenn du die Transparenz behalten möchtest, wandle stattdessen in WebP um. Für den umgekehrten
+        Weg gibt es <a href="/bild-konvertieren/jpg-in-png/">JPG in PNG umwandeln</a>.
+      </p>
+    </div>
+  </ToolShell>
+</BaseLayout>

@@ -1,0 +1,76 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import Icon from '../../components/Icon.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import { guides } from '../../data/tools';
+import { breadcrumbSchema, type Crumb } from '../../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Bildschutz', href: '/bildschutz/' }
+];
+---
+
+<BaseLayout
+  title="Bildschutz – Bilder vor Diebstahl schützen"
+  description="Ratgeber zum Schutz von Bildern: Wasserzeichen, Auflösung, Metadaten und Urheberrecht – verständlich erklärt für Creator und Unternehmen."
+  path="/bildschutz/"
+  jsonLd={[breadcrumbSchema(crumbs)]}
+>
+  <section class="section" style="padding-top: 2.2rem;">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+      <h1>Bildschutz</h1>
+      <p class="lead">
+        Wer Bilder veröffentlicht, gibt sie technisch aus der Hand. Trotzdem lässt sich der Aufwand
+        für Missbrauch deutlich erhöhen. Hier findest du die Maßnahmen, die tatsächlich wirken – und
+        die, die nur nach Sicherheit aussehen.
+      </p>
+
+      <div class="grid grid--3 mt-4">
+        {guides.map(guide => (
+          <article class="tool-card tool-card--plain">
+            <span class="tool-card__icon"><Icon name="book" /></span>
+            <h3 class="tool-card__title">{guide.title}</h3>
+            <p class="tool-card__desc">{guide.desc}</p>
+            <a class="tool-card__link" href={guide.href}>Ratgeber lesen</a>
+          </article>
+        ))}
+        <article class="tool-card tool-card--plain">
+          <span class="tool-card__icon"><Icon name="watermark" /></span>
+          <h3 class="tool-card__title">Wasserzeichen hinzufügen</h3>
+          <p class="tool-card__desc">Text oder Logo direkt ins Bild setzen – optional als Kachelmuster über die ganze Fläche.</p>
+          <a class="tool-card__link" href="/wasserzeichen-hinzufuegen/">Werkzeug öffnen</a>
+        </article>
+      </div>
+
+      <div class="prose mt-4">
+        <h2>Die drei Ebenen des Bildschutzes</h2>
+        <p>
+          Wirksamer Schutz entsteht nicht durch eine einzelne Maßnahme, sondern durch das
+          Zusammenspiel mehrerer Ebenen. Wer nur eine davon umsetzt, schließt selten die
+          entscheidenden Lücken.
+        </p>
+        <h3>1. Sichtbare Kennzeichnung</h3>
+        <p>
+          Ein Wasserzeichen zeigt sofort, wem das Bild gehört. Es verhindert die Kopie nicht, macht
+          aber die Weiterverwendung unbrauchbar für seriöse Zwecke. Besonders wirksam ist ein
+          Kachelmuster, weil es sich nicht wegschneiden lässt.
+        </p>
+        <h3>2. Technische Begrenzung</h3>
+        <p>
+          Veröffentliche nur die Auflösung, die tatsächlich benötigt wird. Ein Vorschaubild mit 800
+          Pixeln Breite ist für den Bildschirm ausreichend und für den Druck unbrauchbar.
+        </p>
+        <h3>3. Rechtliche Absicherung</h3>
+        <p>
+          Metadaten mit Urhebervermerk, klare Nutzungsbedingungen auf der eigenen Seite und die
+          Dokumentation der Entstehung helfen, Ansprüche später durchzusetzen.
+        </p>
+      </div>
+
+      <AdSlot />
+    </div>
+  </section>
+</BaseLayout>

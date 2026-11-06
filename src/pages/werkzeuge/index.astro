@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import ToolCard from '../../components/ToolCard.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import Icon from '../../components/Icon.astro';
+import { tools } from '../../data/tools';
+import { breadcrumbSchema, ldJson, type Crumb } from '../../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' }
+];
+---
+
+<BaseLayout
+  title="Alle Bildwerkzeuge"
+  description="Übersicht aller kostenlosen Bildwerkzeuge: zuschneiden, komprimieren, Größe ändern, konvertieren und Wasserzeichen hinzufügen – ohne Upload."
+  path="/werkzeuge/"
+  jsonLd={[breadcrumbSchema(crumbs)]}
+>
+  <section class="section" style="padding-top: 2.2rem;">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+      <h1>Alle Bildwerkzeuge</h1>
+      <p class="lead">
+        Fünf Werkzeuge für die häufigsten Aufgaben – alle kostenlos, ohne Anmeldung und ohne Upload.
+        Wähle ein Werkzeug, ziehe dein Bild hinein und lade das Ergebnis herunter.
+      </p>
+
+      <div class="grid grid--tools mt-4">
+        {tools.map(tool => <ToolCard tool={tool} plain />)}
+      </div>
+
+      <div class="feature mt-4">
+        <div class="feature__item">
+          <Icon name="lock" />
+          <h3>Kein Upload</h3>
+          <p>Bilder werden ausschließlich lokal im Browser verarbeitet.</p>
+        </div>
+        <div class="feature__item">
+          <Icon name="euro" />
+          <h3>Kostenlos</h3>
+          <p>Keine Anmeldung, keine Begrenzung, keine Bezahlschranke.</p>
+        </div>
+        <div class="feature__item">
+          <Icon name="image" />
+          <h3>JPG, PNG, WebP</h3>
+          <p>Gängige Formate rein und raus – inklusive Transparenz bei PNG.</p>
+        </div>
+      </div>
+
+      <AdSlot />
+    </div>
+  </section>
+</BaseLayout>

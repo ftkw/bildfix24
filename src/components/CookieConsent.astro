@@ -1,0 +1,59 @@
+---
+// DSGVO-Cookie-Hinweis. Es werden ausschließlich notwendige Speicherwerte
+// (Consent-Entscheidung) lokal abgelegt. Statistik/Ads erst nach Zustimmung.
+---
+
+<div
+  class="cookie"
+  id="cookie-banner"
+  role="dialog"
+  aria-modal="false"
+  aria-live="polite"
+  aria-label="Datenschutz-Einstellungen"
+>
+  <div class="cookie__inner">
+    <p>
+      Diese Website nutzt keine Tracking-Cookies von Drittanbietern. Für die Anzeige von Werbung
+      können nach deiner Zustimmung Cookies gesetzt werden. Mehr dazu in der
+      <a href="/datenschutz/">Datenschutzerklärung</a>.
+    </p>
+    <div class="cookie__actions">
+      <button class="btn" type="button" data-consent="essential">Nur notwendige</button>
+      <button class="btn btn--primary" type="button" data-consent="all">Alle akzeptieren</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const KEY = 'bf-consent';
+  const banner = document.getElementById('cookie-banner');
+
+  const stored = (() => {
+    try {
+      return localStorage.getItem(KEY);
+    } catch {
+      return null;
+    }
+  })();
+
+  if (stored) {
+    document.documentElement.dataset.consent = stored;
+  } else {
+    banner?.classList.add('is-open');
+  }
+
+  const apply = (value: string) => {
+    try {
+      localStorage.setItem(KEY, value);
+    } catch {
+      /* Speicher nicht verfügbar – Entscheidung gilt nur für diese Sitzung */
+    }
+    document.documentElement.dataset.consent = value;
+    banner?.classList.remove('is-open');
+    window.dispatchEvent(new CustomEvent('bf:consent', { detail: value }));
+  };
+
+  banner?.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach(button => {
+    button.addEventListener('click', () => apply(button.dataset.consent ?? 'essential'));
+  });
+</script>

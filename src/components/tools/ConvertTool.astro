@@ -1,0 +1,52 @@
+---
+import Icon from '../Icon.astro';
+
+interface Props {
+  defaultFormat?: 'image/png' | 'image/jpeg' | 'image/webp';
+}
+
+const { defaultFormat = 'image/png' } = Astro.props;
+---
+
+<div class="tool-panel">
+  <div class="dropzone" id="convert-zone">
+    <span class="dropzone__icon"><Icon name="convert" /></span>
+    <span class="dropzone__title">Bild hierher ziehen oder klicken</span>
+    <span class="dropzone__hint">JPG, PNG oder WebP · max. 30 MB</span>
+    <input type="file" id="convert-input" accept="image/png,image/jpeg,image/webp" aria-label="Bilddatei auswählen" />
+  </div>
+
+  <div id="convert-workspace" hidden>
+    <div class="preview">
+      <img id="convert-img" alt="Vorschau des Bildes" />
+    </div>
+
+    <div class="controls controls--split">
+      <div class="field">
+        <span class="field__label">Zielformat</span>
+        <div class="segmented" id="convert-format" data-default={defaultFormat} role="group" aria-label="Zielformat">
+          <button type="button" data-format="image/jpeg" aria-pressed="false">JPG</button>
+          <button type="button" data-format="image/png" aria-pressed="false">PNG</button>
+          <button type="button" data-format="image/webp" aria-pressed="false">WebP</button>
+        </div>
+      </div>
+      <div class="field" id="convert-quality-row">
+        <label for="convert-quality">Qualität <span class="field__value" id="convert-quality-value">92 %</span></label>
+        <input type="range" id="convert-quality" min="10" max="100" step="1" value="92" />
+      </div>
+    </div>
+
+    <div class="row mt-3" id="convert-actions">
+      <button class="btn btn--primary" id="convert-apply" type="button">Umwandeln</button>
+      <a class="btn btn--download" id="convert-download" download hidden><Icon name="download" />Herunterladen</a>
+      <button class="btn btn--ghost" id="convert-reset" type="button">Anderes Bild</button>
+    </div>
+
+    <div class="result__stats mt-3" id="convert-stats" hidden></div>
+    <div class="notice mt-2" id="convert-notice" hidden role="status"></div>
+  </div>
+</div>
+
+<script>
+  import '../../scripts/tools/convert';
+</script>

@@ -1,0 +1,89 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Icon from '../components/Icon.astro';
+import type { Crumb } from '../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Über uns', href: '/ueber-uns/' }
+];
+---
+
+<BaseLayout
+  title="Über uns"
+  description="Wer hinter bildfix24 steht, wie die Werkzeuge arbeiten und warum auf Uploads verzichtet wird."
+  path="/ueber-uns/"
+>
+  <section class="section" style="padding-top: 2.2rem;">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+
+      <div class="prose">
+        <h1>Über bildfix24</h1>
+        <p class="lead">
+          bildfix24 ist ein unabhängiges Projekt mit einem einfachen Ziel: Bildwerkzeuge, die ohne
+          Anmeldung funktionieren und die Bilder der Nutzer nicht durch fremde Server schicken.
+        </p>
+
+        <h2>Warum es diese Seite gibt</h2>
+        <p>
+          Wer schnell ein Bild zuschneiden oder komprimieren will, landet meist bei Angeboten, die
+          Dateien hochladen, Konten verlangen oder das Ergebnis mit einem eigenen Logo versehen. Für
+          einmalige Aufgaben ist das unnötig. Moderne Browser können all das lokal erledigen – schnell,
+          ohne Wartezeit und ohne dass eine Kopie irgendwo liegen bleibt.
+        </p>
+
+        <h2>Wie die Werkzeuge arbeiten</h2>
+        <p>
+          Alle Funktionen basieren auf Browser-Standards: der Canvas-API zum Zeichnen und Kodieren von
+          Bildern sowie JavaScript für die Bedienlogik. Die ausgewählte Datei wird in den Arbeitsspeicher
+          deines Browsers geladen und dort verarbeitet. Beim Schließen des Tabs wird sie verworfen.
+        </p>
+        <p>
+          Es gibt keine Benutzerkonten, keine Datenbank mit Bildern und keine Warteschlange. Das
+          Ergebnis entsteht auf deinem Gerät und wird von dort heruntergeladen.
+        </p>
+
+        <h2>Redaktionelle Grundsätze</h2>
+        <ul>
+          <li>Wir beschreiben nur Funktionen, die tatsächlich vorhanden sind.</li>
+          <li>Werbung wird als Werbung gekennzeichnet und beeinflusst keine Inhalte.</li>
+          <li>Ratgebertexte sind allgemeine Orientierung und keine Rechtsberatung.</li>
+          <li>Es werden keine eigenen Wasserzeichen in Nutzerbilder eingefügt.</li>
+        </ul>
+
+        <h2>Transparenz</h2>
+        <p>
+          Die Seite finanziert sich über Werbung. Es gibt keine Bezahlschranke und keine Funktion, die
+          nur gegen Bezahlung verfügbar wäre. Für die Gestaltung werden kostenlose Komponenten von
+          React Bits verwendet; die Lizenz ist im <a href="/impressum/">Impressum</a> dokumentiert.
+        </p>
+
+        <div class="feature mt-4">
+          <div class="feature__item">
+            <Icon name="lock" />
+            <h3>Kein Upload</h3>
+            <p>Bilddaten bleiben auf dem Gerät der Nutzer.</p>
+          </div>
+          <div class="feature__item">
+            <Icon name="euro" />
+            <h3>Ohne Konto</h3>
+            <p>Keine Registrierung, keine E-Mail-Pflicht.</p>
+          </div>
+          <div class="feature__item">
+            <Icon name="scale" />
+            <h3>Nachvollziehbar</h3>
+            <p>Dateigrößen und Ergebnisse sind vor dem Download sichtbar.</p>
+          </div>
+        </div>
+
+        <h2>Kontakt</h2>
+        <p>
+          Fragen, Fehlerhinweise oder Kritik? Schreib uns über die
+          <a href="/kontakt/">Kontaktseite</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

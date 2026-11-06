@@ -1,0 +1,35 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import { tools } from '../data/tools';
+---
+
+<BaseLayout
+  title="Seite nicht gefunden"
+  description="Die aufgerufene Seite existiert nicht. Hier findest du alle Bildwerkzeuge von bildfix24."
+  path="/404/"
+  noindex={true}
+>
+  <section class="section">
+    <div class="container center">
+      <p class="eyebrow">Fehler 404</p>
+      <h1>Diese Seite gibt es nicht</h1>
+      <p class="lead" style="margin-inline: auto;">
+        Vielleicht wurde die Adresse geändert oder ein Tippfehler hat sich eingeschlichen. Hier geht
+        es zurück zu den Werkzeugen.
+      </p>
+      <div class="row" style="justify-content: center; margin-top: 1.6rem;">
+        <a class="btn btn--primary" href="/">Zur Startseite</a>
+        <a class="btn" href="/werkzeuge/">Alle Werkzeuge</a>
+      </div>
+
+      <div class="grid grid--3 mt-4" style="text-align: left;">
+        {tools.map(tool => (
+          <a class="tool-card tool-card--plain" href={tool.href} style="text-decoration: none;">
+            <h3 class="tool-card__title">{tool.name}</h3>
+            <p class="tool-card__desc">{tool.short}</p>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,20 @@
+# Cloudflare-Pages-Header. Wird beim Deploy aus public/ ins dist-Root kopiert.
+# Bei einem Wechsel des Hosters muss das Pendant (_headers / netlify.toml /
+# .htaccess) mitgenommen werden – sonst fehlen Security-Header und Caching.
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: SAMEORIGIN
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), microphone=(), camera=(), interest-cohort=()
+
+# Astro hängt an jede Datei einen Content-Hash – sie kann dauerhaft gecacht werden.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Die Startseite muss kurzfristig aktualisierbar bleiben.
+/
+  Cache-Control: public, max-age=0, must-revalidate
+
+/og.png
+  Cache-Control: public, max-age=86400

@@ -1,0 +1,154 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+import AdSlot from '../../components/AdSlot.astro';
+import { articleSchema, breadcrumbSchema, type Crumb } from '../../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Bildschutz', href: '/bildschutz/' },
+  { name: 'Urheberrecht bei Bildern', href: '/bildschutz/urheberrecht-bild/' }
+];
+
+const published = '2026-11-01';
+---
+
+<BaseLayout
+  title="Urheberrecht bei Bildern – einfach erklärt"
+  description="Was das Urheberrecht bei Bildern regelt: Schutzvoraussetzungen, Nutzungsrechte, Zitatrecht, Social Media und was bei unerlaubter Nutzung hilft."
+  path="/bildschutz/urheberrecht-bild/"
+  jsonLd={[
+    articleSchema({
+      headline: 'Urheberrecht bei Bildern – Grundlagen verständlich erklärt',
+      description:
+        'Grundlagen des deutschen Urheberrechts bei Bildern: Schutz, Nutzungsrechte, Zitatrecht und Vorgehen bei unerlaubter Nutzung.',
+      path: '/bildschutz/urheberrecht-bild/',
+      datePublished: published
+    }),
+    breadcrumbSchema(crumbs)
+  ]}
+  ogType="article"
+>
+  <section class="section" style="padding-top: 2.2rem;">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+
+      <div class="prose">
+        <h1>Urheberrecht bei Bildern</h1>
+        <p class="lead">
+          Fotos sind in Deutschland automatisch geschützt – ohne Anmeldung, ohne Copyright-Zeichen.
+          Dieser Überblick erklärt die wichtigsten Grundlagen für Creator, Unternehmen und alle, die
+          fremde Bilder verwenden möchten.
+        </p>
+
+        <p class="small muted">Zuletzt aktualisiert: November 2026</p>
+
+        <h2>Wann ist ein Bild geschützt?</h2>
+        <p>
+          Nach § 2 des Urheberrechtsgesetzes (UrhG) zählen Lichtbildwerke zu den geschützten Werken.
+          Geschützt ist dabei nicht die Idee, sondern die konkrete gestalterische Leistung – also die
+          individuelle Umsetzung. Für einfache Alltagsfotos greift zusätzlich der Leistungsschutz für
+          Lichtbilder nach § 72 UrhG. In beiden Fällen entsteht der Schutz automatisch mit der
+          Aufnahme.
+        </p>
+
+        <h3>Kein Erfordernis einer Registrierung</h3>
+        <p>
+          Anders als bei Marken oder Patenten gibt es kein Register, in das ein Foto eingetragen
+          werden müsste. Das Copyright-Zeichen „©“ ist rechtlich nicht erforderlich, aber als Hinweis
+          sinnvoll. Für den Nachweis der Urheberschaft zählt vor allem die Originaldatei mit
+          Zeitstempel.
+        </p>
+
+        <h2>Wer ist Urheber?</h2>
+        <p>
+          Urheber ist die Person, die das Bild tatsächlich aufgenommen hat (§ 7 UrhG). Das Recht
+          bleibt grundsätzlich bei ihr und ist nicht übertragbar. Übertragen werden können nur
+          Nutzungsrechte – also die Erlaubnis, das Bild auf bestimmte Weise zu verwenden.
+        </p>
+        <p>
+          Wichtig für Auftragsarbeiten: Dass jemand bezahlt hat, bedeutet nicht automatisch, dass alle
+          Rechte übertragen wurden. Im Zweifel gilt die Zweckübertragungsregel (§ 31 Abs. 5 UrhG) –
+          es wird nur das eingeräumt, was für den vereinbarten Zweck erforderlich ist.
+        </p>
+
+        <h2>Nutzungsrechte richtig einordnen</h2>
+        <ul>
+          <li><strong>Einfaches Nutzungsrecht:</strong> Der Urheber kann das Bild weiterhin anderen erlauben.</li>
+          <li><strong>Ausschließliches Nutzungsrecht:</strong> Nur der Lizenznehmer darf das Bild auf die vereinbarte Weise nutzen.</li>
+          <li><strong>Räumlich, zeitlich und inhaltlich begrenzt:</strong> Nutzungsrechte können eingeschränkt werden – etwa nur für Print, nur für ein Jahr oder nur für bestimmte Kanäle.</li>
+        </ul>
+        <p>
+          Stockfoto-Lizenzen sind meist einfache Nutzungsrechte mit klaren Grenzen. Wer diese Grenzen
+          überschreitet – etwa ein Bild mit „nur redaktionelle Nutzung“ in der Werbung einsetzt –
+          handelt ohne Erlaubnis.
+        </p>
+
+        <h2>Zitatrecht: enge Grenzen</h2>
+        <p>
+          Das Zitatrecht (§ 51 UrhG) erlaubt es, fremde Werke in begrenztem Umfang zu verwenden, um
+          eine eigene geistige Auseinandersetzung zu belegen. Es ist kein Freibrief: Das Zitat muss
+          einen konkreten Zweck erfüllen, in einen eigenen Text eingebettet sein und als Zitat
+          gekennzeichnet werden. Ein Bild „nur zur Illustration“ zu übernehmen, ist in der Regel kein
+          zulässiges Zitat.
+        </p>
+
+        <h2>Typische Fallstricke im Netz</h2>
+        <h3>Bilder aus Suchmaschinen</h3>
+        <p>
+          Die Bildersuche zeigt keine gemeinfreien Inhalte, sondern Treffer. Die meisten davon sind
+          urheberrechtlich geschützt. Eine Nutzung ohne Lizenz ist auch dann nicht erlaubt, wenn das
+          Bild leicht zu finden war.
+        </p>
+        <h3>Social Media</h3>
+        <p>
+          Die AGB von Plattformen räumen dem Betreiber eine Lizenz an hochgeladenen Inhalten ein. Das
+          bedeutet aber nicht, dass Dritte die Bilder weiterverwenden dürfen. Wer ein fremdes Bild
+          teilt, braucht dafür eine eigene Erlaubnis – das Teilen-Feature der Plattform ist etwas
+          anderes als ein erneuter Upload.
+        </p>
+        <h3>Einbetten statt kopieren</h3>
+        <p>
+          Das Einbetten über die offizielle Einbettungsfunktion ist rechtlich anders zu bewerten als
+          das Herunterladen und erneute Hochladen. Es ersetzt jedoch keine Lizenz für die eigene
+          kommerzielle Nutzung und sollte nicht als Umgehung verstanden werden.
+        </p>
+
+        <h2>Was tun bei unerlaubter Nutzung?</h2>
+        <ol>
+          <li><strong>Nachweis sichern:</strong> Screenshot mit URL und Datum, eigene Originaldatei mit Zeitstempel.</li>
+          <li><strong>Kontakt aufnehmen:</strong> Viele Fälle lassen sich mit einer sachlichen E-Mail klären.</li>
+          <li><strong>Frist setzen:</strong> Unterlassung und – je nach Fall – eine Lizenzvergütung verlangen.</li>
+          <li><strong>Rechtlich beraten lassen:</strong> Bei gewerblicher Nutzung oder Wiederholung ist anwaltliche Hilfe sinnvoll.</li>
+        </ol>
+
+        <h2>Checkliste für die Nutzung fremder Bilder</h2>
+        <ul>
+          <li>Lizenz vorhanden und dokumentiert?</li>
+          <li>Nutzungsumfang eingehalten (Kanäle, Zeitraum, Bearbeitung)?</li>
+          <li>Urheber korrekt genannt, falls erforderlich?</li>
+          <li>Bei Personen auf dem Bild: Einwilligung nach § 22 KunstUrhG vorhanden?</li>
+          <li>Keine erkennbaren Marken oder geschützten Werke im Bild?</li>
+        </ul>
+
+        <blockquote>
+          <p>
+            Dieser Beitrag ist eine allgemeine Orientierung und keine Rechtsberatung. Für die
+            Beurteilung eines konkreten Falls wende dich an eine Rechtsanwältin oder einen Rechtsanwalt
+            mit Schwerpunkt Urheberrecht.
+          </p>
+        </blockquote>
+
+        <h2>Weiterlesen</h2>
+        <p>
+          Wie du deine eigenen Bilder praktisch schützt, erklärt der Ratgeber
+          <a href="/bildschutz/bilder-vor-diebstahl-schuetzen/">Bilder vor Diebstahl schützen</a>.
+          Ein Wasserzeichen setzt du direkt mit dem
+          <a href="/wasserzeichen-hinzufuegen/">Wasserzeichen-Werkzeug</a>.
+        </p>
+      </div>
+
+      <AdSlot />
+    </div>
+  </section>
+</BaseLayout>

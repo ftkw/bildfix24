@@ -1,0 +1,56 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import Icon from '../components/Icon.astro';
+import type { Crumb } from '../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Kontakt', href: '/kontakt/' }
+];
+---
+
+<BaseLayout
+  title="Kontakt"
+  description="Kontakt zu bildfix24: Fragen zu den Bildwerkzeugen, Fehlerhinweise und Feedback."
+  path="/kontakt/"
+>
+  <section class="section" style="padding-top: 2.2rem;">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+
+      <div class="prose">
+        <h1>Kontakt</h1>
+        <p class="lead">
+          Fragen zu einem Werkzeug, ein Fehler oder eine Anregung? Schreib eine E-Mail – wir lesen
+          jede Nachricht.
+        </p>
+
+        <div class="tool-card tool-card--plain" style="max-width: 520px;">
+          <span class="tool-card__icon"><Icon name="info" /></span>
+          <h3 class="tool-card__title">E-Mail</h3>
+          <p class="tool-card__desc">
+            <a href="mailto:kontakt@bildfix24.de">kontakt@bildfix24.de</a>
+          </p>
+          <p class="small muted mb-0">
+            Antwort in der Regel innerhalb von zwei Werktagen. Bitte beachte, dass wir keine
+            Rechtsberatung anbieten können.
+          </p>
+        </div>
+
+        <h2>Hilfreiche Angaben bei Fehlern</h2>
+        <ul>
+          <li>Welches Werkzeug und welcher Browser (inkl. Version)?</li>
+          <li>Dateiformat und ungefähre Dateigröße des Bildes</li>
+          <li>Was du erwartet hast und was tatsächlich passiert ist</li>
+          <li>Falls möglich: ein Screenshot der Fehlermeldung</li>
+        </ul>
+
+        <p class="small muted">
+          Bitte sende keine vertraulichen oder personenbezogenen Bilder per E-Mail. Für die Funktion
+          der Werkzeuge ist kein Upload nötig.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

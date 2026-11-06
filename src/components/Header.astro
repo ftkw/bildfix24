@@ -1,0 +1,64 @@
+---
+import Icon from './Icon.astro';
+import { SITE } from '../data/tools';
+
+const path = Astro.url.pathname;
+
+// Marke zweifarbig: Name in Tinte, Endung gedämpft. Die Endung erscheint nur,
+// wenn SITE.domain gesetzt ist – solange die Seite auf pages.dev läuft, wäre
+// ein ".de" im Logo eine Behauptung, die der Host nicht einlöst.
+const [brandName, brandTld] = SITE.domain ? SITE.domain.split(/\.(?=[^.]+$)/) : [SITE.name, null];
+
+const links = [
+  { href: '/werkzeuge/', label: 'Werkzeuge' },
+  { href: '/bildschutz/', label: 'Bildschutz' },
+  { href: '/ueber-uns/', label: 'Über uns' }
+];
+
+const isActive = (href: string) => path === href || path.startsWith(href);
+---
+
+<header class="header">
+  <div class="container header__inner">
+    <a class="brand" href="/" aria-label={`${SITE.name} – Startseite`}>
+      <span class="brand__mark"><Icon name="image" size={17} /></span>
+      <span>{brandName}{brandTld && <span class="brand__tld">.{brandTld}</span>}</span>
+    </a>
+
+    <nav class="nav" aria-label="Hauptnavigation">
+      {links.map(link => (
+        <a href={link.href} aria-current={isActive(link.href) ? 'page' : undefined}>{link.label}</a>
+      ))}
+    </nav>
+
+    <a class="btn btn--primary header__cta" href="/werkzeuge/">Alle Werkzeuge</a>
+  </div>
+
+  <details class="mobile-nav">
+    <summary><Icon name="menu" size={18} /> Menü</summary>
+    <div class="mobile-nav__list">
+      <a href="/werkzeuge/">Alle Werkzeuge</a>
+      <a href="/bild-zuschneiden/">Zuschneiden</a>
+      <a href="/bild-komprimieren/">Komprimieren</a>
+      <a href="/bildgroesse-aendern/">Größe ändern</a>
+      <a href="/bild-konvertieren/">Konvertieren</a>
+      <a href="/wasserzeichen-hinzufuegen/">Wasserzeichen</a>
+      <a href="/bildschutz/">Bildschutz</a>
+      <a href="/ueber-uns/">Über uns</a>
+    </div>
+  </details>
+</header>
+
+<style>
+  .header__cta {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.88rem;
+    border-radius: 10px;
+  }
+
+  .mobile-nav summary {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+</style>

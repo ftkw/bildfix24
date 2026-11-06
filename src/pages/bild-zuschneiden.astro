@@ -1,0 +1,143 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import ToolShell from '../components/ToolShell.astro';
+import Icon from '../components/Icon.astro';
+import { getTool } from '../data/tools';
+import { breadcrumbSchema, faqSchema, softwareSchema, type Crumb, type FaqItem } from '../lib/seo';
+
+const tool = getTool('crop');
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bild zuschneiden', href: '/bild-zuschneiden/' }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Wie schneide ich ein Bild online zu?',
+    a: 'Wähle eine Datei aus oder ziehe sie in das Feld. Danach ziehst du den Rahmen über den gewünschten Bereich und passt ihn an den Ecken an. Mit einem Klick auf „Zuschneiden“ entsteht das Ergebnis, das du direkt herunterladen kannst.'
+  },
+  {
+    q: 'Verliert das Bild beim Zuschneiden an Qualität?',
+    a: 'Nein. Es werden keine Pixel neu berechnet oder hochskaliert. Der gewählte Ausschnitt wird in Originalauflösung übernommen. Nur wenn du zusätzlich ein anderes Ausgabeformat mit geringerer Qualität wählst, ändert sich die Dateigröße.'
+  },
+  {
+    q: 'Welche Seitenverhältnisse kann ich wählen?',
+    a: 'Frei, 1:1, 4:3, 16:9, 3:4 und 9:16. Die festen Verhältnisse sind praktisch für Instagram, Präsentationen oder Druckformate. Bei „Frei“ bestimmst du Breite und Höhe unabhängig.'
+  },
+  {
+    q: 'Wird mein Bild auf einen Server hochgeladen?',
+    a: 'Nein. Der Zuschnitt läuft vollständig in deinem Browser über die Canvas-API. Die Datei verlässt dein Gerät nicht – es gibt keinen Upload und keine Speicherung.'
+  },
+  {
+    q: 'Kann ich den Zuschnitt korrigieren?',
+    a: 'Ja. Du kannst den Rahmen beliebig oft verschieben und neu ziehen, bevor du auf „Zuschneiden“ klickst. Mit „Anderes Bild“ startest du komplett neu.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'Bild zuschneiden',
+    description:
+      'Kostenloses Werkzeug zum Zuschneiden von Bildern im Browser – mit frei wählbarem Seitenverhältnis, ohne Upload.',
+    path: '/bild-zuschneiden/'
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="Bild zuschneiden – kostenlos & ohne Upload"
+  description="Bilder online zuschneiden mit frei wählbarem Seitenverhältnis. Kostenlos, ohne Anmeldung und ohne Upload – direkt im Browser."
+  path="/bild-zuschneiden/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="Bild zuschneiden"
+    lead="Schneide Fotos präzise zu – mit festen Seitenverhältnissen für Social Media oder frei gewähltem Ausschnitt. Die Bearbeitung läuft vollständig in deinem Browser."
+    toolKey="crop"
+    crumbs={crumbs}
+    faq={faq}
+    steps={[
+      { title: 'Bild auswählen', text: 'Ziehe eine JPG-, PNG- oder WebP-Datei in das Feld oder klicke darauf, um eine Datei zu wählen.' },
+      { title: 'Ausschnitt festlegen', text: 'Ziehe den Rahmen auf den gewünschten Bereich. An den Ecken kannst du ihn vergrößern oder verkleinern, mit den Pfeiltasten feinjustieren.' },
+      { title: 'Zuschneiden und laden', text: 'Klicke auf „Zuschneiden“ und lade das Ergebnis in Originalauflösung herunter.' }
+    ]}
+  >
+    <div slot="tool" class="tool-panel">
+      <div class="dropzone" id="crop-zone">
+        <span class="dropzone__icon"><Icon name="upload" /></span>
+        <span class="dropzone__title">Bild hierher ziehen oder klicken</span>
+        <span class="dropzone__hint">JPG, PNG oder WebP · max. 30 MB</span>
+        <input type="file" id="crop-input" accept="image/png,image/jpeg,image/webp" aria-label="Bilddatei auswählen" />
+      </div>
+
+      <div id="crop-workspace" hidden>
+        <div class="preview">
+          <div class="preview__stage" id="crop-stage">
+            <img id="crop-img" alt="Vorschau des zugeschnittenen Bildes" />
+            <div class="crop-layer" id="crop-layer">
+              <div class="crop-box" id="crop-box" role="group" aria-label="Zuschnittrahmen">
+                <span class="crop-handle" data-corner="nw"></span>
+                <span class="crop-handle" data-corner="ne"></span>
+                <span class="crop-handle" data-corner="sw"></span>
+                <span class="crop-handle" data-corner="se"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="field">
+            <span class="field__label" id="crop-ratio-label">Seitenverhältnis</span>
+            <div class="segmented" id="crop-ratio" role="group" aria-labelledby="crop-ratio-label">
+              <button type="button" data-ratio="free" aria-pressed="true">Frei</button>
+              <button type="button" data-ratio="1" aria-pressed="false">1:1</button>
+              <button type="button" data-ratio="1.3333333333" aria-pressed="false">4:3</button>
+              <button type="button" data-ratio="1.7777777778" aria-pressed="false">16:9</button>
+              <button type="button" data-ratio="0.75" aria-pressed="false">3:4</button>
+              <button type="button" data-ratio="0.5625" aria-pressed="false">9:16</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3" id="crop-actions">
+          <button class="btn btn--primary" id="crop-apply" type="button">Zuschneiden</button>
+          <a class="btn btn--download" id="crop-download" download hidden><Icon name="download" />Herunterladen</a>
+          <button class="btn btn--ghost" id="crop-reset" type="button">Anderes Bild</button>
+        </div>
+
+        <div class="result__stats mt-3" id="crop-stats" hidden></div>
+        <div class="notice mt-2" id="crop-notice" hidden role="status"></div>
+      </div>
+    </div>
+
+    <div class="prose mt-4">
+      <h2>Wann sich Zuschneiden lohnt</h2>
+      <p>
+        Ein guter Zuschnitt lenkt den Blick auf das Wesentliche. Für Produktfotos, Porträts und
+        Vorschaubilder ist er oft wirkungsvoller als jede Filteranpassung. Gleichzeitig reduzierst du
+        die Pixelmenge – ein kleinerer Ausschnitt bedeutet automatisch eine kleinere Datei.
+      </p>
+      <h3>Typische Formate</h3>
+      <ul>
+        <li><strong>1:1</strong> – Feed-Beiträge, Profilbilder, Produktkacheln</li>
+        <li><strong>4:3</strong> – klassische Fotografie, Präsentationen</li>
+        <li><strong>16:9</strong> – Video-Vorschaubilder, Bildschirmpräsentationen</li>
+        <li><strong>9:16</strong> – Stories, Reels, vertikale Displays</li>
+      </ul>
+      <p>
+        Wenn du unsicher bist, schneide zunächst großzügig zu und arbeite mit dem
+        <a href="/bildgroesse-aendern/">Größen-Werkzeug</a> weiter. Für Webseiten empfiehlt es sich,
+        anschließend die Datei mit dem <a href="/bild-komprimieren/">Kompressions-Werkzeug</a> zu
+        verkleinern.
+      </p>
+    </div>
+  </ToolShell>
+
+  <script>
+    import '../scripts/tools/crop';
+  </script>
+</BaseLayout>

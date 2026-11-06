@@ -1,0 +1,91 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import type { Crumb } from '../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Impressum', href: '/impressum/' }
+];
+---
+
+<BaseLayout
+  title="Impressum"
+  description="Impressum und Anbieterkennzeichnung von bildfix24 gemäß § 5 DDG."
+  path="/impressum/"
+  noindex={false}
+>
+  <section class="section" style="padding-top: 2.2rem;">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+      <div class="prose">
+        <h1>Impressum</h1>
+
+        <div class="notice" role="note">
+          <div>
+            <strong>Platzhalter:</strong> Die folgenden Angaben sind Musterdaten und müssen vor der
+            Veröffentlichung durch die tatsächlichen Betreiberdaten ersetzt werden.
+          </div>
+        </div>
+
+        <h2>Angaben gemäß § 5 DDG</h2>
+        <p>
+          Max Mustermann<br />
+          Musterstraße 1<br />
+          12345 Musterstadt<br />
+          Deutschland
+        </p>
+
+        <h2>Kontakt</h2>
+        <p>
+          E-Mail: kontakt@bildfix24.de<br />
+          Telefon: +49 123 456789
+        </p>
+
+        <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+        <p>
+          Max Mustermann<br />
+          Musterstraße 1<br />
+          12345 Musterstadt
+        </p>
+
+        <h2>Verbraucherstreitbeilegung</h2>
+        <p>
+          Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer
+          Verbraucherschlichtungsstelle teilzunehmen.
+        </p>
+
+        <h2>Haftung für Inhalte</h2>
+        <p>
+          Die Inhalte dieser Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit,
+          Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen. Als
+          Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach den
+          allgemeinen Gesetzen verantwortlich.
+        </p>
+
+        <h2>Haftung für Links</h2>
+        <p>
+          Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen
+          Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen.
+          Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der
+          Seiten verantwortlich.
+        </p>
+
+        <h2>Urheberrecht</h2>
+        <p>
+          Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem
+          deutschen Urheberrecht. Beiträge Dritter sind als solche gekennzeichnet. Die Vervielfältigung,
+          Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes
+          bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
+        </p>
+
+        <h2>Hinweis zu eingesetzten Komponenten</h2>
+        <p>
+          Diese Website verwendet kostenlose Design-Komponenten von React Bits
+          (MIT + Commons Clause, Copyright © 2026 David Haz). Details siehe
+          <a href="https://github.com/DavidHDev/react-bits/blob/main/LICENSE.md" rel="noopener nofollow" target="_blank">Lizenztext</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

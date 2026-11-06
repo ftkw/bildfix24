@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+import ToolShell from '../../components/ToolShell.astro';
+import ConvertTool from '../../components/tools/ConvertTool.astro';
+import { breadcrumbSchema, faqSchema, softwareSchema, type Crumb, type FaqItem } from '../../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bild konvertieren', href: '/bild-konvertieren/' },
+  { name: 'JPG in PNG', href: '/bild-konvertieren/jpg-in-png/' }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Warum sollte ich JPG in PNG umwandeln?',
+    a: 'PNG ist verlustfrei. Wenn du ein Bild mehrfach bearbeiten oder Text und Grafiken scharf halten willst, ist PNG die bessere Wahl. Beim erneuten Speichern entstehen keine weiteren Kompressionsartefakte.'
+  },
+  {
+    q: 'Wird ein JPG durch die Umwandlung in PNG schärfer?',
+    a: 'Nein. Bereits verlorene Details kommen nicht zurück. Die Umwandlung verhindert lediglich weiteren Qualitätsverlust bei der nächsten Bearbeitung.'
+  },
+  {
+    q: 'Wird die PNG-Datei größer?',
+    a: 'Bei Fotos in der Regel ja, weil PNG verlustfrei speichert. Für Grafiken mit wenigen Farben kann PNG dagegen kleiner sein. Die Dateigröße wird dir vor dem Download angezeigt.'
+  },
+  {
+    q: 'Bleibt die Bildauflösung erhalten?',
+    a: 'Ja. Es werden keine Pixel verändert oder skaliert – nur das Speicherformat wechselt.'
+  },
+  {
+    q: 'Werden meine Bilder hochgeladen?',
+    a: 'Nein. Die Umwandlung läuft lokal in deinem Browser.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'JPG in PNG umwandeln',
+    description: 'JPG-Bilder kostenlos und verlustfrei in PNG umwandeln – ohne Upload, direkt im Browser.',
+    path: '/bild-konvertieren/jpg-in-png/'
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="JPG in PNG umwandeln – kostenlos"
+  description="JPG kostenlos in PNG umwandeln: verlustfrei, ohne Upload und ohne Anmeldung. Direkt im Browser, inklusive Transparenz-Unterstützung."
+  path="/bild-konvertieren/jpg-in-png/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="JPG in PNG umwandeln"
+    lead="Speichere dein JPG als PNG – verlustfrei und ohne Upload. Praktisch, wenn du das Bild anschließend weiterbearbeiten willst."
+    toolKey="convert"
+    crumbs={crumbs}
+    faq={faq}
+    steps={[
+      { title: 'JPG auswählen', text: 'Ziehe die JPG-Datei in das Feld oder klicke darauf.' },
+      { title: 'PNG als Zielformat', text: 'PNG ist bereits vorausgewählt. Du musst nichts weiter einstellen.' },
+      { title: 'Umwandeln und laden', text: 'Klicke auf „Umwandeln und herunterladen“ – die PNG-Datei wird direkt gespeichert.' }
+    ]}
+  >
+    <div slot="tool">
+      <ConvertTool defaultFormat="image/png" />
+    </div>
+
+    <div class="prose mt-4">
+      <h2>Wann JPG zu PNG konvertieren sinnvoll ist</h2>
+      <p>
+        JPG ist ein verlustbehaftetes Format: Bei jedem Speichern gehen Informationen verloren. Wer
+        ein Bild mehrfach bearbeitet, sollte deshalb früh auf PNG wechseln. Auch für Screenshots mit
+        Schrift oder für Grafiken mit klaren Kanten ist PNG die sauberere Wahl.
+      </p>
+      <h3>Gut zu wissen</h3>
+      <ul>
+        <li>Die Umwandlung stellt keine Details wieder her, die JPG bereits verworfen hat.</li>
+        <li>PNG unterstützt Transparenz – ein späteres Freistellen wird dadurch einfacher.</li>
+        <li>Für die reine Web-Auslieferung ist WebP oft die kleinere Alternative.</li>
+      </ul>
+      <p>
+        Für den umgekehrten Weg nutze <a href="/bild-konvertieren/png-in-jpg/">PNG in JPG umwandeln</a>.
+      </p>
+    </div>
+  </ToolShell>
+</BaseLayout>

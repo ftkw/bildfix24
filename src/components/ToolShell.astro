@@ -1,0 +1,101 @@
+---
+import Breadcrumbs from './Breadcrumbs.astro';
+import Faq from './Faq.astro';
+import Icon from './Icon.astro';
+import AdSlot from './AdSlot.astro';
+import ToolCard from './ToolCard.astro';
+import { tools, type ToolKey } from '../data/tools';
+import type { Crumb, FaqItem } from '../lib/seo';
+
+interface Props {
+  h1: string;
+  lead: string;
+  toolKey: ToolKey;
+  crumbs: Crumb[];
+  faq: FaqItem[];
+  steps: { title: string; text: string }[];
+}
+
+const { h1, lead, toolKey, crumbs, faq, steps } = Astro.props;
+const related = tools.filter(tool => tool.key !== toolKey).slice(0, 3);
+---
+
+<section class="section" style="padding-top: 2.2rem; padding-bottom: 1rem;">
+  <div class="container">
+    <Breadcrumbs items={crumbs} />
+    <h1>{h1}</h1>
+    <p class="lead">{lead}</p>
+
+    <div class="tool-wrap">
+      <slot name="tool" />
+      <p class="privacy-note">
+        <Icon name="lock" size={16} />
+        Dein Bild verlässt dein Gerät nicht – die Verarbeitung findet vollständig im Browser statt.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section section--soft">
+  <div class="container">
+    <h2>So funktioniert es</h2>
+    <ol class="steps">
+      {steps.map(step => (
+        <li class="step">
+          <div>
+            <h3>{step.title}</h3>
+            <p>{step.text}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="stack stack--lg">
+      <div class="feature">
+        <div class="feature__item">
+          <Icon name="shield" />
+          <h3>Kein Upload</h3>
+          <p>Alle Berechnungen laufen lokal per Canvas. Es werden keine Bilddaten an einen Server gesendet.</p>
+        </div>
+        <div class="feature__item">
+          <Icon name="euro" />
+          <h3>Kostenlos &amp; ohne Konto</h3>
+          <p>Keine Registrierung, keine Begrenzung der Anzahl. Einfach Datei wählen und loslegen.</p>
+        </div>
+        <div class="feature__item">
+          <Icon name="bolt" />
+          <h3>Schnell &amp; sauber</h3>
+          <p>Keine Werbe-Overlays im Werkzeug, keine Wasserzeichen von uns, keine versteckten Limits.</p>
+        </div>
+      </div>
+
+      <Faq items={faq} />
+
+      <slot />
+
+      <AdSlot />
+
+      <div class="banner">
+        <h2>Weitere Bildwerkzeuge</h2>
+        <p>Alles, was du für Bilder im Alltag brauchst – ohne Upload und ohne Anmeldung.</p>
+        <a class="btn btn--primary" href="/werkzeuge/">Alle Werkzeuge ansehen</a>
+      </div>
+
+      <div>
+        <h2>Passende Werkzeuge</h2>
+        <div class="grid grid--3 mt-2">
+          {related.map(tool => <ToolCard tool={tool} plain />)}
+        </div>
+      </div>
+
+      <p class="small muted">
+        Zuletzt aktualisiert: November 2026 · bildfix24 ist ein unabhängiges, werbefinanziertes
+        Angebot. Die Nutzung erfolgt ohne Gewähr auf ein bestimmtes Ergebnis.
+      </p>
+    </div>
+  </div>
+</section>
