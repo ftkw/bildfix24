@@ -8,7 +8,7 @@ import sitemap from '@astrojs/sitemap';
 // (workers.dev -> eigene Domain) kein Suchen-und-Ersetzen wird:
 //   PUBLIC_SITE_URL=https://bildfix24.de npm run build
 // Ohne gesetzte Variable gilt die aktuelle Auslieferungsadresse.
-const SITE_URL = process.env.PUBLIC_SITE_URL ?? 'https://bildfix24.ftkw117.workers.dev';
+const SITE_URL = process.env.PUBLIC_SITE_URL ?? 'https://bildfix24.pages.dev';
 
 export default defineConfig({
   site: SITE_URL,

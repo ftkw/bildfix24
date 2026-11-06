@@ -1,4 +1,8 @@
-// Deploy-Konfiguration für Cloudflare Workers (Static Assets).
+// Beispiel-Konfiguration für einen spaeteren Wechsel zu Cloudflare Workers.
+// AKTUELL NICHT AKTIV: Das Projekt laeuft als Pages-Projekt. Pages sucht beim
+// Build nach wrangler.json* und wuerde diese Datei mit einer Warnung ueberspringen,
+// deshalb liegt sie als *.example.jsonc im Repo. Zum Reaktivieren nach
+// wrangler.jsonc umbenennen.
 //
 // Wird nur benutzt, wenn per `npx wrangler deploy` oder über eine Git-Integration
 // gebaut wird. Der Dashboard-Upload ("Upload assets") liest diese Datei NICHT –
