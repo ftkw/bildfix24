@@ -6,3 +6,9 @@ shots/
 *.log
 .env
 .env.*
+
+# Lockfile wird nicht committet: npm auf macOS erzeugt ein Lock mit gemischten
+# @rolldown/*-Platform-Bindings (1.2.16/1.3.0). "npm ci" scheitert damit auf dem
+# Linux-Buildhost. Ohne Lock nutzt Cloudflare Pages "npm install" und loest die
+# passenden Linux-Bindings selbst auf.
+package-lock.json
