@@ -21,7 +21,7 @@ export interface Tool {
 export const SITE = {
   name: 'bildfix24',
   domain: null as string | null,
-  url: 'https://bildfix24.pages.dev',
+  url: 'https://bildfix24.ftkw117.workers.dev',
   email: 'kontakt@bildfix24.de',
   tagline: 'Bildwerkzeuge direkt im Browser',
   description:

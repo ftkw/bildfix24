@@ -1,0 +1,21 @@
+// Deploy-Konfiguration für Cloudflare Workers (Static Assets).
+//
+// Wird nur benutzt, wenn per `npx wrangler deploy` oder über eine Git-Integration
+// gebaut wird. Der Dashboard-Upload ("Upload assets") liest diese Datei NICHT –
+// dort werden die Einstellungen im Dialog gesetzt.
+//
+// `name` muss exakt dem Worker-Namen im Dashboard entsprechen, sonst legt
+// `wrangler deploy` einen zweiten Worker an und die URL ändert sich.
+{
+  "name": "bildfix24",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    // Astro schreibt /pfad/index.html. "auto-trailing-slash" liefert die Seite
+    // sowohl mit als auch ohne Slash aus, ohne 307-Umleitung (kein doppelter Hop).
+    "html_handling": "auto-trailing-slash",
+    // Ohne diese Zeile bekommt ein unbekannter Pfad eine nackte 404-Antwort statt
+    // der gestalteten src/pages/404.astro.
+    "not_found_handling": "404-page"
+  }
+}

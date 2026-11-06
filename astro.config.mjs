@@ -6,7 +6,7 @@ import sitemap from '@astrojs/sitemap';
 // `site` ist die Basis für canonical, og:url und die sitemap. Muss identisch mit
 // SITE.url in src/data/tools.ts sein – bei einem Domainwechsel beide Stellen ändern.
 export default defineConfig({
-  site: 'https://bildfix24.pages.dev',
+  site: 'https://bildfix24.ftkw117.workers.dev',
   integrations: [react(), sitemap()],
   compressHTML: true,
   build: {
