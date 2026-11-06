@@ -42,7 +42,7 @@ const notice = $('#resize-notice');
 
 const progress = createProgress(actionRow, {
   label: 'Neue Größe wird berechnet …',
-  doneLabel: 'Fertig – Ergebnis bereit'
+  doneLabel: 'Fertig'
 });
 
 let image: LoadedImage | null = null;
@@ -171,7 +171,7 @@ async function process(): Promise<void> {
         <div class="stat ${width < source.width ? 'stat--good' : ''}"><span class="stat__label">Skalierung</span><span class="stat__value">${Math.round((width / source.width) * 100)} %</span></div>
       `;
     }
-    showNotice(notice, `Ergebnis bereit – ${width} × ${height} px, ${formatBytes(blob.size)}. Jetzt herunterladen.`, 'ok');
+    showNotice(notice, `Ergebnis bereit – ${width} × ${height} px, ${formatBytes(blob.size)}. Du kannst das Bild jetzt herunterladen.`, 'ok');
   } catch (error) {
     showNotice(notice, (error as Error).message, 'error');
   } finally {

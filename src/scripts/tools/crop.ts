@@ -34,7 +34,7 @@ const stats = $('#crop-stats');
 
 const progress = createProgress(actionRow, {
   label: 'Ausschnitt wird zugeschnitten …',
-  doneLabel: 'Fertig – Ergebnis bereit'
+  doneLabel: 'Fertig'
 });
 
 let image: LoadedImage | null = null;

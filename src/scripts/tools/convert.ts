@@ -35,7 +35,7 @@ const notice = $('#convert-notice');
 
 const progress = createProgress(actionRow, {
   label: 'Bild wird umgewandelt …',
-  doneLabel: 'Fertig – Ergebnis bereit'
+  doneLabel: 'Fertig'
 });
 
 let image: LoadedImage | null = null;
@@ -115,19 +115,21 @@ applyBtn.addEventListener('click', async () => {
         <div class="stat"><span class="stat__label">Dateigröße</span><span class="stat__value">${formatBytes(blob.size)}</span></div>
       `;
     }
-    const hint =
+    // Einzelne Sätze zusammenfügen: keine doppelten Leerzeichen / Satzzeichen,
+    // egal ob Hinweise vorhanden sind oder nicht.
+    const message = [
+      `Ergebnis bereit: ${extFor(format).toUpperCase()} – ${formatBytes(blob.size)}.`,
       format === 'image/jpeg' && source.type === 'image/png'
-        ? ' Transparente Bereiche wurden weiß gefüllt.'
-        : '';
-    const same =
+        ? 'Transparente Bereiche wurden weiß gefüllt.'
+        : '',
       format === source.type
-        ? ' Das Bild lag bereits in diesem Format vor – die Datei wurde neu geschrieben.'
-        : '';
-    showNotice(
-      notice,
-      `Ergebnis bereit: ${extFor(format).toUpperCase()} – ${formatBytes(blob.size)}.${hint}${same} Jetzt herunterladen.`,
-      'ok'
-    );
+        ? 'Das Bild lag bereits in diesem Format vor – die Datei wurde neu geschrieben.'
+        : '',
+      'Du kannst das Bild jetzt herunterladen.'
+    ]
+      .filter(Boolean)
+      .join(' ');
+    showNotice(notice, message, 'ok');
   } catch (error) {
     showNotice(notice, (error as Error).message, 'error');
   } finally {

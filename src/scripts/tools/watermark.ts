@@ -44,7 +44,7 @@ const stats = $('#wm-stats');
 
 const progress = createProgress(actionRow, {
   label: 'Wasserzeichen wird gesetzt …',
-  doneLabel: 'Fertig – Ergebnis bereit'
+  doneLabel: 'Fertig'
 });
 
 const FONT = 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
@@ -256,7 +256,7 @@ applyBtn.addEventListener('click', async () => {
         <div class="stat"><span class="stat__label">Motiv</span><span class="stat__value">${logo ? 'Logo' : 'Text'}</span></div>
       `;
     }
-    showNotice(notice, `Wasserzeichen gesetzt – ${formatBytes(blob.blob.size)}. Jetzt herunterladen.`, 'ok');
+    showNotice(notice, `Wasserzeichen gesetzt – ${formatBytes(blob.blob.size)}. Du kannst das Bild jetzt herunterladen.`, 'ok');
   } catch (error) {
     showNotice(notice, (error as Error).message, 'error');
   } finally {

@@ -35,7 +35,7 @@ const qualityRow = $('#compress-quality-row');
 
 const progress = createProgress(actionRow, {
   label: 'Bild wird komprimiert …',
-  doneLabel: 'Fertig – Ergebnis bereit'
+  doneLabel: 'Fertig'
 });
 
 let image: LoadedImage | null = null;
@@ -98,7 +98,7 @@ async function process(): Promise<void> {
     attachDownload(downloadLink, blob, `${baseName(image.name)}-komprimiert.${extFor(format)}`);
     showNotice(
       notice,
-      `Ergebnis bereit – ${formatBytes(blob.size)} (${extFor(format).toUpperCase()}). Jetzt herunterladen.`,
+      `Ergebnis bereit – ${formatBytes(blob.size)} (${extFor(format).toUpperCase()}). Du kannst das Bild jetzt herunterladen.`,
       'ok'
     );
   } catch (error) {
