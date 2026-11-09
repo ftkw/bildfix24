@@ -1,21 +1,15 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import sitemap from '@astrojs/sitemap';
-import { execSync } from 'node:child_process';
 
-// lastmod 只有在"内容真的改过"时才有参考价值，长期不变的假日期会被 Google 忽略。
-// 这里取 src/pages 与 src/data 的最后一次提交日期；在无 git 的构建环境
-// （例如 Dashboard 的 Upload assets）回退到内容定稿日，改正文时手动更新这里。
-const CONTENT_FALLBACK_DATE = '2026-11-06';
-function contentUpdated() {
-  try {
-    const d = execSync('git log -1 --format=%cs -- src/pages src/data', { encoding: 'utf8' }).trim();
-    if (d) return d;
-  } catch {
-    /* 无 git，用回退值 */
-  }
-  return CONTENT_FALLBACK_DATE;
-}
+// lastmod 只有在"内容真的改过"时才有参考价值，长期不变或每次构建都刷新的假日期
+// 会被 Google 直接忽略。这里刻意用固定常量而不是构建时间：
+//   - 构建时间 → 每次部署都变，等于宣称"全站天天更新"，是负面信号；
+//   - git log -- src/pages → Cloudflare 构建是浅克隆，拿不到真实历史，
+//     会退化成 HEAD 日期（实测过，得到构建当天的日期）；
+//   - 文件 mtime → CI checkout 时间，同样不准。
+// 结论：手动维护。改动 src/pages 或 src/data 里的正文时，同步更新这个日期。
+const CONTENT_UPDATED = '2026-11-06';
 
 // https://astro.build/config
 // `site` ist die Basis für canonical, og:url und die sitemap.
@@ -31,7 +25,7 @@ export default defineConfig({
     react(),
     sitemap({
       serialize: (item) => {
-        item.lastmod = contentUpdated();
+        item.lastmod = CONTENT_UPDATED;
         return item;
       }
     })
