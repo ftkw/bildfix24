@@ -190,6 +190,25 @@ hr {
   border-radius: 999px;
 }
 
+/* Für ganze Sätze im Eyebrow: Großbuchstaben würden einen Satz zur Parole machen. */
+.eyebrow--plain {
+  text-transform: none;
+  letter-spacing: 0.005em;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Zeile über einer H1, die das Suchwort trägt, während die H1 die Marke spricht. */
+.kicker {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand-ink);
+  margin-bottom: 0.55rem;
+}
+
 .lead {
   font-size: 1.12rem;
   color: var(--ink-soft);

@@ -10,19 +10,22 @@ import type { Crumb, FaqItem } from '../lib/seo';
 interface Props {
   h1: string;
   lead: string;
+  /** Markenzeile über der H1. Die H1 bleibt dem Suchwort vorbehalten. */
+  kicker?: string;
   toolKey: ToolKey;
   crumbs: Crumb[];
   faq: FaqItem[];
   steps: { title: string; text: string }[];
 }
 
-const { h1, lead, toolKey, crumbs, faq, steps } = Astro.props;
+const { h1, lead, kicker, toolKey, crumbs, faq, steps } = Astro.props;
 const related = tools.filter(tool => tool.key !== toolKey).slice(0, 3);
 ---
 
 <section class="section" style="padding-top: 2.2rem; padding-bottom: 1rem;">
   <div class="container">
     <Breadcrumbs items={crumbs} />
+    {kicker && <p class="kicker">{kicker}</p>}
     <h1>{h1}</h1>
     <p class="lead">{lead}</p>
 
