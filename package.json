@@ -5,7 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/flat-sitemap.mjs",
     "preview": "astro preview",
     "serve": "node scripts/serve.mjs",
     "test:e2e": "node scripts/e2e.mjs",
