@@ -1,0 +1,172 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+import ToolShell from '../../components/ToolShell.astro';
+import ConvertTool from '../../components/tools/ConvertTool.astro';
+import {
+  breadcrumbSchema,
+  faqSchema,
+  howToSchema,
+  softwareSchema,
+  type Crumb,
+  type FaqItem
+} from '../../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bild konvertieren', href: '/bild-konvertieren/' },
+  { name: 'WebP in PNG', href: '/bild-konvertieren/webp-in-png/' }
+];
+
+const steps = [
+  {
+    title: 'WebP-Datei auswählen',
+    text: 'Ziehe die Datei in das Feld. Die Vorschau zeigt dir, ob das Bild transparente Bereiche enthält.'
+  },
+  {
+    title: 'PNG als Zielformat',
+    text: 'PNG ist vorausgewählt und speichert verlustfrei. Ein Qualitätsregler ist deshalb nicht nötig.'
+  },
+  {
+    title: 'Umwandeln und weiterarbeiten',
+    text: 'Lade das PNG herunter und öffne es im Bildbearbeitungsprogramm deiner Wahl. Die Transparenz bleibt dabei erhalten.'
+  }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Warum sollte ich WebP in PNG umwandeln?',
+    a: 'PNG ist verlustfrei und unterstützt Transparenz. Wenn du das Bild weiterbearbeiten, freistellen oder in einem Programm öffnen willst, das WebP nicht kennt, ist PNG der verlustfreie Weg.'
+  },
+  {
+    q: 'Wird das Bild dadurch besser?',
+    a: 'Nein. Was eine verlustbehaftete WebP-Datei bereits verworfen hat, kommt nicht zurück. PNG verhindert lediglich, dass bei den nächsten Bearbeitungsschritten weitere Qualität verloren geht.'
+  },
+  {
+    q: 'Warum wird die Datei so viel größer?',
+    a: 'PNG komprimiert verlustfrei und arbeitet ohne die Annahmen, mit denen WebP und JPG Größe sparen. Bei Fotos ist ein Vielfaches der ursprünglichen Dateigröße normal. Für die Auslieferung im Web ist PNG deshalb meist die falsche Wahl.'
+  },
+  {
+    q: 'Bleibt die Transparenz wirklich erhalten?',
+    a: 'Ja. PNG unterstützt einen Alphakanal, durchsichtige und halbtransparente Bereiche bleiben also erhalten – anders als bei einer Umwandlung in JPG, wo sie weiß gefüllt werden.'
+  },
+  {
+    q: 'Kann ich das PNG anschließend verkleinern?',
+    a: 'Ja, mit dem Werkzeug „Bild komprimieren“. Achte darauf, dass beim Verkleinern die Transparenz erhalten bleibt und das Bild nicht in JPG umgewandelt wird.'
+  },
+  {
+    q: 'Werden meine Bilder hochgeladen?',
+    a: 'Nein. Die Umwandlung läuft lokal im Browser, die Bilddaten verlassen dein Gerät nicht.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'WebP in PNG umwandeln',
+    description: 'WebP-Bilder kostenlos und verlustfrei in PNG umwandeln, inklusive Transparenz.',
+    path: '/bild-konvertieren/webp-in-png/'
+  }),
+  howToSchema({
+    name: 'WebP in PNG umwandeln',
+    description: 'Eine WebP-Datei verlustfrei in PNG umwandeln, um Transparenz zu erhalten und weiterzuarbeiten.',
+    path: '/bild-konvertieren/webp-in-png/',
+    steps
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="WebP in PNG umwandeln – verlustfrei"
+  description="WebP in PNG umwandeln: verlustfrei, mit erhaltener Transparenz und ohne Upload. Direkt im Browser, ohne Anmeldung."
+  path="/bild-konvertieren/webp-in-png/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="WebP in PNG umwandeln"
+    lead="PNG speichert verlustfrei und behält transparente Bereiche. Wandle deine WebP-Datei hier um, wenn du weiterarbeiten oder sie in einem Programm öffnen willst, das WebP nicht liest."
+    toolKey="convert"
+    crumbs={crumbs}
+    faq={faq}
+    steps={steps}
+  >
+    <div slot="tool">
+      <ConvertTool defaultFormat="image/png" />
+    </div>
+
+    <div class="prose mt-4">
+      <h2>Der Unterschied liegt im Speicherverfahren</h2>
+      <p>
+        WebP kann sowohl verlustbehaftet als auch verlustfrei speichern – welche Variante eine Datei
+        nutzt, sieht man ihr von außen nicht an. PNG speichert immer verlustfrei. Beim Umwandeln
+        werden die vorhandenen Pixel unverändert übernommen; hinzu kommt lediglich ein anderes
+        Dateiformat.
+      </p>
+
+      <h2>Was du vorher wissen solltest</h2>
+      <div style="overflow-x: auto;">
+        <table>
+        <thead>
+          <tr>
+            <th>Eigenschaft</th>
+            <th>WebP</th>
+            <th>PNG</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Transparenz</td>
+            <td>möglich</td>
+            <td>möglich, bleibt beim Umwandeln erhalten</td>
+          </tr>
+          <tr>
+            <td>Speicherung</td>
+            <td>verlustbehaftet oder verlustfrei</td>
+            <td>immer verlustfrei</td>
+          </tr>
+          <tr>
+            <td>Dateigröße</td>
+            <td>klein</td>
+            <td>bei Fotos deutlich größer</td>
+          </tr>
+          <tr>
+            <td>Weiterbearbeitung</td>
+            <td>nur in Programmen mit WebP-Unterstützung</td>
+            <td>in nahezu jedem Bildprogramm</td>
+          </tr>
+          <tr>
+            <td>Sinnvoll für</td>
+            <td>Auslieferung im Web</td>
+            <td>Bearbeitung, Freistellen, Druckvorstufe</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h3>Typische Situationen</h3>
+      <ul>
+        <li>
+          <strong>Freistellen:</strong> Ein Motiv mit durchsichtigem Hintergrund lässt sich in PNG
+          weiterbearbeiten, ohne dass die Kante beim nächsten Speichern ausfranst.
+        </li>
+        <li>
+          <strong>Programme ohne WebP-Unterstützung:</strong> Ältere Bildbearbeitungen und
+          Layoutprogramme öffnen WebP nicht. PNG löst das ohne zusätzliche Software.
+        </li>
+        <li>
+          <strong>Mehrere Bearbeitungsschritte:</strong> Wer ein Bild zehnmal speichert, sollte
+          spätestens nach dem zweiten Schritt auf ein verlustfreies Format wechseln.
+        </li>
+      </ul>
+
+      <p>
+        Für die Auslieferung im Web ist die Umwandlung dagegen selten sinnvoll: Dort ist WebP die
+        kleinere Wahl. Wenn eine WebP-Datei nur wegen eines Portals scheitert, das JPG verlangt, ist
+        <a href="/bild-konvertieren/webp-in-jpg/">WebP in JPG</a> der passende Weg. Für den
+        umgekehrten Fall gibt es <a href="/bild-konvertieren/jpg-in-webp/">JPG in WebP</a>, und der
+        Überblick über alle Richtungen steht unter <a href="/bild-konvertieren/">Bild konvertieren</a>.
+      </p>
+    </div>
+  </ToolShell>
+</BaseLayout>

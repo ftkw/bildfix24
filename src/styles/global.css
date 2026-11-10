@@ -89,6 +89,10 @@ h4 {
   letter-spacing: -0.022em;
   font-weight: 700;
   text-wrap: balance;
+  /* Lange Komposita wie „Datenschutzerklärung" sprengen sonst sehr schmale
+     Viewports (320 px). Silbentrennung greift, weil <html lang="de-DE"> gesetzt ist. */
+  hyphens: auto;
+  overflow-wrap: break-word;
 }
 
 h1 {
@@ -1253,6 +1257,20 @@ input[type="range"] {
   color: var(--muted);
 }
 
+/* Auf schmalen Displays passen vier Spalten nur mit kleinerer Schrift und
+   engerem Innenabstand in den Container – sonst muss man für zwei Cent
+   waagerecht scrollen, obwohl der Inhalt kurz ist. */
+@media (max-width: 520px) {
+  .prose table {
+    font-size: 0.84rem;
+  }
+
+  .prose th,
+  .prose td {
+    padding: 0.5rem 0.45rem;
+  }
+}
+
 /* --------------------------------------------------------------------------
    FAQ
    -------------------------------------------------------------------------- */
@@ -1592,6 +1610,17 @@ input[type="range"] {
 .stack {
   display: grid;
   gap: 1rem;
+}
+
+/*
+ * Grid-Kinder haben standardmäßig `min-width: auto` und richten sich damit nach
+ * ihrer min-content-Breite. Eine breite Tabelle hebt dadurch die gesamte Spur an
+ * und schiebt die Seite horizontal über den Viewport – auch dann, wenn die
+ * Tabelle selbst in einem `overflow-x: auto`-Container liegt. Mit `min-width: 0`
+ * schrumpft das Kind auf die Spurbreite und der Container scrollt wie gedacht.
+ */
+.stack > * {
+  min-width: 0;
 }
 
 .stack--lg {

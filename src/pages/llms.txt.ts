@@ -15,7 +15,10 @@ import { SITE, tools } from '../data/tools';
 // Seiten, die zur Werkzeug-Familie gehören, aber nicht im tools[]-Array stehen.
 const konvertierung = [
   ['JPG in PNG', '/bild-konvertieren/jpg-in-png/', 'verlustfreie Umwandlung von JPG zu PNG.'],
-  ['PNG in JPG', '/bild-konvertieren/png-in-jpg/', 'PNG zu JPG mit einstellbarer Qualität.']
+  ['PNG in JPG', '/bild-konvertieren/png-in-jpg/', 'PNG zu JPG mit einstellbarer Qualität.'],
+  ['WebP in JPG', '/bild-konvertieren/webp-in-jpg/', 'für Portale und Programme, die nur JPG akzeptieren; Transparenz wird weiß gefüllt.'],
+  ['JPG in WebP', '/bild-konvertieren/jpg-in-webp/', 'kleinere Dateien für Webseiten, mit gemessenen Vergleichswerten.'],
+  ['WebP in PNG', '/bild-konvertieren/webp-in-png/', 'verlustfrei und mit erhaltener Transparenz, für Weiterbearbeitung und Druckvorstufe.']
 ] as const;
 
 const ratgeber = [

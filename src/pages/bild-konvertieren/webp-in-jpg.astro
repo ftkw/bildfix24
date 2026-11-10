@@ -1,0 +1,175 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+import ToolShell from '../../components/ToolShell.astro';
+import ConvertTool from '../../components/tools/ConvertTool.astro';
+import {
+  breadcrumbSchema,
+  faqSchema,
+  howToSchema,
+  softwareSchema,
+  type Crumb,
+  type FaqItem
+} from '../../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bild konvertieren', href: '/bild-konvertieren/' },
+  { name: 'WebP in JPG', href: '/bild-konvertieren/webp-in-jpg/' }
+];
+
+const steps = [
+  {
+    title: 'WebP-Datei auswählen',
+    text: 'Ziehe die Datei in das Feld oder klicke darauf. Das Werkzeug zeigt dir Auflösung und bisherige Dateigröße an.'
+  },
+  {
+    title: 'Qualität festlegen',
+    text: 'JPG ist bereits vorausgewählt. Für Fotos sind 85 bis 90 Prozent ein guter Kompromiss – darunter können Kanten und Schrift sichtbar ausfransen.'
+  },
+  {
+    title: 'Umwandeln und prüfen',
+    text: 'Nach dem Umwandeln siehst du die neue Dateigröße. Lade das JPG herunter und teste es direkt im Zielportal, bevor du es dort endgültig hochlädst.'
+  }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Warum akzeptiert das Portal meine WebP-Datei nicht?',
+    a: 'WebP ist ein Format für Webseiten. Viele Online-Formulare, Behördendienste, Bewerbungsportale und ältere Programme prüfen die Dateiendung und lassen nur JPG, PNG oder PDF zu. In diesem Fall musst du umwandeln – die Bildinhalte bleiben dabei gleich.'
+  },
+  {
+    q: 'Was passiert mit transparenten Bereichen?',
+    a: 'JPG kennt keine Transparenz. Beim Umwandeln werden durchsichtige Flächen weiß gefüllt. Wenn du die Transparenz behalten willst, wandle stattdessen in PNG um.'
+  },
+  {
+    q: 'Wird das Bild durch die Umwandlung schlechter?',
+    a: 'Wenn die WebP-Datei verlustbehaftet gespeichert war, wird sie beim Umwandeln erneut komprimiert. Ein einzelner Schritt ist meist unauffällig, mehrfaches Hin- und Herwandeln hinterlässt dagegen sichtbare Spuren. Bewahre deshalb die Originaldatei auf.'
+  },
+  {
+    q: 'Warum ist das JPG am Ende größer als das WebP?',
+    a: 'WebP komprimiert bei gleicher Qualitätsstufe effizienter als JPG. Dass die JPG-Datei größer ausfällt, ist normal und kein Fehler. Über den Qualitätsregler kannst du gegensteuern.'
+  },
+  {
+    q: 'Welche Qualitätsstufe soll ich wählen?',
+    a: 'Für Fotos 85 bis 90 Prozent. Für Screenshots mit viel Schrift ist JPG grundsätzlich die falsche Wahl, weil Buchstabenkanten unter der Kompression leiden – dort ist PNG die bessere Option.'
+  },
+  {
+    q: 'Werden meine Bilder hochgeladen?',
+    a: 'Nein. Die Umwandlung läuft vollständig in deinem Browser. Es werden keine Bilddaten an einen Server übertragen.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'WebP in JPG umwandeln',
+    description: 'WebP-Bilder kostenlos in JPG umwandeln – ohne Upload, direkt im Browser.',
+    path: '/bild-konvertieren/webp-in-jpg/'
+  }),
+  howToSchema({
+    name: 'WebP in JPG umwandeln',
+    description: 'Eine WebP-Datei im Browser in JPG umwandeln, wenn ein Portal oder Programm nur JPG akzeptiert.',
+    path: '/bild-konvertieren/webp-in-jpg/',
+    steps
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="WebP in JPG umwandeln – kostenlos"
+  description="WebP in JPG umwandeln: kostenlos, ohne Upload, direkt im Browser. Für Portale, Formulare und Programme, die nur JPG annehmen."
+  path="/bild-konvertieren/webp-in-jpg/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="WebP in JPG umwandeln"
+    lead="Wenn ein Portal, ein Formular oder ein älteres Programm nur JPG annimmt, wandle die WebP-Datei hier um. Die Verarbeitung läuft im Browser – dein Bild wird nicht hochgeladen."
+    toolKey="convert"
+    crumbs={crumbs}
+    faq={faq}
+    steps={steps}
+  >
+    <div slot="tool">
+      <ConvertTool defaultFormat="image/jpeg" />
+    </div>
+
+    <div class="prose mt-4">
+      <h2>WebP ist im Web üblich – außerhalb davon oft nicht</h2>
+      <p>
+        WebP wurde für Webseiten entwickelt und wird von allen aktuellen Browsern angezeigt. Sobald
+        die Datei aber das Browserfenster verlässt, wird es eng: Viele Online-Formulare prüfen die
+        Dateiendung, ältere Office-Versionen und Bildverwaltungen können WebP nicht öffnen, und
+        Druckereien arbeiten weiterhin mit JPG oder TIFF. Die Umwandlung ist deshalb meist kein
+        Qualitätswunsch, sondern eine Vorgabe des Gegenübers.
+      </p>
+
+      <h2>Was sich beim Umwandeln ändert</h2>
+      <p>
+        Die Pixel bleiben unverändert – es wird nichts skaliert und nichts zugeschnitten. Geändert
+        wird ausschließlich, wie das Bild gespeichert wird.
+      </p>
+      <div style="overflow-x: auto;">
+        <table>
+        <thead>
+          <tr>
+            <th>Eigenschaft</th>
+            <th>WebP (vorher)</th>
+            <th>JPG (nachher)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Transparenz</td>
+            <td>möglich</td>
+            <td>nicht möglich, wird weiß gefüllt</td>
+          </tr>
+          <tr>
+            <td>Dateigröße</td>
+            <td>klein</td>
+            <td>meist größer bei gleicher Qualitätsstufe</td>
+          </tr>
+          <tr>
+            <td>Kompatibilität</td>
+            <td>Browser und moderne Programme</td>
+            <td>praktisch überall, auch in Formularen und im Druck</td>
+          </tr>
+          <tr>
+            <td>Mehrfaches Bearbeiten</td>
+            <td>verlustbehaftet, Qualität nimmt ab</td>
+            <td>verlustbehaftet, Qualität nimmt ab</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+
+      <h3>Worauf du beim Ergebnis achten solltest</h3>
+      <ul>
+        <li>
+          <strong>Transparenz prüfen:</strong> Ein freigestelltes Motiv bekommt einen weißen
+          Hintergrund. Auf einer weißen Portalseite fällt das nicht auf, auf einem farbigen
+          Briefkopf schon.
+        </li>
+        <li>
+          <strong>Schrift prüfen:</strong> Screenshots und Grafiken mit Text sind in JPG die falsche
+          Wahl. Wenn das Zielformat nicht zwingend JPG sein muss, nimm
+          <a href="/bild-konvertieren/webp-in-png/">WebP in PNG</a>.
+        </li>
+        <li>
+          <strong>Größenlimit prüfen:</strong> Viele Portale begrenzen die Dateigröße. Reicht das JPG
+          nicht aus, verkleinere es anschließend mit
+          <a href="/bild-komprimieren/">Bild komprimieren</a>.
+        </li>
+      </ul>
+
+      <h2>Der umgekehrte Weg</h2>
+      <p>
+        Wenn du eine JPG-Datei für eine Webseite kleiner machen willst, ist
+        <a href="/bild-konvertieren/jpg-in-webp/">JPG in WebP umwandeln</a> die passende Richtung.
+        Für den allgemeinen Überblick über alle drei Formate gibt es
+        <a href="/bild-konvertieren/">Bild konvertieren</a>.
+      </p>
+    </div>
+  </ToolShell>
+</BaseLayout>

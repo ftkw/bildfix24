@@ -1,0 +1,175 @@
+---
+import BaseLayout from '../../components/BaseLayout.astro';
+import ToolShell from '../../components/ToolShell.astro';
+import ConvertTool from '../../components/tools/ConvertTool.astro';
+import {
+  breadcrumbSchema,
+  faqSchema,
+  howToSchema,
+  softwareSchema,
+  type Crumb,
+  type FaqItem
+} from '../../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bild konvertieren', href: '/bild-konvertieren/' },
+  { name: 'JPG in WebP', href: '/bild-konvertieren/jpg-in-webp/' }
+];
+
+const steps = [
+  {
+    title: 'JPG auswählen',
+    text: 'Ziehe die JPG-Datei in das Feld. Auflösung und aktuelle Dateigröße werden sofort angezeigt.'
+  },
+  {
+    title: 'WebP als Zielformat',
+    text: 'WebP ist vorausgewählt. Stelle die Qualität ein – 80 Prozent ist für die meisten Webseiten ein guter Ausgangspunkt.'
+  },
+  {
+    title: 'Umwandeln und vergleichen',
+    text: 'Nach dem Umwandeln siehst du die neue Dateigröße. Vergleiche sie mit dem Ausgangswert, bevor du die Datei herunterlädst.'
+  }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Was bringt WebP gegenüber JPG?',
+    a: 'WebP erzeugt bei vergleichbarer Qualität meist deutlich kleinere Dateien. Kleinere Bilder laden schneller, was sich direkt auf Ladezeit und Core Web Vitals einer Seite auswirkt.'
+  },
+  {
+    q: 'Kann jeder Browser WebP anzeigen?',
+    a: 'Alle aktuellen Browser können WebP darstellen: Chrome, Firefox, Edge und Safari ab Version 14. Kritisch wird es nur bei sehr alten Browsern und bei Programmen außerhalb des Browsers.'
+  },
+  {
+    q: 'Kann ich WebP überall einsetzen?',
+    a: 'Nein. Für den Druck, für viele Online-Formulare und für ältere Programme ist WebP ungeeignet. Auch manche Content-Management-Systeme und Newsletter-Werkzeuge akzeptieren das Format nicht. Prüfe das vor dem Austausch.'
+  },
+  {
+    q: 'Wird das Bild beim Umwandeln schlechter?',
+    a: 'WebP ist bei dieser Einstellung verlustbehaftet, das Bild wird also neu berechnet. Ein einzelner Schritt ist bei 80 Prozent in der Regel nicht sichtbar. Wandele nicht mehrfach hin und her, sondern arbeite vom Original.'
+  },
+  {
+    q: 'Bleibt die Transparenz erhalten?',
+    a: 'Ja, WebP unterstützt Transparenz. Wenn dein Ausgangsbild eine hatte, bleibt sie erhalten – anders als bei JPG.'
+  },
+  {
+    q: 'Werden meine Bilder hochgeladen?',
+    a: 'Nein. Die Umwandlung findet im Browser statt, die Datei verlässt dein Gerät nicht.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'JPG in WebP umwandeln',
+    description: 'JPG-Bilder kostenlos in WebP umwandeln und die Dateigröße für Webseiten reduzieren.',
+    path: '/bild-konvertieren/jpg-in-webp/'
+  }),
+  howToSchema({
+    name: 'JPG in WebP umwandeln',
+    description: 'Ein JPG im Browser in WebP umwandeln, um die Dateigröße für Webseiten zu reduzieren.',
+    path: '/bild-konvertieren/jpg-in-webp/',
+    steps
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="JPG in WebP umwandeln – kleinere Dateien"
+  description="JPG in WebP umwandeln: kleinere Dateien bei gleicher Qualitätsstufe, direkt im Browser und ohne Upload. Mit Größenvergleich vor dem Download."
+  path="/bild-konvertieren/jpg-in-webp/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="JPG in WebP umwandeln"
+    lead="WebP speichert Bilder bei gleicher Qualitätsstufe kleiner als JPG. Wandle deine Datei hier um und vergleiche die Größe, bevor du sie herunterlädst."
+    toolKey="convert"
+    crumbs={crumbs}
+    faq={faq}
+    steps={steps}
+  >
+    <div slot="tool">
+      <ConvertTool defaultFormat="image/webp" />
+    </div>
+
+    <div class="prose mt-4">
+      <h2>Warum WebP kleinere Dateien erzeugt</h2>
+      <p>
+        JPG stammt aus dem Jahr 1992 und komprimiert einen Block nach dem anderen, ohne den
+        Bildinhalt als Ganzes zu betrachten. WebP arbeitet mit einem neueren Verfahren, das
+        benachbarte Bildbereiche mit einbezieht. Das Ergebnis sind bei gleicher wahrgenommener
+        Qualität kleinere Dateien – der Effekt ist bei Grafiken mit klaren Flächen größer als bei
+        detailreichen Fotos.
+      </p>
+
+      <h2>Gemessene Werte</h2>
+      <p>
+        Die folgende Tabelle ist nicht geschätzt, sondern mit genau diesem Werkzeug erzeugt:
+        Ausgangsbild 1200 × 630 Pixel, eine Grafik mit Text und Farbverläufen, umgewandelt in Chrome
+        über die Canvas-API.
+      </p>
+      <div style="overflow-x: auto;">
+        <table>
+        <thead>
+          <tr>
+            <th>Qualitätsstufe</th>
+            <th>JPG</th>
+            <th>WebP</th>
+            <th>Ersparnis</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>92 %</td>
+            <td>79,4 KB</td>
+            <td>44,3 KB</td>
+            <td>−44 %</td>
+          </tr>
+          <tr>
+            <td>80 %</td>
+            <td>53,4 KB</td>
+            <td>28,3 KB</td>
+            <td>−47 %</td>
+          </tr>
+          <tr>
+            <td>60 %</td>
+            <td>37,7 KB</td>
+            <td>22,2 KB</td>
+            <td>−41 %</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
+      <p>
+        Bei Fotos fällt der Abstand je nach Motiv kleiner aus – ein Wert, den man pauschal nicht
+        versprechen kann. Deshalb zeigt das Werkzeug dir die tatsächliche Dateigröße deines Bildes an,
+        statt mit einer festen Zahl zu werben.
+      </p>
+
+      <h3>Wann WebP die richtige Wahl ist</h3>
+      <ul>
+        <li>Bilder, die auf einer Webseite oder in einem Onlineshop ausgeliefert werden.</li>
+        <li>Galerien und Übersichtsseiten mit vielen Bildern, bei denen jedes Kilobyte zählt.</li>
+        <li>Bilder mit Transparenz, die trotzdem klein bleiben sollen.</li>
+      </ul>
+
+      <h3>Wann du bei JPG bleiben solltest</h3>
+      <ul>
+        <li>Druckvorlagen und alles, was an eine Druckerei geht.</li>
+        <li>Uploads in Formularen, Portalen und Bewerbungssystemen.</li>
+        <li>Weitergabe an Personen, bei denen du nicht weißt, womit sie die Datei öffnen.</li>
+      </ul>
+
+      <h2>Verwandte Schritte</h2>
+      <p>
+        Für den umgekehrten Fall gibt es <a href="/bild-konvertieren/webp-in-jpg/">WebP in JPG</a>,
+        für transparente Grafiken <a href="/bild-konvertieren/webp-in-png/">WebP in PNG</a>. Wenn die
+        Datei zusätzlich kleiner skaliert werden soll, hilft
+        <a href="/bildgroesse-aendern/">Bildgröße ändern</a> vor dem Umwandeln.
+      </p>
+    </div>
+  </ToolShell>
+</BaseLayout>

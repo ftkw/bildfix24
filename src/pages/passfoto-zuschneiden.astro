@@ -32,6 +32,10 @@ const steps = [
 
 const faq: FaqItem[] = [
   {
+    q: 'Kann ich dasselbe Foto für Bewerbung und Personalausweis verwenden?',
+    a: 'Ja, wenn die Aufnahme die biometrischen Kriterien erfüllt. Für eine Bewerbung darf der Ausschnitt großzügiger sein, für den Ausweis muss die Kopfhöhe zwischen 32 und 36 Millimetern liegen. Das biometrische Lichtbild ist also die strengere Variante und für Bewerbungen ebenfalls geeignet – umgekehrt gilt das nicht.'
+  },
+  {
     q: 'Welche Maße hat ein Passfoto in Deutschland?',
     a: 'Ein biometrisches Lichtbild ist 35 mm breit und 45 mm hoch. Die Kopfhöhe – gemessen vom Kinn bis zum oberen Rand des Kopfes – soll zwischen 32 und 36 mm liegen. Das Gesicht muss frontal, vollständig sichtbar und gleichmäßig ausgeleuchtet sein.'
   },
@@ -82,7 +86,7 @@ const jsonLd = [
 
 <BaseLayout
   title="Passfoto zuschneiden – Format 35 × 45 mm"
-  description="Foto auf 35 × 45 mm für Personalausweis, Reisepass oder Visum zuschneiden: richtiges Seitenverhältnis, 413 × 531 Pixel, ohne Upload."
+  description="Foto auf 35 × 45 mm zuschneiden – für Personalausweis, Visum und Bewerbung: 413 × 531 Pixel bei 300 dpi, ohne Upload im Browser."
   path="/passfoto-zuschneiden/"
   jsonLd={jsonLd}
 >
@@ -197,6 +201,27 @@ const jsonLd = [
         unscharfes Bild. Wer nur die Pixelzahl trifft, aber das falsche Verhältnis, bekommt ein
         verzerrtes Gesicht. Deshalb beide Schritte: erst zuschneiden, dann die Kantenlänge exakt
         setzen.
+      </p>
+
+      <h2>Bewerbungsfoto: dasselbe Format, andere Erwartung</h2>
+      <p>
+        Ein Bewerbungsfoto muss keine behördlichen Vorgaben erfüllen – dafür gibt es keine
+        gesetzliche Norm. Eingebürgert haben sich in Deutschland trotzdem 35 × 45 mm oder
+        45 × 60 mm im Hochformat. Wer bereits ein biometrisches Lichtbild zur Hand hat, kann es in
+        der Regel direkt verwenden; für eine Bewerbung darf der Ausschnitt aber großzügiger sein,
+        weil keine Kopfhöhe geprüft wird.
+      </p>
+      <ul>
+        <li><strong>Kein Kopfhöhenmaß:</strong> Die 32 bis 36 Millimeter gelten nur für Ausweisdokumente.</li>
+        <li><strong>Ausschnitt:</strong> Häufig bis zur Brust oder zum oberen Oberkörper, nicht nur der Kopf.</li>
+        <li><strong>Hintergrund:</strong> Hell und einfarbig ist immer sicher, ein dezenter Verlauf ist bei Bewerbungen üblich.</li>
+        <li><strong>Datei:</strong> Für Online-Bewerbungen zählt ein JPG, das sich schnell öffnen lässt – viele Portale setzen ein Größenlimit.</li>
+      </ul>
+      <p>
+        Gibt das Bewerbungsportal eine maximale Dateigröße vor, hilft
+        <a href="/bild-auf-500-kb-verkleinern/">Bild auf 500 KB verkleinern</a>. Für andere
+        Ausschnitte oder Formate steht <a href="/bild-zuschneiden/">Bild zuschneiden</a> mit frei
+        wählbarem Seitenverhältnis bereit.
       </p>
 
       <h2>Vom Foto zum Lichtbild: die Aufnahme entscheidet</h2>
