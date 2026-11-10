@@ -1,0 +1,151 @@
+---
+import Icon from '../Icon.astro';
+---
+
+<div class="tool-panel">
+  <div class="dropzone" id="gray-zone">
+    <span class="dropzone__icon"><Icon name="grayscale" /></span>
+    <span class="dropzone__title">Bild hierher ziehen oder klicken</span>
+    <span class="dropzone__hint">JPG, PNG oder WebP · max. 30 MB</span>
+    <input
+      type="file"
+      id="gray-input"
+      accept="image/png,image/jpeg,image/webp"
+      aria-label="Bilddatei für die Graustufen-Umwandlung auswählen"
+    />
+  </div>
+
+  <div id="gray-workspace" hidden>
+    <div class="gray-compare">
+      <figure>
+        <div class="preview"><img id="gray-img" alt="Originalbild in Farbe" /></div>
+        <figcaption>Original</figcaption>
+      </figure>
+      <figure>
+        <div class="preview">
+          <canvas id="gray-out" role="img" aria-label="Vorschau des Bildes in Graustufen"></canvas>
+        </div>
+        <figcaption>Graustufen</figcaption>
+      </figure>
+    </div>
+
+    <div class="controls controls--split gray-controls mt-3">
+      <div class="field">
+        <span class="field__label">Umrechnung</span>
+        <div class="segmented" id="gray-method" role="group" aria-label="Umrechnung in Graustufen">
+          <button type="button" data-method="luma" aria-pressed="true">Helligkeit</button>
+          <button type="button" data-method="mean" aria-pressed="false">Mittelwert</button>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field__label">Tonwertspreizung <span class="field__value" id="gray-spread-value">aus</span></span>
+        <input
+          type="range"
+          id="gray-spread"
+          min="0"
+          max="100"
+          step="5"
+          value="0"
+          aria-label="Tonwertspreizung in Prozent"
+        />
+      </div>
+      <div class="field">
+        <span class="field__label">Ausgabeformat</span>
+        <div class="segmented" id="gray-format" role="group" aria-label="Ausgabeformat">
+          <button type="button" data-format="image/png" aria-pressed="true">PNG</button>
+          <button type="button" data-format="image/jpeg" aria-pressed="false">JPG</button>
+        </div>
+      </div>
+      <div class="field hidden" id="gray-quality-row">
+        <label for="gray-quality">JPG-Qualität <span class="field__value" id="gray-quality-value">92 %</span></label>
+        <input type="range" id="gray-quality" min="50" max="100" step="1" value="92" />
+      </div>
+    </div>
+
+    <p class="small muted mt-2">
+      Die Vorschau wird auf 900 Pixel verkleinert gerechnet, damit sie beim Ziehen des Reglers
+      sofort reagiert. Das Ergebnis entsteht immer in der vollen Auflösung des Originals.
+    </p>
+
+    <div class="row mt-3" id="gray-actions">
+      <button class="btn btn--primary" id="gray-apply" type="button">Umwandeln und herunterladen</button>
+      <a class="btn btn--download" id="gray-download" download hidden><Icon name="download" />Herunterladen</a>
+      <button class="btn btn--ghost" id="gray-reset" type="button">Anderes Bild</button>
+    </div>
+
+    <div class="result__stats mt-3" id="gray-stats" hidden></div>
+    <div class="notice mt-2" id="gray-notice" hidden role="status"></div>
+  </div>
+</div>
+
+<style>
+  /*
+   * Zwei Vorschauen nebeneinander statt eines Reglers: Bei dieser Umwandlung
+   * geht es genau um den Vergleich, und ein Bild pro Zustand sagt mehr als
+   * jeder Prozentwert.
+   */
+  .gray-compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .gray-compare figure {
+    margin: 0;
+    display: grid;
+  }
+
+  .gray-compare .preview {
+    margin-top: 0;
+    min-height: 140px;
+  }
+
+  /* Das Vorschau-Canvas bekommt seine Maße aus dem Skript; CSS darf es nur
+     begrenzen, nicht verzerren. */
+  .gray-compare .preview canvas {
+    max-height: 46vh;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: var(--shadow-sm);
+    display: block;
+  }
+
+  .gray-compare figcaption {
+    margin-top: 0.4rem;
+    font-size: 0.78rem;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  /* Vier Felder in zwei geschlossenen Reihen – das auto-fit-Raster würde
+     sonst drei Felder oben und eines allein darunter setzen. */
+  .gray-controls {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .gray-controls > .field {
+    grid-column: span 3;
+  }
+
+  @media (max-width: 640px) {
+    .gray-controls {
+      grid-template-columns: 1fr;
+    }
+
+    .gray-controls > .field {
+      grid-column: auto;
+    }
+  }
+
+  @media (max-width: 560px) {
+    .gray-compare {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  import '../../scripts/tools/grayscale';
+</script>

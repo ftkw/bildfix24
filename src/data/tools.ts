@@ -1,11 +1,19 @@
-export type ToolKey = 'crop' | 'compress' | 'resize' | 'convert' | 'watermark' | 'pdf' | 'merge';
+export type ToolKey =
+  | 'crop'
+  | 'compress'
+  | 'resize'
+  | 'convert'
+  | 'watermark'
+  | 'pdf'
+  | 'merge'
+  | 'grayscale';
 
 export interface Tool {
   key: ToolKey;
   href: string;
   name: string;
   short: string;
-  icon: 'crop' | 'compress' | 'resize' | 'convert' | 'watermark' | 'pdf' | 'merge';
+  icon: 'crop' | 'compress' | 'resize' | 'convert' | 'watermark' | 'pdf' | 'merge' | 'grayscale';
   keywords: string;
 }
 
@@ -28,7 +36,7 @@ export const SITE = {
   email: 'oldniko117@gmail.com',
   tagline: 'Bildwerkzeuge direkt im Browser',
   description:
-    'Kostenlose Bildwerkzeuge für Deutschland: Bilder zuschneiden, komprimieren, Größe ändern, konvertieren, Wasserzeichen hinzufügen, als PDF speichern oder zu einem Bild zusammenfügen. Ohne Upload, ohne Anmeldung.'
+    'Kostenlose Bildwerkzeuge für Deutschland: Bilder zuschneiden, komprimieren, Größe ändern, konvertieren, Wasserzeichen hinzufügen, als PDF speichern, zu einem Bild zusammenfügen oder in Graustufen umrechnen. Ohne Upload, ohne Anmeldung.'
 } as const;
 
 export const tools: Tool[] = [
@@ -87,6 +95,14 @@ export const tools: Tool[] = [
     short: 'Mehrere Bilder nebeneinander oder untereinander zu einem Bild verbinden.',
     icon: 'merge',
     keywords: 'bilder zusammenfügen, bilder nebeneinander, fotos zusammenfügen'
+  },
+  {
+    key: 'grayscale',
+    href: '/bild-in-graustufen/',
+    name: 'Bild in Graustufen',
+    short: 'Farbe in 256 Graustufen umrechnen – mit Tonwertspreizung für flaue Scans.',
+    icon: 'grayscale',
+    keywords: 'bild in graustufen umwandeln, schwarzweiß bild, graustufen foto'
   }
 ];
 

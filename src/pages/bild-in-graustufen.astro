@@ -1,0 +1,239 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import ToolShell from '../components/ToolShell.astro';
+import GrayscaleTool from '../components/tools/GrayscaleTool.astro';
+import { breadcrumbSchema, faqSchema, howToSchema, softwareSchema, type Crumb, type FaqItem } from '../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bild in Graustufen umwandeln', href: '/bild-in-graustufen/' }
+];
+
+const steps = [
+  {
+    title: 'Bild auswählen',
+    text: 'Datei hineinziehen oder anklicken. JPG, PNG und WebP bis 30 MB werden direkt im Browser geöffnet – es gibt keinen Upload, das Original bleibt unverändert auf deinem Gerät.'
+  },
+  {
+    title: 'Umrechnung wählen',
+    text: '„Helligkeit“ gewichtet die Kanäle so, wie das Auge sie sieht, und ist der Standard. „Mittelwert“ behandelt Rot, Grün und Blau gleich – das macht reine Farben zu einem einheitlichen Grau, wirkt aber insgesamt flauer.'
+  },
+  {
+    title: 'Tonwertspreizung nur bei flauen Bildern',
+    text: 'Wenn ein Scan oder ein Handyfoto im Gegenlicht nur ein schmales Grauband nutzt, zieht die Spreizung den vorkommenden Bereich auf die volle Spanne von Schwarz bis Weiß. Bei einem normal belichteten Bild bleibt sie aus – sonst reißen Lichter und Schatten aus.'
+  },
+  {
+    title: 'Format wählen und herunterladen',
+    text: 'PNG ist verlustfrei und behält Transparenz, JPG erzeugt die kleinere Datei. Nach dem Klick auf „Umwandeln“ steht die fertige Datei in voller Auflösung bereit.'
+  }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Was ist der Unterschied zwischen Graustufen und Schwarzweiß?',
+    a: 'Graustufen kennen 256 Helligkeitsstufen von 0 (Schwarz) bis 255 (Weiß), Schwarzweiß im engeren Sinn nur zwei. Umgangssprachlich wird beides oft gleichgesetzt, in der Druckvorstufe und bei der Bildverarbeitung sind es zwei verschiedene Dinge: Ein Foto in Graustufen zeigt noch Schattierungen und Gesichter, ein binäres Schwarzweißbild zeigt nur noch Flächen – bei einem Porträt bleibt davon eine Silhouette. Dieses Werkzeug erzeugt Graustufen mit 256 Stufen.'
+  },
+  {
+    q: 'Warum wird ein rotes Motiv so dunkel?',
+    a: 'Weil das Auge Grün viel stärker wahrnimmt als Rot und Blau. Die Standardumrechnung gewichtet deshalb Grün mit 71,5 Prozent, Rot mit 21,3 Prozent und Blau mit 7,2 Prozent. Reines Rot ergibt damit den Grauwert 54 – ein mittleres Dunkelgrau, obwohl es für uns intensiv leuchtet. Wer das nicht will, nimmt „Mittelwert“: Dort ergibt reines Rot 85, also ein helleres Grau.'
+  },
+  {
+    q: 'Welche Umrechnung soll ich nehmen?',
+    a: 'Für alles, was weiterverarbeitet oder gedruckt wird, „Helligkeit“ – das ist die Rechnung, die auch Bildbearbeitungsprogramme und Druckereien verwenden, und sie erhält die wahrgenommenen Kontraste. „Mittelwert“ ist dann sinnvoll, wenn verschiedene Farben bewusst auf denselben Grauwert gebracht werden sollen, etwa um zu prüfen, ob zwei Flächen gleich dunkel wirken.'
+  },
+  {
+    q: 'Was macht die Tonwertspreizung genau?',
+    a: 'Sie sucht den dunkelsten und den hellsten tatsächlich vorkommenden Grauwert und zieht diesen Bereich auf die volle Spanne 0 bis 255. Ein flauer Scan, dessen Werte alle zwischen 100 und 160 liegen, bekommt dadurch wieder echte Schwarztöne und Lichter. Die Grenze: Ein einzelner weißer Staubkorn-Pixel oder eine Spiegelung setzt den hellsten Wert bereits auf 255, dann bewirkt die Spreizung fast nichts. In dem Fall hilft nur Zuschneiden oder eine echte Tonwertkorrektur.'
+  },
+  {
+    q: 'Wird mein Bild dabei hochgeladen?',
+    a: 'Nein. Das Bild wird im Browser gelesen, die Pixel werden auf einer Zeichenfläche umgerechnet und das Ergebnis dort kodiert. Es gibt keinen Server, der eine Datei empfängt – deshalb eignet sich das Werkzeug auch für Ausweiskopien, Zeugnisse und alles, was das Gerät nicht verlassen soll.'
+  },
+  {
+    q: 'Ist die Umwandlung verlustfrei?',
+    a: 'Als PNG ja: Die Grauwerte werden exakt so gespeichert, wie sie berechnet wurden. Als JPG nein, dort kommt die übliche Kompressionsstufe dazu. Verlustfrei ist aber nur die Speicherung – die Farbinformation selbst ist nach der Umwandlung dauerhaft weg. Wer später doch eine Farbversion braucht, muss das Original aufbewahren.'
+  },
+  {
+    q: 'Warum ist die PNG-Datei größer als das Original-JPG?',
+    a: 'Weil das Original bereits komprimiert war. Ein Foto aus der Kamera ist als JPG mit Qualitätsstufe 85 gespeichert und dadurch klein; ein Graustufen-PNG speichert jeden Pixel verlustfrei und ist deshalb oft größer, obwohl es nur einen Kanal statt drei enthält. Wenn die Dateigröße zählt, nimm die JPG-Ausgabe oder verkleinere das Bild vorher – dafür gibt es das Werkzeug „Bildgröße ändern“.'
+  },
+  {
+    q: 'Bleibt die Transparenz von PNG-Dateien erhalten?',
+    a: 'Ja. Der Alphakanal wird nicht angefasst, durchsichtige Bereiche bleiben durchsichtig. Nur bei der JPG-Ausgabe wird vorher weiß gefüllt, weil JPG keine Transparenz speichern kann – ohne diese Füllung würden die durchsichtigen Bereiche schwarz und im Graustufenbild als schwarzer Kasten erscheinen.'
+  },
+  {
+    q: 'Wofür braucht man Graustufen überhaupt?',
+    a: 'Für den einfarbigen Druck (eine Farbe statt vier kostet weniger), für Gravur und Lasern, für die Vorbereitung von Scans für die Texterkennung, für Formulare und Behördenportale, die nur Graustufen akzeptieren, und für alles, was von einem Farbstich befreit werden soll – ein alter Scan in Graustufen zeigt den Gilb nicht mehr.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'Bild in Graustufen umwandeln',
+    description:
+      'Ein Bild im Browser in Graustufen umrechnen: wahlweise nach Helligkeit oder Mittelwert, mit Tonwertspreizung für flaue Scans, Ausgabe als PNG oder JPG.',
+    path: '/bild-in-graustufen/'
+  }),
+  howToSchema({
+    name: 'Bild in Graustufen umwandeln',
+    description: 'Ein Farbbild ohne Upload in ein Graustufenbild mit 256 Helligkeitsstufen umwandeln.',
+    path: '/bild-in-graustufen/',
+    steps
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="Bild in Graustufen umwandeln – ohne Upload"
+  description="Bild in Graustufen umwandeln: Umrechnung nach Helligkeit oder Mittelwert, Tonwertspreizung für flaue Scans, Ausgabe als PNG oder JPG. Direkt im Browser, ohne Upload."
+  path="/bild-in-graustufen/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="Bild in Graustufen umwandeln"
+    lead="Farbe raus, 256 Graustufen rein – links das Original, rechts das Ergebnis, während du die Einstellungen änderst. Die Datei bleibt dabei auf deinem Gerät."
+    toolKey="grayscale"
+    crumbs={crumbs}
+    faq={faq}
+    steps={steps}
+  >
+    <GrayscaleTool slot="tool" />
+
+    <div class="prose mt-4">
+      <h2>Graustufen ist nicht Schwarzweiß</h2>
+      <p>
+        Die beiden Begriffe werden im Alltag durcheinandergeworfen, technisch sind sie weit
+        entfernt voneinander. Graustufen bedeuten 256 Stufen: Jeder Pixel bekommt einen Wert
+        zwischen 0 und 255, und ein Gesicht bleibt als Gesicht erkennbar, weil Schatten und
+        Lichter erhalten bleiben. Schwarzweiß im engeren Sinn – in der Druckvorstufe
+        „Strichzeichnung“ oder 1 Bit genannt – kennt nur zwei Zustände.
+      </p>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Eigenschaft</th>
+              <th>Graustufen (8 Bit)</th>
+              <th>Schwarzweiß (1 Bit)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Stufen pro Pixel</td><td>256</td><td>2</td></tr>
+            <tr><td>Ein Porträt wird</td><td>erkennbar, mit Schattierungen</td><td>eine Silhouette</td></tr>
+            <tr><td>Sinnvoll für</td><td>Fotos, Scans, Zeitungsdruck</td><td>Strichzeichnungen, Fax, Logo in einer Farbe</td></tr>
+            <tr><td>Dateigröße</td><td>höher</td><td>sehr niedrig</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Dieses Werkzeug erzeugt die 256-Stufen-Variante. Wer eine echte Strichzeichnung braucht,
+        muss anschließend einen Schwellenwert setzen – dabei wird jeder Pixel entweder schwarz
+        oder weiß, und genau dort entscheidet sich, ob eine Unterschrift noch lesbar ist.
+      </p>
+
+      <h2>Warum Rot dunkler wird als Grün</h2>
+      <p>
+        Ein Grauwert ist keine Messung, sondern eine Wahrnehmung. Das Auge hat für Grün etwa
+        dreimal so viele Rezeptoren wie für Rot und vierzigmal so viele wie für Blau. Die
+        Standardumrechnung, 1982 als Rec. 709 festgelegt, bildet das ab: Grün zählt 71,5 Prozent,
+        Rot 21,3 Prozent, Blau 7,2 Prozent.
+      </p>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Farbe</th>
+              <th>Grauwert nach Helligkeit (Rec. 709)</th>
+              <th>Grauwert nach Mittelwert</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Reines Rot <code>#FF0000</code></td><td>54</td><td>85</td></tr>
+            <tr><td>Reines Grün <code>#00FF00</code></td><td>182</td><td>85</td></tr>
+            <tr><td>Reines Blau <code>#0000FF</code></td><td>18</td><td>85</td></tr>
+            <tr><td>Reines Gelb <code>#FFFF00</code></td><td>237</td><td>170</td></tr>
+            <tr><td>Mittelgrau <code>#808080</code></td><td>128</td><td>128</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">
+        Alle Werte sind in diesem Werkzeug nachgerechnet, nicht geschätzt. Die Zeile für Mittelgrau
+        zeigt den Sonderfall: Nur dort sind beide Verfahren gleich, weil alle Kanäle denselben Wert
+        haben. Je weiter eine Farbe von Grau entfernt ist, desto größer wird der Unterschied.
+      </p>
+      <p>
+        Praktische Folge: Ein knallrotes Auto auf grünem Gras wird in Graustufen zu einem dunklen
+        Fahrzeug auf hellem Grund – der Kontrast kehrt sich optisch um. Wer das nicht will, nimmt
+        „Mittelwert“; dann landen alle reinen Farben bei 85, und das Bild wirkt flacher, aber
+        farbtreuer in der Helligkeit.
+      </p>
+
+      <h2>Tonwertspreizung: was sie rettet und wann sie nichts bringt</h2>
+      <p>
+        Ein Graustufenbild kann technisch korrekt und trotzdem unbrauchbar aussehen: Ein Scan mit
+        schwachem Kontrast nutzt vielleicht nur Werte zwischen 100 und 160, das Ergebnis ist ein
+        gleichmäßig mittelgrauer Brei. Die Tonwertspreizung misst den tatsächlich vorkommenden
+        Bereich und zieht ihn auf 0 bis 255 – aus einem flauen Scan wird ein Bild mit echten
+        Schwarztönen und Lichtern.
+      </p>
+      <p>
+        Wichtig ist die Einschränkung: Sie arbeitet mit dem Minimum und dem Maximum, die im Bild
+        vorkommen. Ein einzelnes weißes Staubkorn oder eine Spiegelung im Hintergrund setzt das
+        Maximum bereits auf 255 – dann bleibt für die Spreizung fast nichts übrig, und der Regler
+        wirkt wirkungslos. In dem Fall hilft nur, die Störung vorher wegzuschneiden, oder eine
+        richtige Tonwertkorrektur mit einstellbaren Grenzen. Deshalb ist die Spreizung hier ein
+        Regler und keine automatische Funktion: Standardmäßig bleibt sie aus.
+      </p>
+
+      <h2>Wann Graustufen die bessere Wahl sind</h2>
+      <ul>
+        <li>
+          <strong>Einfarbiger Druck.</strong> Eine schwarze Druckplatte statt vier – das ist der
+          Unterschied zwischen einem Cent und zehn Cent pro Seite bei Textdokumenten mit Bildern.
+        </li>
+        <li>
+          <strong>Gravur und Laser.</strong> Gravurmaschinen und Lasercutter arbeiten mit
+          Helligkeitswerten oder Schwellenwerten, nicht mit RGB. Ein Graustufenbild ist die
+          Vorlage, aus der die Steuerung ihre Bahnen ableitet.
+        </li>
+        <li>
+          <strong>Vorbereitung für die Texterkennung.</strong> OCR-Programme arbeiten zuverlässiger
+          auf Graustufen als auf Farbbildern, weil Farbkanten sonst als Struktur missverstanden
+          werden.
+        </li>
+        <li>
+          <strong>Alte Scans und Farbstiche.</strong> Ein vergilbter Scan zeigt in Graustufen keinen
+          Gilb mehr. Das ist oft der schnellste Weg zu einem brauchbaren Dokument.
+        </li>
+        <li>
+          <strong>Formulare und Portale.</strong> Manche Behördenportale akzeptieren nur Graustufen
+          oder begrenzen die Dateigröße so stark, dass ein Ein-Kanal-Bild der einzige Weg ist.
+        </li>
+      </ul>
+
+      <h2>Wann Farbe bleiben muss</h2>
+      <p>
+        Die Umwandlung ist eine Einbahnstraße: Aus einem Graustufenbild lässt sich die ursprüngliche
+        Farbe nicht zurückrechnen, weil beim Mitteln verschiedene Farbtripel auf denselben Wert
+        fallen. Deshalb gilt: Original aufbewahren. Und in diesen Fällen ist die Umwandlung meist
+        die falsche Entscheidung:
+      </p>
+      <ul>
+        <li>Wenn die Farbe selbst die Information trägt – Diagramme mit farbcodierten Linien, Karten, Warnhinweise.</li>
+        <li>Wenn das Bild als Produktabbildung dient: Ein graues Kleidungsstück verkauft sich schlecht.</li>
+        <li>Wenn es später weiterbearbeitet wird: Jeder Rechenschritt auf bereits reduzierten Daten lässt sich nicht mehr rückgängig machen.</li>
+      </ul>
+
+      <h2>Verwandte Anleitungen</h2>
+      <ul>
+        <li><a href="/bild-komprimieren/">Bild komprimieren</a> – Dateigröße senken, wenn Graustufen allein nicht reicht.</li>
+        <li><a href="/bildgroesse-aendern/">Bildgröße ändern</a> – Pixelmaße für Druck und Portale setzen.</li>
+        <li><a href="/bild-konvertieren/">Bild konvertieren</a> – zwischen JPG, PNG und WebP wechseln.</li>
+        <li><a href="/bilder-zusammenfuegen/">Bilder zusammenfügen</a> – mehrere Aufnahmen in einer Datei.</li>
+      </ul>
+    </div>
+  </ToolShell>
+</BaseLayout>
