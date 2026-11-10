@@ -2,6 +2,7 @@
 import BaseLayout from '../components/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import Icon from '../components/Icon.astro';
+import { SITE } from '../data/tools';
 import type { Crumb } from '../lib/seo';
 
 const crumbs: Crumb[] = [
@@ -30,7 +31,7 @@ const crumbs: Crumb[] = [
           <span class="tool-card__icon"><Icon name="info" /></span>
           <h3 class="tool-card__title">E-Mail</h3>
           <p class="tool-card__desc">
-            <a href="mailto:oldniko117@gmail.com">oldniko117@gmail.com</a>
+            <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
           </p>
           <p class="small muted mb-0">
             Antwort in der Regel innerhalb von zwei Werktagen. Bitte beachte, dass wir keine
