@@ -1,11 +1,11 @@
-export type ToolKey = 'crop' | 'compress' | 'resize' | 'convert' | 'watermark';
+export type ToolKey = 'crop' | 'compress' | 'resize' | 'convert' | 'watermark' | 'pdf';
 
 export interface Tool {
   key: ToolKey;
   href: string;
   name: string;
   short: string;
-  icon: 'crop' | 'compress' | 'resize' | 'convert' | 'watermark';
+  icon: 'crop' | 'compress' | 'resize' | 'convert' | 'watermark' | 'pdf';
   keywords: string;
 }
 
@@ -71,6 +71,14 @@ export const tools: Tool[] = [
     short: 'Text oder Logo als Wasserzeichen setzen – auch als Kachelmuster.',
     icon: 'watermark',
     keywords: 'wasserzeichen bild, wasserzeichen hinzufügen, bild schützen'
+  },
+  {
+    key: 'pdf',
+    href: '/bild-in-pdf/',
+    name: 'Bild in PDF umwandeln',
+    short: 'Mehrere Bilder als seitenfüllendes PDF speichern – ein Dokument, ein Download.',
+    icon: 'pdf',
+    keywords: 'bild in pdf umwandeln, jpg in pdf, fotos als pdf'
   }
 ];
 

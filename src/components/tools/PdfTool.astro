@@ -1,0 +1,142 @@
+---
+import Icon from '../Icon.astro';
+---
+
+<div class="tool-panel">
+  <div class="dropzone" id="pdf-zone">
+    <span class="dropzone__icon"><Icon name="pdf" /></span>
+    <span class="dropzone__title">Bilder hierher ziehen oder klicken</span>
+    <span class="dropzone__hint">Mehrere Dateien möglich · JPG, PNG oder WebP · je max. 30 MB</span>
+    <input
+      type="file"
+      id="pdf-input"
+      accept="image/png,image/jpeg,image/webp"
+      multiple
+      aria-label="Bilddateien für das PDF auswählen"
+    />
+  </div>
+
+  <div id="pdf-workspace" hidden>
+    <ol class="pdf-list" id="pdf-list" aria-label="Bilder im PDF, in dieser Reihenfolge"></ol>
+
+    <div class="row">
+      <button class="btn btn--ghost" id="pdf-add" type="button">Weitere Bilder hinzufügen</button>
+      <input
+        type="file"
+        id="pdf-add-input"
+        accept="image/png,image/jpeg,image/webp"
+        multiple
+        hidden
+        aria-label="Weitere Bilddateien auswählen"
+      />
+    </div>
+
+    <div class="controls controls--split mt-3">
+      <div class="field">
+        <span class="field__label">Seitenformat</span>
+        <div class="segmented" id="pdf-page" data-default="a4p" role="group" aria-label="Seitenformat">
+          <button type="button" data-page="a4p" aria-pressed="true">A4 hoch</button>
+          <button type="button" data-page="a4l" aria-pressed="false">A4 quer</button>
+          <button type="button" data-page="original" aria-pressed="false">Original</button>
+        </div>
+        <span class="small muted" id="pdf-page-hint"></span>
+      </div>
+      <div class="field" id="pdf-quality-row">
+        <label for="pdf-quality">Bildqualität <span class="field__value" id="pdf-quality-value">85 %</span></label>
+        <input type="range" id="pdf-quality" min="50" max="95" step="1" value="85" />
+      </div>
+    </div>
+
+    <div class="row mt-3" id="pdf-actions">
+      <button class="btn btn--primary" id="pdf-apply" type="button">PDF erstellen</button>
+      <a class="btn btn--download" id="pdf-download" download hidden><Icon name="download" />Herunterladen</a>
+      <button class="btn btn--ghost" id="pdf-clear" type="button">Liste leeren</button>
+    </div>
+
+    <div class="result__stats mt-3" id="pdf-stats" hidden></div>
+    <div class="notice mt-2" id="pdf-notice" hidden role="status"></div>
+  </div>
+</div>
+
+<style is:global>
+  .pdf-list {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .pdf-item {
+    display: grid;
+    grid-template-columns: 1.6rem 3.2rem minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 0.6rem;
+    background: var(--surface, #fff);
+  }
+
+  .pdf-item__num {
+    font-variant-numeric: tabular-nums;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  .pdf-item__thumb {
+    width: 3.2rem;
+    height: 2.2rem;
+    object-fit: cover;
+    border-radius: 0.35rem;
+    background: #eef1f5;
+  }
+
+  .pdf-item__meta {
+    display: grid;
+    min-width: 0;
+  }
+
+  .pdf-item__name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .pdf-item__sub {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .pdf-item__remove {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.6rem;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 520px) {
+    .pdf-item {
+      grid-template-columns: 2.6rem minmax(0, 1fr) auto;
+    }
+
+    .pdf-item__num {
+      display: none;
+    }
+
+    .pdf-item__thumb {
+      width: 2.6rem;
+      height: 2rem;
+    }
+  }
+</style>
+
+<script>
+  import '../../scripts/tools/pdf';
+</script>

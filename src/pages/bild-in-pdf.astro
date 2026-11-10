@@ -1,0 +1,202 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import ToolShell from '../components/ToolShell.astro';
+import PdfTool from '../components/tools/PdfTool.astro';
+import { breadcrumbSchema, faqSchema, howToSchema, softwareSchema, type Crumb, type FaqItem } from '../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bild in PDF umwandeln', href: '/bild-in-pdf/' }
+];
+
+const steps = [
+  {
+    title: 'Bilder auswählen – mehrere auf einmal',
+    text: 'Ziehe eine oder mehrere Dateien in das Feld oben. JPG, PNG und WebP bis 30 MB pro Datei werden direkt im Browser geöffnet; es findet kein Upload statt. Die Reihenfolge in der Liste wird die Seitenreihenfolge im PDF.'
+  },
+  {
+    title: 'Seitenformat wählen',
+    text: 'A4 hoch passt für Dokumente, Bewerbungen und Ausdrucke. A4 quer für Panorama- und Landschaftsbilder. Original lässt die Seite genau so groß wie das Bild, ohne Einpassung – sinnvoll für Screenshots und Grafiken.'
+  },
+  {
+    title: 'Bildqualität einstellen',
+    text: '85 Prozent ist ein guter Ausgangspunkt und für die meisten Fotos nicht von einer verlustfreien Variante zu unterscheiden. Wenn die PDF-Datei klein bleiben muss, gehe auf 70 bis 75 Prozent.'
+  },
+  {
+    title: 'PDF erstellen und prüfen',
+    text: 'Klicke auf „PDF erstellen“ und lade das Ergebnis herunter. Öffne es einmal und blättere durch: Stimmt die Reihenfolge, sitzt jedes Bild gerade, fehlt keine Seite?'
+  }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Werden meine Bilder für die Umwandlung hochgeladen?',
+    a: 'Nein. Die Bilder werden im Browser gelesen, auf eine Zeichenfläche gezeichnet und dort als JPEG kodiert. Das PDF wird anschließend im Arbeitsspeicher zusammengesetzt. Es gibt keinen Server, der eine Datei empfängt – deshalb ist das Werkzeug auch für Ausweise, Zeugnisse und Verträge geeignet.'
+  },
+  {
+    q: 'Kann ich mehrere Bilder in ein einziges PDF packen?',
+    a: 'Ja, bis zu 30 Bilder pro Dokument. Jedes Bild bekommt eine eigene Seite, in der Reihenfolge der Liste. Ein einzelnes PDF aus zehn Fotos ist der übliche Weg, um Bewerbungsunterlagen oder Belege zu verschicken, weil der Empfänger nur eine Datei öffnen muss.'
+  },
+  {
+    q: 'Wird der Text im PDF durchsuchbar?',
+    a: 'Nein. Aus einem Bild kann ohne Texterkennung (OCR) kein durchsuchbarer Text entstehen – das PDF enthält eine Bildseite, keine Schrift. Wer durchsuchbare Dokumente braucht, muss den Umweg über eine OCR-Software gehen. Für Scans, Fotos und Belege ist das in der Regel unerheblich.'
+  },
+  {
+    q: 'Warum wird die PDF-Datei nicht kleiner als die JPGs?',
+    a: 'Weil das PDF die JPEG-Daten unverändert einbettet, statt sie neu zu komprimieren. Ein PDF mit fünf Fotos ist ungefähr so groß wie diese fünf Fotos zusammen, plus etwa ein Kilobyte Verwaltung pro Seite. Kleiner wird es nur, wenn du die Qualitätsstufe senkst oder die Bilder vorher verkleinerst.'
+  },
+  {
+    q: 'Was passiert mit transparenten PNG-Dateien?',
+    a: 'PDF-Seiten in diesem Werkzeug haben keinen Alphakanal. Durchsichtige Bereiche werden weiß gefüllt, damit keine schwarzen Flächen entstehen. Wenn die Transparenz erhalten bleiben muss, ist PNG das richtige Format und nicht PDF.'
+  },
+  {
+    q: 'Wie groß ist die Seite im Format „Original“?',
+    a: 'Ein Pixel entspricht einem Punkt (1/72 Zoll). Ein Bild mit 1200 × 800 Pixeln ergibt damit eine Seite von 42,3 × 28,2 cm. Das ist kein Druckformat, sondern eine Arbeitsfläche ohne Skalierung – nützlich, wenn die Pixel unangetastet bleiben sollen und erst im Druckprogramm platziert wird.'
+  },
+  {
+    q: 'Eignet sich das für Bewerbungen?',
+    a: 'Für Anhänge ja: Porträt, Zeugnisse und Arbeitsproben in einer Datei sind leichter zu handhaben als fünf Einzelbilder. Achte aber darauf, dass viele Bewerbungsportale die Gesamtgröße begrenzen – fünf Fotos mit je 3 MB ergeben schnell 15 MB. Stelle die Qualität dann auf 70 Prozent.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'Bild in PDF umwandeln',
+    description:
+      'Mehrere Bilder im Browser zu einem PDF zusammenfassen: A4 oder Originalformat, einstellbare Qualität, keine Uploads.',
+    path: '/bild-in-pdf/'
+  }),
+  howToSchema({
+    name: 'Bild in PDF umwandeln',
+    description: 'Ein oder mehrere Bilder ohne Upload in ein PDF mit einer Seite pro Bild umwandeln.',
+    path: '/bild-in-pdf/',
+    steps
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="Bild in PDF umwandeln – mehrere Bilder, ein Dokument"
+  description="JPG, PNG oder WebP in ein PDF umwandeln: eine Seite pro Bild, A4 oder Originalformat, Qualität einstellbar. Im Browser, ohne Upload und ohne Anmeldung."
+  path="/bild-in-pdf/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="Bild in PDF umwandeln"
+    lead="Ein Dokument statt fünf Einzeldateien: Hier packst du mehrere Bilder in ein PDF, jede Aufnahme auf einer eigenen Seite. Die Dateien bleiben dabei auf deinem Gerät."
+    toolKey="pdf"
+    crumbs={crumbs}
+    faq={faq}
+    steps={steps}
+  >
+    <PdfTool slot="tool" />
+
+    <div class="prose mt-4">
+      <h2>Was beim Umwandeln tatsächlich passiert</h2>
+      <p>
+        Ein PDF ist ein Behälter, kein Bildformat. Beim Umwandeln wird jedes Foto auf eine Seite
+        gelegt, und die Seite bekommt eine feste Größe in Punkten – 1 Punkt entspricht 1/72 Zoll.
+        Das Bild selbst wird als JPEG in dieses PDF eingebettet. Es wird also nicht „in PDF
+        umgerechnet“, sondern in eine Seitenbeschreibung eingehängt.
+      </p>
+      <p>
+        Daraus folgen drei Eigenschaften, die man vorher kennen sollte: Die Seiten haben immer eine
+        feste physikalische Größe, es gibt keinen Alphakanal, und der Inhalt bleibt ein Bild – kein
+        Text, keine Auswahl, keine Suche.
+      </p>
+
+      <h2>A4 oder Original: was der Unterschied praktisch bedeutet</h2>
+      <p>
+        Bei <strong>A4</strong> wird das Bild so eingepasst, dass es vollständig auf die Seite passt
+        und dabei sein Seitenverhältnis behält. Bei einem Foto im Querformat bleibt oben und unten
+        Weißraum. Bei <strong>Original</strong> hat die Seite genau die Pixelmaße des Bildes; nichts
+        wird skaliert.
+      </p>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Bildbreite</th>
+              <th>Effektive Auflösung auf A4 (19,7 cm Breite)</th>
+              <th>Geeignet für</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>4000 px</td><td>ca. 515 dpi</td><td>Druck in Fotobuchqualität</td></tr>
+            <tr><td>3000 px</td><td>ca. 386 dpi</td><td>Druck, deutlich über dem Optimum</td></tr>
+            <tr><td>2000 px</td><td>ca. 258 dpi</td><td>Druck, guter Bereich</td></tr>
+            <tr><td>1600 px</td><td>ca. 206 dpi</td><td>Ausdruck im Büro, Bildschirm</td></tr>
+            <tr><td>1200 px</td><td>ca. 155 dpi</td><td>Nur Bildschirm und Vorschau</td></tr>
+            <tr><td>800 px</td><td>ca. 103 dpi</td><td>Zu weich für den Druck</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">
+        Faustregel: 200 dpi sind für den Ausdruck ausreichend, 300 dpi sind der Wert, den
+        Druckereien nennen. Die dpi-Zahl ergibt sich aus Pixeln geteilt durch die gedruckte Breite in
+        Zoll – nicht aus der Dateigröße in Kilobyte.
+      </p>
+
+      <h2>Dateigröße steuern</h2>
+      <p>
+        Das PDF bettet die JPEG-Daten unverändert ein, deshalb entspricht seine Größe ungefähr der
+        Summe der JPEGs plus rund einem Kilobyte pro Seite. Wenn ein Portal eine Obergrenze setzt,
+        hilft nur eines von zwei Dingen: die Qualitätsstufe senken oder die Bilder vorher in den
+        Pixelmaßen verkleinern.
+      </p>
+      <p>
+        Der zweite Weg ist der bessere. Ein Foto mit 1600 statt 4000 Pixeln Breite sieht auf A4
+        gedruckt fast gleich aus, ist aber ein Vielfaches kleiner – weil weniger Details zu
+        speichern sind. Wie weit man gehen kann, steht in der
+        <a href="/bild-auf-500-kb-verkleinern/">Anleitung zur Zielgröße 500 KB</a>; die Pixelmaße
+        selbst setzt man mit <a href="/bildgroesse-aendern/">Bildgröße ändern</a>.
+      </p>
+
+      <h2>Reihenfolge, Anzahl und ein häufiges Missverständnis</h2>
+      <p>
+        Jedes Bild wird eine Seite, in der Reihenfolge der Liste. Will man eine bestimmte Abfolge,
+        wählt man die Dateien in dieser Reihenfolge aus – oder entfernt einzelne Einträge und fügt
+        sie neu hinzu. Eine Seitennummerierung setzt das Werkzeug bewusst nicht: Sie würde bei
+        Fotos, die als Einzelseiten gedacht sind, nur stören.
+      </p>
+      <p>
+        Das häufigste Missverständnis: „PDF macht die Datei klein.“ Das stimmt nur, weil viele
+        Programme beim Export zusätzlich herunterrechnen. Ohne diese Skalierung ist ein PDF genauso
+        groß wie seine Bilder. Wer eine Datei für eine E-Mail-Grenze braucht, muss die
+        <a href="/bild-komprimieren/">Komprimierung</a> vorher oder die Qualitätsstufe hier
+        bemühen.
+      </p>
+
+      <h2>Wann PDF die falsche Wahl ist</h2>
+      <ul>
+        <li>
+          <strong>Wenn Text durchsuchbar sein muss.</strong> Dafür braucht es OCR – aus Pixeln lässt
+          sich kein Zeichen zurückgewinnen.
+        </li>
+        <li>
+          <strong>Wenn Transparenz erhalten bleiben soll.</strong> PNG ist das richtige Format;
+          PDF-Seiten hier haben einen weißen Hintergrund.
+        </li>
+        <li>
+          <strong>Wenn ein Bild weiterbearbeitet wird.</strong> Jedes Öffnen und erneute Speichern
+          als JPEG verliert Information. Bearbeite das Original, exportiere erst am Ende ins PDF.
+        </li>
+        <li>
+          <strong>Wenn das Bild nur geteilt werden soll.</strong> Für einen Chat oder eine
+          Bildergalerie ist JPG praktischer als ein Dokument mit einer Seite.
+        </li>
+      </ul>
+
+      <h2>Verwandte Anleitungen</h2>
+      <ul>
+        <li><a href="/bild-komprimieren/">Bild komprimieren</a> – Dateigröße senken, bevor du mehrere Bilder zusammenfasst.</li>
+        <li><a href="/bildgroesse-aendern/">Bildgröße ändern</a> – Pixelmaße setzen, damit die PDF-Datei klein bleibt.</li>
+        <li><a href="/bild-konvertieren/">Bild konvertieren</a> – JPG, PNG und WebP ineinander umwandeln.</li>
+        <li><a href="/bild-auf-500-kb-verkleinern/">Bild auf 500 KB verkleinern</a> – Zielgrößen für Portale und Formulare.</li>
+      </ul>
+    </div>
+  </ToolShell>
+</BaseLayout>
