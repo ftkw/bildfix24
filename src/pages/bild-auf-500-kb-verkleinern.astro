@@ -1,0 +1,242 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import ToolShell from '../components/ToolShell.astro';
+import Icon from '../components/Icon.astro';
+import { breadcrumbSchema, faqSchema, howToSchema, softwareSchema, type Crumb, type FaqItem } from '../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bild komprimieren', href: '/bild-komprimieren/' },
+  { name: 'Bild auf 500 KB verkleinern', href: '/bild-auf-500-kb-verkleinern/' }
+];
+
+const steps = [
+  {
+    title: 'Bild auswählen',
+    text: 'Ziehe die Datei in das Feld oben. JPG, PNG und WebP bis 30 MB werden direkt im Browser geöffnet – es findet kein Upload statt.'
+  },
+  {
+    title: 'Qualitätsstufe senken, bis die Größe passt',
+    text: 'Stelle 75 Prozent ein und beobachte die angezeigte Dateigröße. Liegt das Ergebnis über 500 KB, gehe in 10-Prozent-Schritten herunter. Bei Fotos reicht meist eine Stufe zwischen 60 und 80 Prozent.'
+  },
+  {
+    title: 'Bei Bedarf zusätzlich die Pixelmaße verkleinern',
+    text: 'Wenn 500 KB auch bei niedriger Qualität nicht erreicht werden, ist das Bild zu groß aufgelöst. Verkleinere zuerst die Kantenlänge auf 1500 bis 2000 Pixel und komprimiere danach erneut.'
+  },
+  {
+    title: 'Herunterladen und Ergebnis prüfen',
+    text: 'Lade die Datei herunter und öffne sie einmal in voller Größe. Bei Gesichtern und Text im Bild lohnt der Blick auf 100 Prozent, bevor du sie hochlädst.'
+  }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Warum verlangen so viele Portale maximal 500 KB?',
+    a: 'Bewerbungsportale, Hochschulplattformen und Behördenformulare begrenzen die Dateigröße, weil Speicher und Übertragung Kosten verursachen und große Dateien den Vorgang abbrechen lassen. 500 KB ist ein verbreiteter Kompromiss: klein genug für den Server, groß genug für ein erkennbares Porträt.'
+  },
+  {
+    q: 'Sieht man den Qualitätsverlust bei 500 KB?',
+    a: 'Auf dem Bildschirm meist nicht, im Druck schon. Ein Foto mit 500 KB eignet sich für Formulare, Portale und Webvorschauen. Für den Druck in DIN A4 oder größer brauchst du deutlich mehr Daten – dort sind 500 KB zu wenig und das Ergebnis wird sichtbar weich.'
+  },
+  {
+    q: 'Mein Bild bleibt trotz niedriger Qualität über 500 KB. Woran liegt das?',
+    a: 'Dann ist die Auflösung das Problem, nicht die Kompression. Ein 6000 Pixel breites Foto lässt sich nicht beliebig klein rechnen, ohne dass es matschig wird. Verkleinere zuerst die Pixelmaße – etwa auf 1600 Pixel Breite – und komprimiere das Ergebnis danach erneut.'
+  },
+  {
+    q: 'PNG oder JPG für 500 KB?',
+    a: 'Für Fotos fast immer JPG: PNG ist verlustfrei und wird bei Fotos kaum kleiner. PNG bleibt sinnvoll bei Screenshots mit Schrift, Grafiken mit wenigen Farben und allem, was Transparenz braucht. Im Zweifel beide Formate ausprobieren und die kleinere Datei nehmen.'
+  },
+  {
+    q: 'Werden meine Bilder hochgeladen?',
+    a: 'Nein. Die Verarbeitung läuft vollständig in deinem Browser. Es gibt keinen Server, der die Datei empfängt – deshalb ist das Werkzeug auch für Ausweiskopien, Zeugnisse und andere vertrauliche Dokumente geeignet.'
+  },
+  {
+    q: 'Kann ich mehrere Bilder gleichzeitig verkleinern?',
+    a: 'Das Werkzeug verarbeitet immer eine Datei. Für eine Handvoll Bilder ist das schneller als es klingt, weil jeder Durchlauf nur wenige Sekunden dauert. Bei größeren Mengen lohnt sich ein Stapelwerkzeug auf dem Rechner.'
+  },
+  {
+    q: 'Was ist der Unterschied zwischen 500 KB und 500 kB?',
+    a: 'Praktisch keiner. KB (Kilobyte) und kB werden umgangssprachlich gleich verwendet, gemeint sind 1000 Byte pro Kilobyte beziehungsweise 1024 Byte in der Binärzählung. Portale runden unterschiedlich, deshalb lohnt ein kleiner Sicherheitsabstand: Zielgröße 480 KB statt exakt 500 KB.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'Bild auf 500 KB verkleinern',
+    description:
+      'Bilder im Browser auf eine Zielgröße von 500 KB bringen: Qualitätsstufe und Pixelmaße anpassen, Ergebnis vor dem Download vergleichen.',
+    path: '/bild-auf-500-kb-verkleinern/'
+  }),
+  howToSchema({
+    name: 'Bild auf 500 KB verkleinern',
+    description:
+      'Ein Foto ohne sichtbaren Qualitätsverlust unter 500 KB bringen – mit Qualitätsstufe und angepasster Auflösung.',
+    path: '/bild-auf-500-kb-verkleinern/',
+    steps
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="Bild auf 500 KB verkleinern – ohne sichtbaren Verlust"
+  description="Foto auf unter 500 KB bringen: Qualitätsstufe und Pixelmaße richtig wählen, Ergebnis vor dem Download prüfen. Im Browser, ohne Upload und ohne Anmeldung."
+  path="/bild-auf-500-kb-verkleinern/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="Bild auf 500 KB verkleinern"
+    lead="Bewerbungsportal, Behördenformular oder E-Mail-Anhang: Hier bringst du ein Foto unter 500 KB, ohne dass es sichtbar schlechter wird. Die Datei bleibt dabei auf deinem Gerät."
+    toolKey="compress"
+    crumbs={crumbs}
+    faq={faq}
+    steps={steps}
+  >
+    <div slot="tool" class="tool-panel">
+      <div class="dropzone" id="compress-zone">
+        <span class="dropzone__icon"><Icon name="compress" /></span>
+        <span class="dropzone__title">Bild hierher ziehen oder klicken</span>
+        <span class="dropzone__hint">JPG, PNG oder WebP · max. 30 MB</span>
+        <input type="file" id="compress-input" accept="image/png,image/jpeg,image/webp" aria-label="Bilddatei auswählen" />
+      </div>
+
+      <div id="compress-workspace" hidden>
+        <div class="preview">
+          <img id="compress-img" alt="Vorschau des zu komprimierenden Bildes" />
+        </div>
+
+        <div class="controls controls--split">
+          <div class="field" id="compress-quality-row">
+            <label for="compress-quality">Qualität <span class="field__value" id="compress-quality-value">80 %</span></label>
+            <input type="range" id="compress-quality" min="10" max="100" step="1" value="80" />
+          </div>
+          <div class="field">
+            <span class="field__label">Ausgabeformat</span>
+            <div class="segmented" id="compress-format" role="group" aria-label="Ausgabeformat">
+              <button type="button" data-format="image/jpeg" aria-pressed="true">JPG</button>
+              <button type="button" data-format="image/png" aria-pressed="false">PNG</button>
+              <button type="button" data-format="image/webp" aria-pressed="false">WebP</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3" id="compress-actions">
+          <button class="btn btn--primary" id="compress-apply" type="button">Komprimieren</button>
+          <a class="btn btn--download" id="compress-download" download hidden><Icon name="download" />Herunterladen</a>
+          <button class="btn btn--ghost" id="compress-reset" type="button">Anderes Bild</button>
+        </div>
+
+        <div class="result__stats mt-3" id="compress-stats" hidden></div>
+        <div class="notice mt-2" id="compress-notice" hidden role="status"></div>
+      </div>
+    </div>
+
+    <div class="prose mt-4">
+      <h2>Warum ausgerechnet 500 KB?</h2>
+      <p>
+        Die Grenze ist kein technisches Naturgesetz, sondern eine Konvention. Sie taucht überall dort
+        auf, wo viele Dateien gleichzeitig gespeichert und übertragen werden: Bewerbungsportale,
+        Hochschulplattformen, Vereinsverwaltungen, Behördenformulare. 500 KB reichen für ein
+        erkennbares Porträt in Bildschirmauflösung und sind gleichzeitig klein genug, dass ein
+        Formular nicht abbricht, wenn hundert Personen gleichzeitig hochladen.
+      </p>
+      <p>
+        Wenn du nicht genau weißt, welche Grenze gilt: Lade im Zweifel die kleinere Datei hoch.
+        Portale prüfen in der Regel nur die Obergrenze, nicht die Qualität. Eine Datei mit 420 KB
+        wird genauso akzeptiert wie eine mit 498 KB.
+      </p>
+
+      <h2>Zielgrößen und typische Vorgehensweisen</h2>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Zielgröße</th>
+              <th>Sinnvolles Vorgehen</th>
+              <th>Typisches Ergebnis</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>unter 2 MB</td>
+              <td>Nur Qualitätsstufe auf 80 % senken, Pixelmaße unverändert lassen</td>
+              <td>Meist in einem Schritt erreichbar</td>
+            </tr>
+            <tr>
+              <td>unter 500 KB</td>
+              <td>Qualität 65–80 %; bei sehr großen Fotos zusätzlich auf 2000 px Breite verkleinern</td>
+              <td>Für Porträt und Dokumente gut lesbar</td>
+            </tr>
+            <tr>
+              <td>unter 200 KB</td>
+              <td>Qualität 55–70 % und Kantenlänge auf 1200–1500 px begrenzen</td>
+              <td>Für Web und Formulare ausreichend</td>
+            </tr>
+            <tr>
+              <td>unter 100 KB</td>
+              <td>Qualität 45–60 %, Kantenlänge 800–1000 px, Ausgabe als WebP</td>
+              <td>Vorschaubild-Qualität, für Druck nicht geeignet</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">
+        Die Werte sind Erfahrungswerte für Fotos. Bei Screenshots mit viel Text und bei Grafiken mit
+        großen einfarbigen Flächen weichen sie deutlich ab – dort ist die Auflösung wichtiger als die
+        Qualitätsstufe.
+      </p>
+
+      <h2>Qualitätsstufe: was sie tatsächlich macht</h2>
+      <p>
+        Bei JPG und WebP bestimmt die Qualitätsstufe, wie grob das Bild in Blöcken zusammengefasst
+        wird. Niedrigere Werte bedeuten kleinere Dateien und sichtbare Artefakte – feine Strukturen
+        verschwinden zuerst, Gesichter werden weich, harte Kanten bekommen ein leichtes Muster.
+      </p>
+      <ul>
+        <li><strong>85–95 %:</strong> praktisch verlustfrei, spart wenig. Für Screenshots mit Schrift.</li>
+        <li><strong>70–85 %:</strong> der übliche Bereich für Fotos im Web. Ohne direkten Vergleich kaum zu erkennen.</li>
+        <li><strong>55–70 %:</strong> sichtbar weicher, aber für Porträts in Formularen völlig ausreichend.</li>
+        <li><strong>unter 50 %:</strong> nur, wenn die Dateigröße wichtiger ist als die Optik.</li>
+      </ul>
+
+      <h2>Der häufigste Fehler: zuerst an der Qualität drehen</h2>
+      <p>
+        Ein Foto aus einer modernen Kamera oder einem Smartphone hat oft 4000 bis 6000 Pixel
+        Kantenlänge. Für ein Formular braucht niemand diese Auflösung. Wenn du zuerst die
+        <a href="/bildgroesse-aendern/">Bildgröße auf etwa 1600 Pixel</a> reduzierst und danach mit
+        80 Prozent komprimierst, landest du fast immer unter 500 KB – und das Ergebnis sieht besser
+        aus als ein in Originalauflösung heruntergerechnetes Bild mit 40 Prozent Qualität.
+      </p>
+      <p>
+        Der Grund: Weniger Pixel bedeuten weniger Details, die der Kompressor wegwerfen muss. Beide
+        Wege sparen Bytes, aber der erste verteilt den Verlust gleichmäßiger.
+      </p>
+
+      <h2>Wann 500 KB die falsche Zielgröße ist</h2>
+      <p>
+        Für den Druck. Ein Foto mit 500 KB hat typischerweise genug Pixel für 10 × 15 cm, darüber
+        wird es sichtbar unscharf. Wer Bewerbungsfotos, Speisekarten oder Flyer drucken lassen will,
+        sollte die Originaldatei behalten und nur für die Online-Einreichung eine kleine Kopie
+        erzeugen.
+      </p>
+      <p>
+        Ebenfalls ungeeignet: Bilder, die später weiterbearbeitet werden. Jede JPG-Kompression
+        verliert Information, und wiederholtes Speichern summiert die Verluste. Bearbeite immer die
+        Originaldatei und komprimiere erst den finalen Export.
+      </p>
+
+      <h2>Verwandte Anleitungen</h2>
+      <ul>
+        <li><a href="/bild-komprimieren/">Bild komprimieren</a> – das Werkzeug ohne feste Zielgröße, mit Formatauswahl.</li>
+        <li><a href="/bildgroesse-aendern/">Bildgröße ändern</a> – Pixelmaße exakt setzen, bevor du komprimierst.</li>
+        <li><a href="/produktbild-komprimieren/">Produktbilder komprimieren</a> – für Shop und Marktplatz.</li>
+      </ul>
+    </div>
+  </ToolShell>
+
+  <script>
+    import '../scripts/tools/compress';
+  </script>
+</BaseLayout>

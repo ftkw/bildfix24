@@ -9,7 +9,7 @@ import sitemap from '@astrojs/sitemap';
 //     会退化成 HEAD 日期（实测过，得到构建当天的日期）；
 //   - 文件 mtime → CI checkout 时间，同样不准。
 // 结论：手动维护。改动 src/pages 或 src/data 里的正文时，同步更新这个日期。
-const CONTENT_UPDATED = '2026-11-06';
+const CONTENT_UPDATED = '2026-11-11';
 
 // https://astro.build/config
 // `site` ist die Basis für canonical, og:url und die sitemap.

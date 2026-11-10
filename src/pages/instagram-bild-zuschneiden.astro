@@ -1,0 +1,244 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import ToolShell from '../components/ToolShell.astro';
+import Icon from '../components/Icon.astro';
+import { breadcrumbSchema, faqSchema, howToSchema, softwareSchema, type Crumb, type FaqItem } from '../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bild zuschneiden', href: '/bild-zuschneiden/' },
+  { name: 'Instagram-Bild zuschneiden', href: '/instagram-bild-zuschneiden/' }
+];
+
+const steps = [
+  {
+    title: 'Bild auswählen',
+    text: 'Ziehe das Foto in das Feld oben. Es bleibt auf deinem Gerät – der Zuschnitt läuft im Browser, nicht auf einem Server.'
+  },
+  {
+    title: 'Format wählen: 1:1, 4:5 oder 9:16',
+    text: 'Für den Feed im Quadrat 1:1, für ein größeres Hochformat 4:5, für Story und Reels 9:16. Der Rahmen springt auf das passende Seitenverhältnis und rastet beim Ziehen ein.'
+  },
+  {
+    title: 'Ausschnitt verschieben',
+    text: 'Ziehe den Rahmen so, dass das Motiv im Zentrum bleibt. Lass oben und unten etwas Luft, weil Instagram in der Vorschau je nach Gerät unterschiedlich beschneidet.'
+  },
+  {
+    title: 'Zuschneiden und herunterladen',
+    text: 'Klicke auf „Zuschneiden“ und lade das Ergebnis herunter. Die Pixel bleiben erhalten, sodass du beim Upload keine Auflösung verlierst.'
+  }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Welche Bildgröße ist für Instagram am besten?',
+    a: 'Für den Feed: 1080 × 1080 Pixel im Quadrat oder 1080 × 1350 Pixel im Hochformat 4:5. Für Story und Reels: 1080 × 1920 Pixel. Größere Dateien werden von Instagram auf diese Maße heruntergerechnet, kleinere werden nicht hochskaliert – deshalb lohnt es sich, direkt in der Zielgröße zu arbeiten.'
+  },
+  {
+    q: 'Warum wird mein Bild bei Instagram abgeschnitten?',
+    a: 'Weil Instagram beim Upload auf das gewählte Format bringt und dabei die Ränder beschneidet. Welcher Teil verschwindet, entscheidet die App – meist die Mitte. Wenn du den Ausschnitt vorher selbst festlegst, bestimmst du, was sichtbar bleibt.'
+  },
+  {
+    q: 'Sollte ich größer als 1080 Pixel hochladen?',
+    a: 'Nein. Instagram rechnet auf 1080 Pixel Breite herunter und komprimiert zusätzlich. Eine 4000 Pixel breite Datei bringt also keine bessere Qualität, kostet aber mehr Datenvolumen beim Upload. 1080 Pixel Breite ist der sinnvolle Ausgangspunkt.'
+  },
+  {
+    q: 'Was ist besser: 1:1 oder 4:5?',
+    a: '4:5 nutzt mehr Bildschirmfläche im Feed und wird in der Regel häufiger vollständig angezeigt. 1:1 ist dann sinnvoll, wenn dasselbe Motiv auch in Karussells oder auf anderen Kanälen funktionieren soll. Beides ist möglich, solange du innerhalb eines Posts bei einem Format bleibst.'
+  },
+  {
+    q: 'Wie viel Rand sollte ich für Story und Reels lassen?',
+    a: 'Halte die wichtigen Inhalte im mittleren Bereich: oben etwa 250 Pixel für den Kontonamen, unten rund 250 Pixel für Beschriftung und Buttons freilassen. Alles, was am äußersten Rand liegt, wird auf manchen Geräten überdeckt.'
+  },
+  {
+    q: 'Wird die Bildqualität beim Zuschneiden schlechter?',
+    a: 'Nein, solange du nicht zusätzlich komprimierst. Zuschneiden entfernt Pixel am Rand, verändert aber die verbleibenden nicht. Erst der Upload zu Instagram führt eine Kompression durch – dagegen hilft ein sauberes Ausgangsbild ohne Überschärfung.'
+  },
+  {
+    q: 'Kann ich mehrere Bilder im gleichen Format zuschneiden?',
+    a: 'Das Werkzeug bearbeitet immer eine Datei. Für ein Karussell mit sechs Bildern sind das sechs kurze Durchläufe. Wähle dabei jedes Mal dasselbe Seitenverhältnis, damit die Bilder im Feed eine einheitliche Höhe haben.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'Instagram-Bild zuschneiden',
+    description:
+      'Fotos auf Instagram-Formate zuschneiden: 1:1 für den Feed, 4:5 für Hochformat, 9:16 für Story und Reels – direkt im Browser.',
+    path: '/instagram-bild-zuschneiden/'
+  }),
+  howToSchema({
+    name: 'Bild für Instagram zuschneiden',
+    description:
+      'Ein Foto auf das passende Instagram-Format bringen, ohne dass die App den Ausschnitt selbst wählt.',
+    path: '/instagram-bild-zuschneiden/',
+    steps
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="Instagram-Bild zuschneiden – 1:1, 4:5 und 9:16"
+  description="Fotos für Instagram zuschneiden: 1080 × 1080 für den Feed, 1080 × 1350 im Hochformat, 1080 × 1920 für Story und Reels. Ohne Upload, direkt im Browser."
+  path="/instagram-bild-zuschneiden/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="Instagram-Bild zuschneiden"
+    lead="Lege den Ausschnitt selbst fest, bevor Instagram es tut. Die Formate für Feed, Story und Reels sind voreingestellt, die Bearbeitung läuft vollständig in deinem Browser."
+    toolKey="crop"
+    crumbs={crumbs}
+    faq={faq}
+    steps={steps}
+  >
+    <div slot="tool" class="tool-panel">
+      <div class="dropzone" id="crop-zone">
+        <span class="dropzone__icon"><Icon name="upload" /></span>
+        <span class="dropzone__title">Bild hierher ziehen oder klicken</span>
+        <span class="dropzone__hint">JPG, PNG oder WebP · max. 30 MB</span>
+        <input type="file" id="crop-input" accept="image/png,image/jpeg,image/webp" aria-label="Bilddatei auswählen" />
+      </div>
+
+      <div id="crop-workspace" hidden>
+        <div class="preview">
+          <div class="preview__stage" id="crop-stage">
+            <img id="crop-img" alt="Vorschau des zugeschnittenen Bildes" />
+            <div class="crop-layer" id="crop-layer">
+              <div class="crop-box" id="crop-box" role="group" aria-label="Zuschnittrahmen">
+                <span class="crop-handle" data-corner="nw"></span>
+                <span class="crop-handle" data-corner="ne"></span>
+                <span class="crop-handle" data-corner="sw"></span>
+                <span class="crop-handle" data-corner="se"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="field">
+            <span class="field__label" id="crop-ratio-label">Instagram-Format</span>
+            <div class="segmented" id="crop-ratio" role="group" aria-labelledby="crop-ratio-label">
+              <button type="button" data-ratio="1" aria-pressed="true">1:1</button>
+              <button type="button" data-ratio="0.8" aria-pressed="false">4:5</button>
+              <button type="button" data-ratio="0.5625" aria-pressed="false">9:16</button>
+              <button type="button" data-ratio="free" aria-pressed="false">Frei</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3" id="crop-actions">
+          <button class="btn btn--primary" id="crop-apply" type="button">Zuschneiden</button>
+          <a class="btn btn--download" id="crop-download" download hidden><Icon name="download" />Herunterladen</a>
+          <button class="btn btn--ghost" id="crop-reset" type="button">Anderes Bild</button>
+        </div>
+
+        <div class="result__stats mt-3" id="crop-stats" hidden></div>
+        <div class="notice mt-2" id="crop-notice" hidden role="status"></div>
+      </div>
+    </div>
+
+    <div class="prose mt-4">
+      <h2>Die Formate im Überblick</h2>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>Pixel</th>
+              <th>Verwendung</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1:1</td>
+              <td>1080 × 1080</td>
+              <td>Feed im Quadrat, Karussell, klassische Posts</td>
+            </tr>
+            <tr>
+              <td>4:5</td>
+              <td>1080 × 1350</td>
+              <td>Feed im Hochformat – nutzt die größte Fläche</td>
+            </tr>
+            <tr>
+              <td>9:16</td>
+              <td>1080 × 1920</td>
+              <td>Story, Reels, Feed-Video</td>
+            </tr>
+            <tr>
+              <td>16:9</td>
+              <td>1080 × 608</td>
+              <td>Querformat in der Feed-Vorschau, selten sinnvoll</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Für das Profilbild gilt eine eigene Regel: Es wird immer kreisförmig angezeigt. Lade es
+        quadratisch hoch und achte darauf, dass das Motiv mittig sitzt – alles außerhalb des Kreises
+        fällt weg.
+      </p>
+
+      <h2>Warum du vorher zuschneiden solltest</h2>
+      <p>
+        Instagram bringt jedes Bild beim Upload auf ein Format und entscheidet dabei selbst, welcher
+        Teil beschnitten wird. Diese Entscheidung fällt nicht immer glücklich: Bei Gruppenfotos
+        verschwindet jemand am Rand, bei Produktaufnahmen wird das Logo angeschnitten, bei Porträts
+        sitzt der Kopf zu nah am Rand.
+      </p>
+      <p>
+        Wer den Ausschnitt vorher festlegt, behält die Kontrolle. Der Rahmen wird nicht mehr
+        verschoben, sondern nur noch auf die Zielgröße skaliert – das Ergebnis entspricht dem, was du
+        hochgeladen hast.
+      </p>
+
+      <h2>Auflösung: lieber richtig als groß</h2>
+      <p>
+        Instagram speichert Bilder mit maximal 1080 Pixel Breite. Alles darüber wird beim Upload
+        heruntergerechnet, alles darunter bleibt klein. Hochladen in 1080 Pixel Breite ist damit der
+        einzige Weg, die Kontrolle über die Schärfe zu behalten: Eine 4000 Pixel breite Datei wird
+        nicht besser aussehen, aber länger brauchen.
+      </p>
+      <p>
+        Zusätzlich komprimiert Instagram jedes Bild. Feine Strukturen – Stoffmuster, Laub, Text im
+        Bild – leiden darunter am stärksten. Wenn du unsicher bist, prüfe das Ergebnis einmal in der
+        Vorschau, bevor du veröffentlichst.
+      </p>
+
+      <h2>Sicherer Bereich für Story und Reels</h2>
+      <p>
+        Bei 9:16 überdecken Interface-Elemente Teile des Bildes. Rechne mit etwa 250 Pixel oben für
+        Kontoname und Fortschrittsbalken und rund 250 Pixel unten für Beschriftung und Reaktionsbuttons.
+        Wichtige Inhalte gehören in den Bereich dazwischen – also in ein etwa 1080 × 1420 Pixel großes
+        Mittelfeld.
+      </p>
+
+      <h2>Wenn das Bild nicht ins Format passt</h2>
+      <p>
+        Zwei Wege: Du schneidest großzügig zu und verlierst Bildinhalt, oder du ergänzt die Ränder.
+        Für den Feed ist ein sauberer Zuschnitt meist die bessere Wahl – aufgefüllte Ränder sehen
+        nach Notlösung aus und kosten Reichweite. Wenn das Motiv aber nicht ohne Verlust ins
+        Hochformat passt, lass es im Quadrat und akzeptiere die kleinere Darstellung.
+      </p>
+      <p>
+        Achte beim Zuschneiden darauf, dass die Auflösung reicht: Aus einem 1080 Pixel breiten
+        Ausgangsbild lässt sich kein 1080 Pixel breiter Hochformat-Ausschnitt gewinnen, ohne
+        hochzurechnen. Vergrößere dann mit <a href="/bildgroesse-aendern/">Bildgröße ändern</a>
+        besser nicht – hochskalierte Bilder wirken bei Instagram weich.
+      </p>
+
+      <h2>Verwandte Anleitungen</h2>
+      <ul>
+        <li><a href="/bild-zuschneiden/">Bild zuschneiden</a> – freies Seitenverhältnis und gängige Formate.</li>
+        <li><a href="/bild-komprimieren/">Bild komprimieren</a> – Dateigröße vor dem Upload reduzieren.</li>
+        <li><a href="/passfoto-zuschneiden/">Passfoto zuschneiden</a> – wenn es auf Millimeter ankommt.</li>
+      </ul>
+    </div>
+  </ToolShell>
+
+  <script>
+    import '../scripts/tools/crop';
+  </script>
+</BaseLayout>

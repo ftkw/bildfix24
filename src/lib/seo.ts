@@ -84,6 +84,39 @@ export function faqSchema(items: FaqItem[]) {
   };
 }
 
+/**
+ * HowTo für Anleitungsseiten mit konkretem Ziel (z. B. „Bild auf 500 KB verkleinern“).
+ *
+ * Google zeigt HowTo-Richresults seit 2023 nur noch eingeschränkt an, aber die
+ * Auszeichnung bleibt für die Zitierbarkeit durch KI-Suche nützlich: die Schritte
+ * werden als abgeschlossene Einheit gelesen und lassen sich einzeln referenzieren.
+ */
+export function howToSchema(opts: {
+  name: string;
+  description: string;
+  path: string;
+  steps: { title: string; text: string }[];
+}) {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: opts.name,
+    description: opts.description,
+    inLanguage: 'de-DE',
+    totalTime: 'PT2M',
+    tool: [
+      { '@type': 'HowToTool', name: 'Webbrowser' },
+      { '@type': 'HowToTool', name: SITE.name }
+    ],
+    step: opts.steps.map((step, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: step.title,
+      text: step.text
+    }))
+  };
+}
+
 export function breadcrumbSchema(crumbs: Crumb[]) {
   return {
     '@context': 'https://schema.org',

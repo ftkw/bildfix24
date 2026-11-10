@@ -1,0 +1,245 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import ToolShell from '../components/ToolShell.astro';
+import Icon from '../components/Icon.astro';
+import { breadcrumbSchema, faqSchema, howToSchema, softwareSchema, type Crumb, type FaqItem } from '../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bild zuschneiden', href: '/bild-zuschneiden/' },
+  { name: 'Passfoto zuschneiden', href: '/passfoto-zuschneiden/' }
+];
+
+const steps = [
+  {
+    title: 'Bild auswählen',
+    text: 'Nimm eine Aufnahme mit ruhigem, hellem Hintergrund und frontalem Gesichtsausdruck. Ziehe die Datei in das Feld oben – sie verlässt dein Gerät nicht.'
+  },
+  {
+    title: 'Format 35:45 wählen',
+    text: 'Der Rahmen springt auf das Seitenverhältnis eines biometrischen Lichtbilds. Verschiebe ihn so, dass der Kopf mittig sitzt und oben etwa ein Zehntel Luft bleibt.'
+  },
+  {
+    title: 'Auf 413 × 531 Pixel bringen',
+    text: 'Für den Druck in 300 dpi entspricht 35 × 45 mm genau 413 × 531 Pixel. Nach dem Zuschneiden kannst du die Kantenlänge mit dem Werkzeug „Bildgröße ändern“ exakt setzen.'
+  },
+  {
+    title: 'Ergebnis prüfen lassen',
+    text: 'Ob ein Lichtbild den biometrischen Vorgaben entspricht, entscheidet am Ende die Behörde. Dieses Werkzeug bereitet den Zuschnitt vor, ersetzt aber keine Prüfung.'
+  }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Welche Maße hat ein Passfoto in Deutschland?',
+    a: 'Ein biometrisches Lichtbild ist 35 mm breit und 45 mm hoch. Die Kopfhöhe – gemessen vom Kinn bis zum oberen Rand des Kopfes – soll zwischen 32 und 36 mm liegen. Das Gesicht muss frontal, vollständig sichtbar und gleichmäßig ausgeleuchtet sein.'
+  },
+  {
+    q: 'Wie viele Pixel sind 35 × 45 mm?',
+    a: 'Bei 300 dpi, der üblichen Auflösung für den Fotodruck, sind das 413 × 531 Pixel. Für eine rein digitale Einreichung genügen oft kleinere Dateien, solange die Proportionen stimmen – frag im Zweifel bei der zuständigen Stelle nach den akzeptierten Maßen.'
+  },
+  {
+    q: 'Kann ich ein Passfoto selbst mit dem Smartphone aufnehmen?',
+    a: 'Technisch ja, wenn die Bedingungen stimmen: helle, einfarbige Wand, kein Blitz von vorn, Kamera auf Augenhöhe, neutraler Gesichtsausdruck, keine Schatten im Gesicht. Freunde oder ein Stativ helfen, weil der Abstand sonst zu kurz ist und die Proportionen verzerren.'
+  },
+  {
+    q: 'Reicht es, ein vorhandenes Foto zuzuschneiden?',
+    a: 'Nur wenn die Aufnahme die Vorgaben schon erfüllt. Aus einem Urlaubsfoto mit seitlichem Licht, geneigtem Kopf oder angeschnittenem Kinn wird durch Zuschneiden kein biometrisches Bild. Der Zuschnitt korrigiert die Proportionen, nicht die Aufnahmesituation.'
+  },
+  {
+    q: 'Wird das Foto irgendwohin hochgeladen?',
+    a: 'Nein. Der Zuschnitt läuft im Browser auf deinem Gerät. Gerade bei Ausweisfotos ist das relevant, weil sie biometrische Daten enthalten – hierfür gilt die DSGVO und ein unnötiger Upload wäre vermeidbar.'
+  },
+  {
+    q: 'Was ist bei digitaler Einreichung zu beachten?',
+    a: 'Viele Behörden und Online-Dienste akzeptieren inzwischen digitale Lichtbilder, teilweise mit eigenen Vorgaben zu Dateiformat und Mindestauflösung. Kläre die Anforderungen vorab bei der zuständigen Stelle – sie können sich von den Druckmaßen unterscheiden.'
+  },
+  {
+    q: 'Warum ist mein Foto trotz richtiger Maße abgelehnt worden?',
+    a: 'Meist liegt es nicht am Format, sondern am Inhalt: ungleichmäßige Ausleuchtung, Schatten im Gesicht, Zähne sichtbar, Brille mit Reflexen, Haare im Gesicht oder ein Hintergrund mit Muster. Diese Punkte lassen sich nur bei der Aufnahme beeinflussen, nicht am Rechner.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'Passfoto zuschneiden',
+    description:
+      'Foto auf das Format 35 × 45 mm für biometrische Lichtbilder zuschneiden – im Browser, ohne Upload.',
+    path: '/passfoto-zuschneiden/'
+  }),
+  howToSchema({
+    name: 'Passfoto auf 35 × 45 mm zuschneiden',
+    description:
+      'Ein Foto auf das Seitenverhältnis eines biometrischen Lichtbilds zuschneiden und auf 413 × 531 Pixel bringen.',
+    path: '/passfoto-zuschneiden/',
+    steps
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="Passfoto zuschneiden – Format 35 × 45 mm"
+  description="Foto auf 35 × 45 mm für Personalausweis, Reisepass oder Visum zuschneiden: richtiges Seitenverhältnis, 413 × 531 Pixel, ohne Upload."
+  path="/passfoto-zuschneiden/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="Passfoto zuschneiden"
+    lead="Bringe dein Foto auf das Format 35 × 45 Millimeter und die passende Pixelzahl. Der Zuschnitt läuft im Browser – dein Bild wird nicht hochgeladen."
+    toolKey="crop"
+    crumbs={crumbs}
+    faq={faq}
+    steps={steps}
+  >
+    <div slot="tool" class="tool-panel">
+      <div class="dropzone" id="crop-zone">
+        <span class="dropzone__icon"><Icon name="upload" /></span>
+        <span class="dropzone__title">Bild hierher ziehen oder klicken</span>
+        <span class="dropzone__hint">JPG, PNG oder WebP · max. 30 MB</span>
+        <input type="file" id="crop-input" accept="image/png,image/jpeg,image/webp" aria-label="Bilddatei auswählen" />
+      </div>
+
+      <div id="crop-workspace" hidden>
+        <div class="preview">
+          <div class="preview__stage" id="crop-stage">
+            <img id="crop-img" alt="Vorschau des zugeschnittenen Passfotos" />
+            <div class="crop-layer" id="crop-layer">
+              <div class="crop-box" id="crop-box" role="group" aria-label="Zuschnittrahmen">
+                <span class="crop-handle" data-corner="nw"></span>
+                <span class="crop-handle" data-corner="ne"></span>
+                <span class="crop-handle" data-corner="sw"></span>
+                <span class="crop-handle" data-corner="se"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="field">
+            <span class="field__label" id="crop-ratio-label">Seitenverhältnis</span>
+            <div class="segmented" id="crop-ratio" role="group" aria-labelledby="crop-ratio-label">
+              <button type="button" data-ratio="0.7777777778" aria-pressed="true">35:45</button>
+              <button type="button" data-ratio="1" aria-pressed="false">1:1</button>
+              <button type="button" data-ratio="free" aria-pressed="false">Frei</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3" id="crop-actions">
+          <button class="btn btn--primary" id="crop-apply" type="button">Zuschneiden</button>
+          <a class="btn btn--download" id="crop-download" download hidden><Icon name="download" />Herunterladen</a>
+          <button class="btn btn--ghost" id="crop-reset" type="button">Anderes Bild</button>
+        </div>
+
+        <div class="result__stats mt-3" id="crop-stats" hidden></div>
+        <div class="notice mt-2" id="crop-notice" hidden role="status"></div>
+      </div>
+    </div>
+
+    <div class="prose mt-4">
+      <h2>Die Vorgaben im Überblick</h2>
+      <p>
+        Für Personalausweis, Reisepass und die meisten Visa gilt in Deutschland ein einheitliches
+        Format. Die folgenden Werte sind die üblichen Anforderungen an ein biometrisches Lichtbild:
+      </p>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Merkmal</th>
+              <th>Vorgabe</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Format</td>
+              <td>35 mm breit × 45 mm hoch (Hochformat)</td>
+            </tr>
+            <tr>
+              <td>Kopfhöhe</td>
+              <td>32 bis 36 mm von Kinn bis oberer Kopfrand</td>
+            </tr>
+            <tr>
+              <td>Auflösung (Druck)</td>
+              <td>413 × 531 Pixel bei 300 dpi</td>
+            </tr>
+            <tr>
+              <td>Hintergrund</td>
+              <td>einfarbig hell, ohne Muster und ohne Schatten</td>
+            </tr>
+            <tr>
+              <td>Gesicht</td>
+              <td>frontal, vollständig sichtbar, neutraler Ausdruck, Mund geschlossen</td>
+            </tr>
+            <tr>
+              <td>Kopfbedeckung</td>
+              <td>nur aus religiösen Gründen, Gesicht muss frei bleiben</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">
+        Die abschließende Beurteilung liegt immer bei der Behörde. Frage im Zweifel vorher nach,
+        besonders bei Visa, die zusätzliche Anforderungen einzelner Länder haben können.
+      </p>
+
+      <h2>Warum 35:45 und 413 × 531 zusammengehören</h2>
+      <p>
+        Beide Zahlen beschreiben dasselbe Format in unterschiedlichen Einheiten. 35:45 ist das
+        Seitenverhältnis – es legt fest, wie breit das Bild im Verhältnis zur Höhe ist. 413 × 531
+        Pixel ist die konkrete Auflösung, die bei 300 dpi genau 35 × 45 Millimeter ergibt.
+      </p>
+      <p>
+        Wer nur das Seitenverhältnis trifft, aber zu wenige Pixel hat, bekommt beim Druck ein
+        unscharfes Bild. Wer nur die Pixelzahl trifft, aber das falsche Verhältnis, bekommt ein
+        verzerrtes Gesicht. Deshalb beide Schritte: erst zuschneiden, dann die Kantenlänge exakt
+        setzen.
+      </p>
+
+      <h2>Vom Foto zum Lichtbild: die Aufnahme entscheidet</h2>
+      <p>
+        Der häufigste Grund für eine Ablehnung ist nicht der Zuschnitt, sondern die Aufnahme. Diese
+        Punkte lassen sich am Rechner nicht korrigieren und müssen vorher stimmen:
+      </p>
+      <ul>
+        <li><strong>Gleichmäßiges Licht:</strong> Tageslicht von vorn, kein Blitz frontal, keine harten Schatten an Nase oder Kinn.</li>
+        <li><strong>Ruhiger Hintergrund:</strong> einfarbige helle Wand, mindestens einen Meter Abstand, damit kein Schatten darauf fällt.</li>
+        <li><strong>Kamera auf Augenhöhe:</strong> Von oben oder unten aufgenommen wirkt das Gesicht verzerrt.</li>
+        <li><strong>Neutraler Ausdruck:</strong> Mund geschlossen, Augen geöffnet und sichtbar, keine hochgezogenen Augenbrauen.</li>
+        <li><strong>Keine Reflexe:</strong> Brille abnehmen oder so kippen, dass keine Spiegelung die Augen verdeckt.</li>
+      </ul>
+      <p>
+        Ein Abstand von etwa 1,5 Metern zur Kamera ist ein guter Ausgangspunkt. Näher dran verzerrt
+        die Proportionen, weiter weg sinkt die Detailauflösung.
+      </p>
+
+      <h2>Was dieses Werkzeug nicht leistet</h2>
+      <p>
+        Es prüft nicht, ob ein Foto biometrisch tauglich ist. Es erkennt keine Schatten, keine
+        Reflexe und keine unzulässige Kopfbedeckung, und es kann die Kopfhöhe nicht automatisch
+        vermessen. Was es tut, ist der letzte, rein mechanische Schritt: den Ausschnitt auf das
+        richtige Verhältnis bringen und die Pixelzahl festlegen.
+      </p>
+      <p>
+        Für den Druck in einem Fotogeschäft oder mit einem Fotodrucker reicht das Ergebnis in
+        413 × 531 Pixel aus, wenn die Aufnahme gut ist. Für die digitale Einreichung bei einer
+        Behörde oder einem Online-Dienst gelten teilweise abweichende Vorgaben – dort entscheidet
+        die Stelle, ob das Bild angenommen wird.
+      </p>
+
+      <h2>Verwandte Anleitungen</h2>
+      <ul>
+        <li><a href="/bildgroesse-aendern/">Bildgröße ändern</a> – die Kantenlänge nach dem Zuschnitt exakt auf 413 × 531 Pixel setzen.</li>
+        <li><a href="/bild-auf-500-kb-verkleinern/">Bild auf 500 KB verkleinern</a> – für Portale mit Größenlimit.</li>
+        <li><a href="/bild-zuschneiden/">Bild zuschneiden</a> – freie Formate für alle anderen Fälle.</li>
+      </ul>
+    </div>
+  </ToolShell>
+
+  <script>
+    import '../scripts/tools/crop';
+  </script>
+</BaseLayout>

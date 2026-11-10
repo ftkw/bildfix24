@@ -1,0 +1,224 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import ToolShell from '../components/ToolShell.astro';
+import Icon from '../components/Icon.astro';
+import { breadcrumbSchema, faqSchema, howToSchema, softwareSchema, type Crumb, type FaqItem } from '../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bild komprimieren', href: '/bild-komprimieren/' },
+  { name: 'Produktbild komprimieren', href: '/produktbild-komprimieren/' }
+];
+
+const steps = [
+  {
+    title: 'Produktbild auswählen',
+    text: 'Ziehe das Foto in das Feld oben. JPG, PNG und WebP bis 30 MB werden im Browser geöffnet – auch bei vertraulichen Produktneuheiten verlässt nichts dein Gerät.'
+  },
+  {
+    title: 'Kantenlänge im Blick behalten',
+    text: 'Die Zoomfunktion der Marktplätze braucht mindestens 1000 Pixel Kantenlänge, besser 1600. Verkleinere deshalb nicht unter diese Grenze, sondern arbeite mit der Qualitätsstufe.'
+  },
+  {
+    title: 'Qualität in 10-Prozent-Schritten senken',
+    text: 'Beginne bei 85 Prozent. Für Produktfotos mit glattem Hintergrund sind 75 bis 85 Prozent meist ausreichend, weil große einfarbige Flächen sehr effizient komprimiert werden.'
+  },
+  {
+    title: 'Beide Varianten vergleichen und herunterladen',
+    text: 'Prüfe die Dateigröße vor dem Download. Für Listenansichten ist eine kleinere Datei besser, für die Detailansicht eine größere – viele Shops laden beides getrennt hoch.'
+  }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Wie groß sollten Produktbilder für einen Shop sein?',
+    a: 'Als Ausgangspunkt haben sich 1600 Pixel an der längeren Kante bewährt. Das reicht für die Zoomfunktion der großen Marktplätze und lässt sich für Listenansichten auf 400 bis 600 Pixel herunterrechnen. Kleinere Ausgangsbilder lassen sich nicht sinnvoll vergrößern.'
+  },
+  {
+    q: 'Warum werden meine Produktfotos beim Hochladen abgelehnt?',
+    a: 'Meist wegen der Dateigröße, seltener wegen der Maße. Viele Shopsysteme und Marktplätze begrenzen Uploads auf wenige Megabyte pro Bild. Wenn ein Foto aus der Kamera 8 MB groß ist, hilft Kompression – 1600 Pixel Kantenlänge bei 85 Prozent landen typischerweise bei 200 bis 400 KB.'
+  },
+  {
+    q: 'Verliert das Produkt durch Kompression an Detailtreue?',
+    a: 'Bei großen einfarbigen Flächen kaum, bei feinen Texturen schon. Stoffgewebe, Holzmaserung, Metallglanz und feine Schrift auf Verpackungen sind die kritischen Fälle. Dort lohnt ein Blick auf 100 Prozent vor dem Upload, bevor du die Qualitätsstufe weiter senkst.'
+  },
+  {
+    q: 'PNG oder JPG für Produktbilder?',
+    a: 'Für Fotos mit weißem oder einfarbigem Hintergrund ist JPG meist die bessere Wahl, weil es deutlich kleiner wird. PNG ist sinnvoll, wenn das Produkt freigestellt ist und Transparenz braucht, oder wenn es sich um eine Grafik mit wenigen Farben handelt.'
+  },
+  {
+    q: 'Kann ich den Hintergrund mit diesem Werkzeug weiß machen?',
+    a: 'Nein. Das Werkzeug komprimiert und konvertiert, es stellt nicht frei und ersetzt keinen Hintergrund. Für die häufig geforderte reine Weißfläche brauchst du ein separates Freistellwerkzeug oder eine Aufnahme vor weißem Hintergrund.'
+  },
+  {
+    q: 'Werden meine Produktbilder auf einen Server geladen?',
+    a: 'Nein. Die Verarbeitung erfolgt lokal im Browser per Canvas. Das ist auch bei unveröffentlichten Produkten relevant: Es gibt keinen Zwischenspeicher, aus dem ein Bild versehentlich öffentlich werden könnte.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'Produktbild komprimieren',
+    description:
+      'Produktfotos für Shop und Marktplatz komprimieren: Dateigröße senken, Zoomfähigkeit erhalten, direkt im Browser.',
+    path: '/produktbild-komprimieren/'
+  }),
+  howToSchema({
+    name: 'Produktbilder für den Shop komprimieren',
+    description:
+      'Produktfotos so verkleinern, dass sie schnell laden und trotzdem die Zoomfunktion der Marktplätze unterstützen.',
+    path: '/produktbild-komprimieren/',
+    steps
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="Produktbild komprimieren – für Shop und Marktplatz"
+  description="Produktfotos komprimieren, ohne die Zoomfunktion zu verlieren: richtige Kantenlänge, passende Qualitätsstufe, Dateigröße vor dem Upload prüfen."
+  path="/produktbild-komprimieren/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="Produktbild komprimieren"
+    lead="Produktfotos sollen scharf aussehen und trotzdem schnell laden. Hier stellst du Größe und Qualität so ein, dass beides zusammenpasst – ohne Upload."
+    toolKey="compress"
+    crumbs={crumbs}
+    faq={faq}
+    steps={steps}
+  >
+    <div slot="tool" class="tool-panel">
+      <div class="dropzone" id="compress-zone">
+        <span class="dropzone__icon"><Icon name="compress" /></span>
+        <span class="dropzone__title">Bild hierher ziehen oder klicken</span>
+        <span class="dropzone__hint">JPG, PNG oder WebP · max. 30 MB</span>
+        <input type="file" id="compress-input" accept="image/png,image/jpeg,image/webp" aria-label="Bilddatei auswählen" />
+      </div>
+
+      <div id="compress-workspace" hidden>
+        <div class="preview">
+          <img id="compress-img" alt="Vorschau des zu komprimierenden Produktbildes" />
+        </div>
+
+        <div class="controls controls--split">
+          <div class="field" id="compress-quality-row">
+            <label for="compress-quality">Qualität <span class="field__value" id="compress-quality-value">80 %</span></label>
+            <input type="range" id="compress-quality" min="10" max="100" step="1" value="80" />
+          </div>
+          <div class="field">
+            <span class="field__label">Ausgabeformat</span>
+            <div class="segmented" id="compress-format" role="group" aria-label="Ausgabeformat">
+              <button type="button" data-format="image/jpeg" aria-pressed="true">JPG</button>
+              <button type="button" data-format="image/png" aria-pressed="false">PNG</button>
+              <button type="button" data-format="image/webp" aria-pressed="false">WebP</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3" id="compress-actions">
+          <button class="btn btn--primary" id="compress-apply" type="button">Komprimieren</button>
+          <a class="btn btn--download" id="compress-download" download hidden><Icon name="download" />Herunterladen</a>
+          <button class="btn btn--ghost" id="compress-reset" type="button">Anderes Bild</button>
+        </div>
+
+        <div class="result__stats mt-3" id="compress-stats" hidden></div>
+        <div class="notice mt-2" id="compress-notice" hidden role="status"></div>
+      </div>
+    </div>
+
+    <div class="prose mt-4">
+      <h2>Der Zielkonflikt bei Produktbildern</h2>
+      <p>
+        Marktplätze und Shopsysteme wollen zwei Dinge gleichzeitig, die sich widersprechen: große
+        Bilder für die Zoomfunktion und kleine Dateien für kurze Ladezeiten. Bei einem Shop mit
+        fünfzig Produkten und je vier Bildern entscheidet die Dateigröße darüber, ob die
+        Kategorieseite in zwei oder in sechs Sekunden lädt.
+      </p>
+      <p>
+        Die Lösung ist selten „stärker komprimieren“, sondern „richtig dimensionieren“. Ein Foto mit
+        1600 Pixel Kantenlänge und 85 Prozent Qualität ist gleichzeitig zoomfähig und klein. Ein Foto
+        mit 4000 Pixel Kantenlänge und 50 Prozent Qualität ist größer und sieht schlechter aus.
+      </p>
+
+      <h2>Empfohlene Werte</h2>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Verwendung</th>
+              <th>Kantenlänge</th>
+              <th>Qualität</th>
+              <th>Typische Dateigröße</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Detailansicht mit Zoom</td>
+              <td>1600 px</td>
+              <td>85 %</td>
+              <td>250–450 KB</td>
+            </tr>
+            <tr>
+              <td>Produktseite ohne Zoom</td>
+              <td>1200 px</td>
+              <td>80 %</td>
+              <td>120–250 KB</td>
+            </tr>
+            <tr>
+              <td>Kachel in der Kategorie</td>
+              <td>600 px</td>
+              <td>80 %</td>
+              <td>40–90 KB</td>
+            </tr>
+            <tr>
+              <td>Warenkorb und Empfehlungen</td>
+              <td>300 px</td>
+              <td>80 %</td>
+              <td>15–35 KB</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">
+        Erfahrungswerte für Produktfotos mit ruhigem Hintergrund. Bei Texturen, Mustern und
+        Verpackungen mit viel Schrift liegen die Werte höher, weil mehr Detail erhalten werden muss.
+      </p>
+
+      <h2>Wo Kompression zuerst sichtbar wird</h2>
+      <ul>
+        <li><strong>Feine Schrift auf Verpackungen</strong> wird unscharf und beginnt zu fransen.</li>
+        <li><strong>Stoff- und Holzstrukturen</strong> verlieren ihre Körnung und wirken glattgebügelt.</li>
+        <li><strong>Metallische Oberflächen</strong> bekommen blockige Verläufe an den Glanzkanten.</li>
+        <li><strong>Harte Produktkanten vor hellem Hintergrund</strong> zeigen ein leichtes Saummuster.</li>
+      </ul>
+      <p>
+        Wenn eines dieser Merkmale für dein Produkt entscheidend ist, bleibt länger bei hoher
+        Qualität und senke stattdessen die Kantenlänge. Weniger Pixel fallen bei der Detailansicht
+        weniger auf als ein zerknittertes Produkt.
+      </p>
+
+      <h2>Was dieses Werkzeug nicht macht</h2>
+      <p>
+        Es stellt nicht frei und ersetzt keinen Hintergrund. Die von vielen Marktplätzen geforderte
+        reine Weißfläche entsteht nur durch eine entsprechende Aufnahme oder ein separates
+        Freistellwerkzeug. Ebenfalls nicht enthalten: das Umbenennen nach einem Schema und das
+        Hinterlegen von Alternativtexten – beides gehört zur Barrierefreiheit und wird von Shopsystemen
+        meist separat verlangt.
+      </p>
+
+      <h2>Verwandte Anleitungen</h2>
+      <ul>
+        <li><a href="/bild-auf-500-kb-verkleinern/">Bild auf 500 KB verkleinern</a> – wenn ein Portal eine feste Obergrenze vorgibt.</li>
+        <li><a href="/bildgroesse-aendern/">Bildgröße ändern</a> – Kantenlänge exakt auf 1600 oder 600 Pixel setzen.</li>
+        <li><a href="/bild-konvertieren/">Bild konvertieren</a> – JPG, PNG und WebP ineinander umwandeln.</li>
+      </ul>
+    </div>
+  </ToolShell>
+
+  <script>
+    import '../scripts/tools/compress';
+  </script>
+</BaseLayout>
