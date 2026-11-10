@@ -15,6 +15,14 @@ const crumbs: Crumb[] = [
 
 const faq: FaqItem[] = [
   {
+    q: 'Kann man ein Bild ohne jeden Qualitätsverlust komprimieren?',
+    a: 'Bei JPEG nicht – jede Speicherung verwirft Information, und einen verlustfreien Modus gibt es dort nicht. Verlustfrei geht nur mit PNG, und dort ist die Ersparnis bei Fotos gering. Was praktisch wie verlustfrei wirkt, ist ein anderer Weg: zuerst die Pixelmaße auf die tatsächlich benötigte Größe reduzieren, dann komprimieren. Bei 85 Prozent und mehr ist der Unterschied auf dem Bildschirm nicht zu erkennen.'
+  },
+  {
+    q: 'Welche Qualitätsstufe ist noch verlustfrei?',
+    a: 'Keine. Die Qualitätsstufe bei JPEG und WebP bestimmt immer, wie viel verworfen wird – auch bei 100 Prozent findet eine Umwandlung statt. Ab etwa 85 Prozent ist der Unterschied bei normaler Betrachtung aber nicht mehr auszumachen. Für Dokumente, die weiterbearbeitet werden, bleibt das Original die richtige Wahl.'
+  },
+  {
     q: 'Wie stark kann ich ein Bild komprimieren?',
     a: 'Das hängt vom Motiv ab. Mit einer Qualitätsstufe von 70–80 Prozent lässt sich die Dateigröße bei Fotos häufig um 60–85 Prozent senken, ohne dass man den Unterschied auf dem Bildschirm sieht. Grafiken mit Text sollten vorsichtig komprimiert werden.'
   },
@@ -49,8 +57,8 @@ const jsonLd = [
 ---
 
 <BaseLayout
-  title="Bild komprimieren – Dateigröße reduzieren"
-  description="Bilder kostenlos komprimieren: Qualität einstellen, JPG oder WebP wählen und die Ersparnis sofort sehen. Ohne Upload, direkt im Browser."
+  title="Bild komprimieren – ohne sichtbaren Qualitätsverlust"
+  description="Bilder komprimieren ohne sichtbaren Qualitätsverlust: erst Pixel reduzieren, dann Qualität wählen, Ersparnis sofort sehen. JPG, PNG, WebP – ohne Upload im Browser."
   path="/bild-komprimieren/"
   jsonLd={jsonLd}
 >
@@ -106,6 +114,78 @@ const jsonLd = [
     </div>
 
     <div class="prose mt-4">
+      <h2>Bild komprimieren ohne Qualitätsverlust: was technisch möglich ist</h2>
+      <p>
+        „Ohne Qualitätsverlust“ ist kein Versprechen, das ein Werkzeug geben kann, sondern eine
+        Eigenschaft des Dateiformats. Wer das einmal auseinanderhält, spart sich viel Enttäuschung –
+        und findet den Weg, der dem Ziel am nächsten kommt.
+      </p>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>Verlustfrei möglich?</th>
+              <th>Praktische Bedeutung</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>PNG</td>
+              <td>Ja</td>
+              <td>Beim Speichern geht nichts verloren. Kleiner wird die Datei nur, wenn die Kompression im Bild noch Luft nach oben hat – bei Fotos ist das kaum der Fall.</td>
+            </tr>
+            <tr>
+              <td>JPEG</td>
+              <td>Nein</td>
+              <td>Jede Speicherung verwirft Information. Es gibt bei JPEG keinen verlustfreien Modus, auch wenn manche Programme das suggerieren.</td>
+            </tr>
+            <tr>
+              <td>WebP</td>
+              <td>Ja, aber nicht in diesem Werkzeug</td>
+              <td>WebP kennt einen verlustfreien Modus. Die Browser-Schnittstelle erzeugt jedoch verlustbehaftete Dateien – das ist eine Einschränkung der Technik, keine Einstellung.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Der Weg, der wie verlustfrei wirkt: erst Pixel, dann Bytes</h2>
+      <p>
+        Die meisten Bilder sind schlicht zu groß aufgelöst. Ein Foto mit 6000 Pixeln Breite wird auf
+        einem Bildschirm mit 1920 Pixeln herunterskaliert angezeigt – die restlichen Pixel sieht
+        niemand. Sie zu entfernen ist der einzige Schritt, der wirklich nichts kostet, was man sehen
+        kann.
+      </p>
+      <p>
+        Deshalb die Reihenfolge: zuerst mit <a href="/bildgroesse-aendern/">Bildgröße ändern</a> auf
+        die tatsächlich benötigte Kantenlänge gehen, danach komprimieren. Ein auf 1600 Pixel
+        verkleinertes Foto mit 80 Prozent Qualität sieht besser aus als dasselbe Foto in
+        Originalauflösung mit 40 Prozent – bei ähnlicher Dateigröße. Der Grund: weniger Pixel
+        bedeuten weniger Details, die der Kompressor wegwerfen muss.
+      </p>
+
+      <h2>Wann man den Verlust tatsächlich sieht</h2>
+      <ul>
+        <li>
+          <strong>Beim Zoomen auf 100 Prozent.</strong> Bei 85 Prozent und höher findet man selbst
+          dann kaum Unterschiede; ab etwa 70 Prozent zeigen sich weiche Kanten und ein leichtes
+          Blockmuster in gleichmäßigen Flächen.
+        </li>
+        <li>
+          <strong>Im Druck.</strong> Was auf dem Bildschirm unsichtbar ist, fällt auf Papier auf –
+          besonders bei Text, feinen Linien und großen einfarbigen Flächen.
+        </li>
+        <li>
+          <strong>Beim wiederholten Speichern.</strong> Jedes erneute JPEG-Speichern verliert
+          zusätzlich Information. Wer ein Bild fünfmal öffnet und speichert, sieht den Unterschied
+          auch bei hoher Qualitätsstufe.
+        </li>
+      </ul>
+      <p>
+        Daraus folgt die wichtigste Regel: immer die Originaldatei bearbeiten und erst den finalen
+        Export komprimieren. Wer das Zwischenergebnis erneut komprimiert, summiert die Verluste.
+      </p>
+
       <h2>Wie groß sollten Bilder im Web sein?</h2>
       <p>
         Als Faustregel gilt: Bilder für Webseiten sollten selten mehr als 200 KB wiegen. Für
