@@ -39,6 +39,12 @@ const resultSize = $('#resize-result-size');
 const actionRow = must<HTMLElement>('#resize-actions');
 const stats = $('#resize-stats');
 const notice = $('#resize-notice');
+const unitBar = $('#resize-unit');
+const dpiBar = $('#resize-dpi');
+const dpiRow = $('#resize-dpi-row');
+const printPresets = $('#resize-print-presets');
+const widthUnitLabel = $('#resize-width-unit');
+const heightUnitLabel = $('#resize-height-unit');
 
 const progress = createProgress(actionRow, {
   label: 'Neue Größe wird berechnet …',
@@ -50,17 +56,68 @@ let aspect = 1;
 let syncing = false;
 let previewUrl: string | null = null;
 
+/** Einheit der Eingabefelder. Intern wird immer in Pixeln gerechnet. */
+let unit: 'px' | 'cm' | 'in' = 'px';
+let dpi = 300;
+let sizePx = { w: 0, h: 0 };
+
+const CM_PER_INCH = 2.54;
+const roundFor = (value: number): number => (unit === 'px' ? Math.round(value) : Math.round(value * 100) / 100);
+const toPx = (value: number): number =>
+  unit === 'px' ? value : unit === 'cm' ? (value / CM_PER_INCH) * dpi : value * dpi;
+const fromPx = (value: number): number =>
+  unit === 'px' ? value : unit === 'cm' ? (value / dpi) * CM_PER_INCH : value / dpi;
+
+/**
+ * Schreibt die aktuellen Pixelmaße in die Felder – das gerade bearbeitete Feld bleibt unberührt.
+ * Weicht der neue Wert nur in der letzten Stelle ab, bleibt die Eingabe stehen: sonst würde aus
+ * „10“ nach einem Auflösungswechsel „10.01“, weil 591 px bei 150 dpi gerundet 10,008 cm sind.
+ */
+function renderFields(skip?: 'width' | 'height' | 'percent'): void {
+  if (!image) return;
+  // Toleranz = halbe Anzeigegenauigkeit (px ganzzahlig, cm/Zoll mit zwei Stellen).
+  const tolerance = unit === 'px' ? 0.5 : unit === 'cm' ? 0.05 : 0.005;
+  const write = (field: HTMLInputElement, px: number): void => {
+    const next = roundFor(fromPx(px));
+    const current = Number(field.value);
+    if (!Number.isFinite(current) || Math.abs(current - next) > tolerance) field.value = String(next);
+  };
+  if (skip !== 'width') write(widthInput, sizePx.w);
+  if (skip !== 'height') write(heightInput, sizePx.h);
+  if (skip !== 'percent') {
+    percentInput.value = String(clamp(Math.round((sizePx.w / image.width) * 100), 1, 400));
+    percentValue.textContent = `${percentInput.value} %`;
+  }
+}
+
+function syncUnitUi(): void {
+  unitBar?.querySelectorAll<HTMLButtonElement>('button').forEach(button => {
+    button.setAttribute('aria-pressed', button.dataset.unit === unit ? 'true' : 'false');
+  });
+  dpiRow?.toggleAttribute('hidden', unit === 'px');
+  printPresets?.toggleAttribute('hidden', unit === 'px');
+
+  const suffix = unit === 'px' ? '(px)' : unit === 'cm' ? '(cm)' : '(Zoll)';
+  if (widthUnitLabel) widthUnitLabel.textContent = suffix;
+  if (heightUnitLabel) heightUnitLabel.textContent = suffix;
+
+  const step = unit === 'px' ? '1' : unit === 'cm' ? '0.1' : '0.01';
+  const max = unit === 'px' ? 12000 : Math.round(fromPx(12000) * 100) / 100;
+  [widthInput, heightInput].forEach(field => {
+    field.step = step;
+    field.max = String(max);
+  });
+}
+
 function setSize(width: number, height: number, from: 'width' | 'height' | 'percent' | 'preset'): void {
   if (!image || syncing) return;
   syncing = true;
-  const w = clamp(Math.round(width), 1, 12000);
-  const h = clamp(Math.round(height), 1, 12000);
-  widthInput.value = String(w);
-  heightInput.value = String(h);
-  if (from !== 'percent') {
-    percentInput.value = String(clamp(Math.round((w / image.width) * 100), 1, 400));
-  }
-  percentValue.textContent = `${percentInput.value} %`;
+  sizePx = {
+    w: clamp(Math.round(width), 1, 12000),
+    h: clamp(Math.round(height), 1, 12000)
+  };
+  const skip = from === 'width' || from === 'height' || from === 'percent' ? from : undefined;
+  renderFields(skip);
   syncing = false;
 }
 
@@ -102,15 +159,15 @@ bindDrop(zone, input, file => {
 
 widthInput.addEventListener('input', () => {
   if (!image) return;
-  const width = Number(widthInput.value) || 1;
-  setSize(width, lock.checked ? width / aspect : Number(heightInput.value) || image.height, 'width');
+  const width = toPx(Number(widthInput.value) || 1);
+  setSize(width, lock.checked ? width / aspect : toPx(Number(heightInput.value) || 1), 'width');
   invalidate();
 });
 
 heightInput.addEventListener('input', () => {
   if (!image) return;
-  const height = Number(heightInput.value) || 1;
-  setSize(lock.checked ? height * aspect : Number(widthInput.value) || image.width, height, 'height');
+  const height = toPx(Number(heightInput.value) || 1);
+  setSize(lock.checked ? height * aspect : toPx(Number(widthInput.value) || 1), height, 'height');
   invalidate();
 });
 
@@ -131,11 +188,52 @@ presetBar.addEventListener('click', event => {
   invalidate();
 });
 
+unitBar?.addEventListener('click', event => {
+  const button = (event.target as HTMLElement).closest<HTMLButtonElement>('button');
+  const next = button?.dataset.unit;
+  if (!next || next === unit || !image) return;
+  unit = next as 'px' | 'cm' | 'in';
+  syncUnitUi();
+  renderFields();
+  invalidate();
+});
+
+dpiBar?.addEventListener('click', event => {
+  const button = (event.target as HTMLElement).closest<HTMLButtonElement>('button');
+  const next = Number(button?.dataset.dpi);
+  if (!button || !image || !Number.isFinite(next) || next === dpi) return;
+
+  // Die eingegebene physikalische Größe bleibt erhalten, die Pixelzahl folgt der neuen Auflösung.
+  const widthValue = Number(widthInput.value) || 0;
+  const heightValue = Number(heightInput.value) || 0;
+  dpi = next;
+  dpiBar.querySelectorAll<HTMLButtonElement>('button').forEach(el => {
+    el.setAttribute('aria-pressed', Number(el.dataset.dpi) === dpi ? 'true' : 'false');
+  });
+  if (widthValue > 0) {
+    // Beide eingegebenen Maße bleiben stehen: Wer 10 × 15 cm für einen Abzug gewählt hat,
+    // will beim Wechsel der Auflösung dasselbe Format in anderer Pixelzahl, nicht das
+    // Seitenverhältnis des Originalbilds.
+    setSize(toPx(widthValue), toPx(heightValue || widthValue), 'preset');
+  }
+  invalidate();
+});
+
+printPresets?.addEventListener('click', event => {
+  const button = (event.target as HTMLElement).closest<HTMLButtonElement>('button[data-cm-w]');
+  if (!button || !image) return;
+  const widthCm = Number(button.dataset.cmW) || 0;
+  const heightCm = Number(button.dataset.cmH) || 0;
+  // Druckformate sind immer in Zentimetern angegeben, unabhängig von der gewählten Einheit.
+  setSize((widthCm / CM_PER_INCH) * dpi, (heightCm / CM_PER_INCH) * dpi, 'preset');
+  invalidate();
+});
+
 async function process(): Promise<void> {
   if (!image) return;
   const source = image;
-  const width = clamp(Number(widthInput.value) || source.width, 1, 12000);
-  const height = clamp(Number(heightInput.value) || source.height, 1, 12000);
+  const width = clamp(sizePx.w || source.width, 1, 12000);
+  const height = clamp(sizePx.h || source.height, 1, 12000);
   const type = ['image/jpeg', 'image/png', 'image/webp'].includes(source.type) ? source.type : 'image/png';
 
   applyBtn.disabled = true;
@@ -165,10 +263,13 @@ async function process(): Promise<void> {
 
     if (stats) {
       stats.hidden = false;
+      const cmW = ((width / dpi) * CM_PER_INCH).toFixed(1).replace('.', ',');
+      const cmH = ((height / dpi) * CM_PER_INCH).toFixed(1).replace('.', ',');
       stats.innerHTML = `
         <div class="stat"><span class="stat__label">Neue Größe</span><span class="stat__value">${width} × ${height} px</span></div>
         <div class="stat"><span class="stat__label">Dateigröße</span><span class="stat__value">${formatBytes(blob.size)}</span></div>
         <div class="stat ${width < source.width ? 'stat--good' : ''}"><span class="stat__label">Skalierung</span><span class="stat__value">${Math.round((width / source.width) * 100)} %</span></div>
+        <div class="stat"><span class="stat__label">Druck bei ${dpi} dpi</span><span class="stat__value">${cmW} × ${cmH} cm</span></div>
       `;
     }
     showNotice(notice, `Ergebnis bereit – ${width} × ${height} px, ${formatBytes(blob.size)}. Du kannst das Bild jetzt herunterladen.`, 'ok');
@@ -192,3 +293,5 @@ resetBtn.addEventListener('click', () => {
   hideNotice(notice);
   revealNode(zone);
 });
+
+syncUnitUi();

@@ -47,6 +47,10 @@ const faq: FaqItem[] = [
     a: 'Weil das PDF die JPEG-Daten unverändert einbettet, statt sie neu zu komprimieren. Ein PDF mit fünf Fotos ist ungefähr so groß wie diese fünf Fotos zusammen, plus etwa ein Kilobyte Verwaltung pro Seite. Kleiner wird es nur, wenn du die Qualitätsstufe senkst oder die Bilder vorher verkleinerst.'
   },
   {
+    q: 'Was passiert mit Aufnahmedatum und GPS-Koordinaten?',
+    a: 'Sie werden entfernt. Jedes Bild wird beim Einbetten neu als JPEG kodiert, und dabei übernimmt die Zeichenfläche keine Metadaten. Tests mit einer Datei, die eine GPS-Position im EXIF-Block trug, zeigen: im fertigen PDF ist weder der EXIF-Block noch die Position vorhanden. Aufnahmedatum und Kameramodell verschwinden ebenfalls.'
+  },
+  {
     q: 'Was passiert mit transparenten PNG-Dateien?',
     a: 'PDF-Seiten in diesem Werkzeug haben keinen Alphakanal. Durchsichtige Bereiche werden weiß gefüllt, damit keine schwarzen Flächen entstehen. Wenn die Transparenz erhalten bleiben muss, ist PNG das richtige Format und nicht PDF.'
   },
@@ -80,7 +84,7 @@ const jsonLd = [
 
 <BaseLayout
   title="Bild in PDF umwandeln – mehrere Bilder, ein Dokument"
-  description="JPG, PNG oder WebP in ein PDF umwandeln: eine Seite pro Bild, A4 oder Originalformat, Qualität einstellbar. Im Browser, ohne Upload und ohne Anmeldung."
+  description="Mehrere Fotos in ein PDF umwandeln: eine Seite pro Bild, A4 oder Originalformat, Qualität einstellbar, Aufnahmedaten und GPS werden entfernt. Im Browser, ohne Upload."
   path="/bild-in-pdf/"
   jsonLd={jsonLd}
 >
@@ -155,19 +159,46 @@ const jsonLd = [
         selbst setzt man mit <a href="/bildgroesse-aendern/">Bildgröße ändern</a>.
       </p>
 
-      <h2>Reihenfolge, Anzahl und ein häufiges Missverständnis</h2>
+      <h2>Mehrere Bilder in ein PDF zusammenfassen</h2>
       <p>
-        Jedes Bild wird eine Seite, in der Reihenfolge der Liste. Will man eine bestimmte Abfolge,
-        wählt man die Dateien in dieser Reihenfolge aus – oder entfernt einzelne Einträge und fügt
-        sie neu hinzu. Eine Seitennummerierung setzt das Werkzeug bewusst nicht: Sie würde bei
+        Jedes Bild wird eine Seite, in der Reihenfolge der Liste. Wer eine bestimmte Abfolge
+        braucht, wählt die Dateien in dieser Reihenfolge aus oder entfernt einzelne Einträge und
+        fügt sie neu hinzu. Eine Seitennummerierung setzt das Werkzeug bewusst nicht: Sie würde bei
         Fotos, die als Einzelseiten gedacht sind, nur stören.
       </p>
       <p>
-        Das häufigste Missverständnis: „PDF macht die Datei klein.“ Das stimmt nur, weil viele
-        Programme beim Export zusätzlich herunterrechnen. Ohne diese Skalierung ist ein PDF genauso
-        groß wie seine Bilder. Wer eine Datei für eine E-Mail-Grenze braucht, muss die
-        <a href="/bild-komprimieren/">Komprimierung</a> vorher oder die Qualitätsstufe hier
-        bemühen.
+        Bis zu 30 Bilder pro Dokument. Ein einzelnes PDF aus zehn Fotos ist der übliche Weg, um
+        Bewerbungsunterlagen, Rechnungen oder Belege zu verschicken – der Empfänger öffnet eine
+        Datei statt zehn Anhänge. Der Dateiname entsteht automatisch:
+        bei einem Bild der Originalname mit der Endung <code>.pdf</code>, bei mehreren Bildern
+        <code>bilder-N-seiten.pdf</code>.
+      </p>
+
+      <h2>Das häufigste Missverständnis: „PDF macht die Datei klein“</h2>
+      <p>
+        Das stimmt nur, weil viele Programme beim Export zusätzlich herunterrechnen. Ohne diese
+        Skalierung ist ein PDF genauso groß wie seine Bilder. Wer eine Datei unter einer
+        E-Mail-Grenze braucht, muss die <a href="/bild-komprimieren/">Komprimierung</a> vorher
+        vornehmen oder hier die Qualitätsstufe senken.
+      </p>
+
+      <h2>Fotos als PDF speichern: die Metadaten verschwinden</h2>
+      <p>
+        Beim Einbetten wird jedes Bild über eine Zeichenfläche neu als JPEG kodiert. Dabei werden
+        alle Metadaten des Originals verworfen – Aufnahmedatum, Kameramodell, Seriennummer und
+        vor allem die <strong>GPS-Koordinaten</strong>, die Smartphones standardmäßig mitschreiben.
+        Auch das fertige PDF enthält keine Autor- oder Programmdaten.
+      </p>
+      <p>
+        Das ist im Alltag meist der erwünschte Effekt: Ein Foto, das per Messenger verschickt wird,
+        verrät oft den Aufnahmeort, ein PDF aus diesem Werkzeug nicht. Wer die Metadaten behalten
+        will – etwa für die Sortierung im Fotoarchiv – muss die Originaldateien aufbewahren.
+      </p>
+      <p>
+        Der Preis dafür: Die Bilder werden einmal neu komprimiert. Bei der Voreinstellung von
+        85 Prozent ist das mit bloßem Auge nicht zu erkennen, aber es ist keine verlustfreie
+        Verarbeitung. Für Dokumente, die später nachbearbeitet werden, bleibt das Original die
+        bessere Wahl.
       </p>
 
       <h2>Wann PDF die falsche Wahl ist</h2>

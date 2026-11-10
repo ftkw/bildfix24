@@ -3,7 +3,7 @@ import BaseLayout from '../components/BaseLayout.astro';
 import ToolShell from '../components/ToolShell.astro';
 import Icon from '../components/Icon.astro';
 import { getTool } from '../data/tools';
-import { breadcrumbSchema, faqSchema, softwareSchema, type Crumb, type FaqItem } from '../lib/seo';
+import { breadcrumbSchema, faqSchema, howToSchema, softwareSchema, type Crumb, type FaqItem } from '../lib/seo';
 
 const tool = getTool('resize');
 
@@ -14,6 +14,18 @@ const crumbs: Crumb[] = [
 ];
 
 const faq: FaqItem[] = [
+  {
+    q: 'Wie gebe ich die Bildgröße in Zentimetern ein?',
+    a: 'Stelle die Einheit über den Schaltflächen auf „Zentimeter“ und wähle die Auflösung, mit der gedruckt werden soll. Dann kannst du die Maße direkt in cm eintragen, und das Werkzeug rechnet sie in Pixel um – bei 300 dpi sind 10 × 15 cm zum Beispiel 1181 × 1772 Pixel.'
+  },
+  {
+    q: 'Was bedeutet dpi, und welche Auflösung brauche ich?',
+    a: 'dpi steht für Punkte pro Zoll (2,54 cm) und beschreibt, wie dicht die Pixel beim Drucken liegen. 300 dpi gelten als Fotostandard, 150 dpi reichen für einen Ausdruck mit etwas Betrachtungsabstand. Je höher der dpi-Wert bei gleichem Format, desto mehr Pixel braucht das Bild – und desto größer wird die Datei.'
+  },
+  {
+    q: 'Warum entspricht das Ergebnis nicht genau meinen Zentimetern?',
+    a: 'Weil Pixel ganzzahlig sind. 10 cm bei 300 dpi ergeben rechnerisch 1181,1 Pixel, gespeichert werden 1181 – das sind 9,999 cm. Der Unterschied liegt unter einem Zehntelmillimeter und ist im Druck nicht sichtbar.'
+  },
   {
     q: 'Wie ändere ich die Bildgröße ohne Verzerrung?',
     a: 'Lass die Option „Seitenverhältnis sperren“ aktiviert. Dann wird die Höhe automatisch mitberechnet, sobald du die Breite änderst – das Bild bleibt unverzerrt.'
@@ -36,12 +48,38 @@ const faq: FaqItem[] = [
   }
 ];
 
+const steps = [
+  {
+    title: 'Bild auswählen',
+    text: 'Datei hineinziehen oder anklicken. Die aktuellen Maße werden automatisch erkannt.'
+  },
+  {
+    title: 'Einheit wählen',
+    text: 'Pixel für Bildschirm und Web, Zentimeter oder Zoll für den Druck. Bei cm und Zoll kommt die Auflösung in dpi dazu – 300 dpi für Fotos, 150 dpi für einfache Ausdrucke.'
+  },
+  {
+    title: 'Neue Maße eingeben',
+    text: 'Trage Breite oder Höhe ein, nutze den Prozentregler, ein Pixel-Preset oder ein Druckformat wie 10 × 15 cm. Das Seitenverhältnis bleibt auf Wunsch gesperrt.'
+  },
+  {
+    title: 'Anwenden und laden',
+    text: 'Klicke auf „Größe anwenden“. Das skalierte Bild wird direkt heruntergeladen – die Statistik darunter zeigt zusätzlich die sich ergebende Druckgröße.'
+  }
+];
+
 const jsonLd = [
   softwareSchema({
     name: 'Bildgröße ändern',
     description:
-      'Bildgröße online ändern: Breite und Höhe in Pixeln oder Prozent anpassen, Seitenverhältnis sperren – ohne Upload.',
+      'Bildgröße online ändern: Breite und Höhe in Pixeln, Zentimetern oder Zoll anpassen, dpi für den Druck wählen, Seitenverhältnis sperren – ohne Upload.',
     path: '/bildgroesse-aendern/'
+  }),
+  howToSchema({
+    name: 'Bildgröße ändern',
+    description:
+      'Ein Bild in Pixel, Zentimetern oder Zoll auf ein neues Maß bringen – mit dpi-Angabe für den Druck.',
+    path: '/bildgroesse-aendern/',
+    steps
   }),
   faqSchema(faq),
   breadcrumbSchema(crumbs)
@@ -49,22 +87,18 @@ const jsonLd = [
 ---
 
 <BaseLayout
-  title="Bildgröße ändern – Pixel & Prozent"
-  description="Bildgröße kostenlos ändern: Breite und Höhe in Pixeln oder Prozent anpassen, Seitenverhältnis sperren. Ohne Upload, direkt im Browser."
+  title="Bildgröße ändern – Pixel, cm und Prozent"
+  description="Bildgröße ändern in Pixel, Zentimeter oder Zoll: mit dpi-Angabe für den Druck, Druckformaten wie 10 × 15 cm und A4, Prozentregler und gesperrtem Seitenverhältnis. Ohne Upload."
   path="/bildgroesse-aendern/"
   jsonLd={jsonLd}
 >
   <ToolShell
     h1="Bildgröße ändern"
-    lead="Passe Breite und Höhe exakt an – in Pixeln oder Prozent. Mit gesperrtem Seitenverhältnis bleibt das Bild unverzerrt."
+    lead="Passe Breite und Höhe exakt an – in Pixeln, Zentimetern oder Zoll, mit dpi-Angabe für den Druck. Mit gesperrtem Seitenverhältnis bleibt das Bild unverzerrt."
     toolKey="resize"
     crumbs={crumbs}
     faq={faq}
-    steps={[
-      { title: 'Bild auswählen', text: 'Datei hineinziehen oder anklicken. Die aktuellen Maße werden automatisch erkannt.' },
-      { title: 'Neue Maße eingeben', text: 'Trage Breite oder Höhe ein, nutze den Prozentregler oder wähle ein Preset. Das Seitenverhältnis bleibt auf Wunsch gesperrt.' },
-      { title: 'Anwenden und laden', text: 'Klicke auf „Größe anwenden“. Das skalierte Bild wird direkt heruntergeladen.' }
-    ]}
+    steps={steps}
   >
     <div slot="tool" class="tool-panel">
       <div class="dropzone" id="resize-zone">
@@ -83,11 +117,30 @@ const jsonLd = [
 
         <div class="controls controls--split">
           <div class="field">
-            <label for="resize-width">Breite (px)</label>
+            <span class="field__label">Einheit</span>
+            <div class="segmented" id="resize-unit" role="group" aria-label="Einheit">
+              <button type="button" data-unit="px" aria-pressed="true">Pixel</button>
+              <button type="button" data-unit="cm" aria-pressed="false">Zentimeter</button>
+              <button type="button" data-unit="in" aria-pressed="false">Zoll</button>
+            </div>
+          </div>
+          <div class="field" id="resize-dpi-row" hidden>
+            <span class="field__label">Auflösung beim Druck</span>
+            <div class="segmented" id="resize-dpi" role="group" aria-label="Auflösung">
+              <button type="button" data-dpi="72" aria-pressed="false">72 dpi</button>
+              <button type="button" data-dpi="150" aria-pressed="false">150 dpi</button>
+              <button type="button" data-dpi="300" aria-pressed="true">300 dpi</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls controls--split">
+          <div class="field">
+            <label for="resize-width">Breite <span id="resize-width-unit">(px)</span></label>
             <input type="number" id="resize-width" min="1" max="12000" step="1" inputmode="numeric" />
           </div>
           <div class="field">
-            <label for="resize-height">Höhe (px)</label>
+            <label for="resize-height">Höhe <span id="resize-height-unit">(px)</span></label>
             <input type="number" id="resize-height" min="1" max="12000" step="1" inputmode="numeric" />
           </div>
         </div>
@@ -113,6 +166,16 @@ const jsonLd = [
               <button type="button" data-w="800" data-h="800">800 × 800</button>
             </div>
           </div>
+
+          <div class="field" id="resize-print-presets" hidden>
+            <span class="field__label">Druckformate</span>
+            <div class="segmented" role="group" aria-label="Druckformate">
+              <button type="button" data-cm-w="9" data-cm-h="13">9 × 13 cm</button>
+              <button type="button" data-cm-w="10" data-cm-h="15">10 × 15 cm</button>
+              <button type="button" data-cm-w="13" data-cm-h="18">13 × 18 cm</button>
+              <button type="button" data-cm-w="21" data-cm-h="29.7">A4</button>
+            </div>
+          </div>
         </div>
 
         <div class="row mt-3" id="resize-actions">
@@ -133,6 +196,37 @@ const jsonLd = [
     </div>
 
     <div class="prose mt-4">
+      <h2>Bildgröße in Zentimetern: Pixel pro Druckformat</h2>
+      <p>
+        Für den Druck zählt nicht die Pixelzahl, sondern die Kombination aus Pixeln und Auflösung.
+        Stelle im Werkzeug auf „Zentimeter“ um und wähle die Auflösung, mit der gedruckt wird –
+        daraus werden die Pixel berechnet. 300 dpi sind der Wert, den Druckereien nennen; 150 dpi
+        reichen für einen Ausdruck, den man aus etwas Abstand betrachtet.
+      </p>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>Pixel bei 150 dpi</th>
+              <th>Pixel bei 300 dpi</th>
+              <th>Typische Verwendung</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>9 × 13 cm</td><td>531 × 768</td><td>1063 × 1535</td><td>Kleiner Abzug, Passbild-Umfeld</td></tr>
+            <tr><td>10 × 15 cm</td><td>591 × 886</td><td>1181 × 1772</td><td>Standardabzug aus dem Drogeriemarkt</td></tr>
+            <tr><td>13 × 18 cm</td><td>768 × 1063</td><td>1535 × 2126</td><td>Klassisches Fotopapier</td></tr>
+            <tr><td>A4 (21 × 29,7 cm)</td><td>1240 × 1754</td><td>2480 × 3508</td><td>Ausdruck, Bewerbungsmappe</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">
+        Die Werte sind gerundet und entsprechen genau dem, was die Druckformat-Schaltflächen im
+        Werkzeug einsetzen. 300 dpi sind 118 Pixel pro Zentimeter – deshalb ist ein 10 × 15 cm
+        großer Abzug 1181 × 1772 Pixel groß.
+      </p>
+
       <h2>Pixel, Prozent und Seitenverhältnis</h2>
       <p>
         Die Pixelmaße bestimmen, wie viele Bildpunkte tatsächlich gespeichert werden. Ein Bild mit

@@ -52,9 +52,9 @@ export const tools: Tool[] = [
     key: 'resize',
     href: '/bildgroesse-aendern/',
     name: 'Bildgröße ändern',
-    short: 'Breite und Höhe exakt anpassen, Seitenverhältnis optional sperren.',
+    short: 'Breite und Höhe exakt anpassen – in Pixel, Zentimeter oder Zoll, Seitenverhältnis optional sperren.',
     icon: 'resize',
-    keywords: 'bildgröße ändern, bild verkleinern, bild vergrößern'
+    keywords: 'bildgröße ändern, bild verkleinern, bild vergrößern, bildgröße cm, druckgröße'
   },
   {
     key: 'convert',
