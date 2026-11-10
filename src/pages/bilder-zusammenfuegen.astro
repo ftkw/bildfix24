@@ -1,0 +1,283 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import ToolShell from '../components/ToolShell.astro';
+import MergeTool from '../components/tools/MergeTool.astro';
+import { breadcrumbSchema, faqSchema, howToSchema, softwareSchema, type Crumb, type FaqItem } from '../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bilder zusammenfügen', href: '/bilder-zusammenfuegen/' }
+];
+
+const steps = [
+  {
+    title: 'Zwei bis zwölf Bilder auswählen',
+    text: 'Ziehe die Dateien in das Feld oben oder klicke hinein. Die Liste zeigt die Reihenfolge – von links nach rechts beziehungsweise von oben nach unten. Mit den Pfeilen an jedem Eintrag verschiebst du ein Bild nach vorne oder hinten.'
+  },
+  {
+    title: 'Anordnung und Größenangleichung wählen',
+    text: 'Nebeneinander ergibt eine waagerechte Bildfolge, untereinander eine senkrechte. „Gleiche Höhe“ skaliert alle Bilder auf das größte ab, „Originalgröße“ lässt jedes Bild in seinen Pixeln und nimmt Ränder in Kauf.'
+  },
+  {
+    title: 'Abstand, Hintergrund und Format festlegen',
+    text: 'Ein Abstand von 0 setzt die Bilder direkt aneinander, sinnvoll bei Screenshots. Bei Fotos wirken 16 bis 32 Pixel ruhiger. Transparenz ist nur als PNG möglich, JPG bekommt immer einen weißen Hintergrund.'
+  },
+  {
+    title: 'Zusammenfügen und prüfen',
+    text: 'Klicke auf „Zusammenfügen“. Unter dem Knopf erscheint das Ergebnis mit seinen Pixelmaßen und der Dateigröße – prüfe dort, ob die Anordnung stimmt, bevor du herunterlädst.'
+  }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Werden meine Bilder zum Zusammenfügen hochgeladen?',
+    a: 'Nein. Die Dateien werden im Browser geöffnet, auf eine gemeinsame Zeichenfläche gezeichnet und dort als PNG oder JPG ausgegeben. Es gibt keinen Server, der eine Datei empfängt – das ist der Grund, warum das Werkzeug auch für Screenshots von Konten, Rechnungen oder Ausweisen taugt.'
+  },
+  {
+    q: 'Warum wirkt eines der Bilder unscharf?',
+    a: 'Bei „Gleiche Höhe“ bekommt jedes Bild die Höhe des größten. Ein kleines Bild wird dabei hochskaliert und verliert an Schärfe – aus 800 × 600 Pixeln werden bei einem 3000 Pixel hohen Nachbarn 4000 × 3000 Pixel, und dabei entstehen keine neuen Details. Wenn die Schärfe wichtiger ist als die saubere Kante, wähle „Originalgröße“.'
+  },
+  {
+    q: 'Kann ich die Reihenfolge der Bilder ändern?',
+    a: 'Ja. Jeder Eintrag in der Liste hat zwei Pfeile: nach oben schieben heißt weiter nach vorne, nach unten schieben weiter nach hinten. Das ist der bequemere Weg, als Dateien zu entfernen und neu hinzuzufügen, weil dabei die Auswahl im Dateidialog nicht neu getroffen werden muss.'
+  },
+  {
+    q: 'Warum ist das Ergebnis so riesig?',
+    a: 'Weil sich die Maße addieren. Vier Fotos mit je 2000 Pixeln Höhe ergeben nebeneinander schnell 10.000 Pixel Breite. Über 12.000 Pixel verweigert das Werkzeug die Ausgabe, weil Browser große Zeichenflächen nicht zuverlässig verarbeiten. Verkleinere die Einzelbilder vorher – etwa auf 1200 Pixel Höhe – oder nutze „Originalgröße“.'
+  },
+  {
+    q: 'PNG oder JPG – was soll ich nehmen?',
+    a: 'PNG für Screenshots, Grafiken, Text und alles, was scharfe Kanten hat oder transparent bleiben soll. JPG für Fotos und Bilder ohne Transparenz, weil die Datei dann deutlich kleiner wird. Ein PNG aus zwei Screenshots ist oft nur wenige hundert Kilobyte groß, ein PNG aus zwei Fotos dagegen mehrere Megabyte.'
+  },
+  {
+    q: 'Bleibt die Transparenz von PNG-Dateien erhalten?',
+    a: 'Ja, wenn du als Hintergrund „Transparent“ und als Format PNG wählst. Die durchsichtigen Bereiche der Einzelbilder bleiben durchsichtig, und auch der Abstand zwischen ihnen bleibt frei. Bei JPG gibt es keine Transparenz – dort wird automatisch weiß gefüllt.'
+  },
+  {
+    q: 'Kann ich Bilder übereinanderlegen oder ein Raster daraus machen?',
+    a: 'Nein. Dieses Werkzeug ordnet linear an: eine Zeile oder eine Spalte, mehr nicht. Für ein Raster aus vier Feldern, für Überlagerungen oder für Bilder mit Beschriftung braucht es einen Collage-Editor. Der Grund für die Beschränkung ist die Verlässlichkeit: Eine feste Anordnung liefert immer dasselbe Ergebnis, ohne Ziehen und Ausrichten.'
+  },
+  {
+    q: 'Eignet sich das für Kleinanzeigen und eBay?',
+    a: 'Ja, das ist einer der häufigsten Anwendungsfälle. Statt fünf Einzelbildern zeigst du ein Bild, in dem Vorder-, Rück- und Detailansicht nebeneinander stehen. Achte darauf, die Bilder vorher auf ähnliche Höhe zu bringen – sonst wird die schmale Detailaufnahme auf das Format der Hauptaufnahme hochgezogen.'
+  },
+  {
+    q: 'Funktioniert das auch auf dem Handy?',
+    a: 'Ja. Der Dateidialog öffnet die Fotomediathek, und das Zusammensetzen läuft im mobilen Browser. Bei sehr großen Handyfotos (4000 Pixel und mehr) sollte man aber „Originalgröße“ wählen oder vorher verkleinern, sonst kommt das Werkzeug an die Grenze von 12.000 Pixeln.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'Bilder zusammenfügen',
+    description:
+      'Mehrere Bilder im Browser zu einem Bild zusammenfügen: nebeneinander oder untereinander, mit einstellbarem Abstand, transparentem Hintergrund und Ausgabe als PNG oder JPG.',
+    path: '/bilder-zusammenfuegen/'
+  }),
+  howToSchema({
+    name: 'Bilder zusammenfügen',
+    description: 'Zwei bis zwölf Bilder ohne Upload zu einem einzigen Bild zusammenfügen.',
+    path: '/bilder-zusammenfuegen/',
+    steps
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="Bilder zusammenfügen – nebeneinander oder untereinander"
+  description="Mehrere Bilder zu einem zusammenfügen: nebeneinander oder untereinander, gleiche Höhe oder Originalgröße, Abstand und transparenter Hintergrund einstellbar. Im Browser, ohne Upload."
+  path="/bilder-zusammenfuegen/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="Bilder zusammenfügen"
+    lead="Zwei Screenshots nebeneinander, Vorher und Nachher in einer Zeile, fünf Produktfotos als eine Aufnahme: Hier fügst du mehrere Bilder zu einem einzigen zusammen. Die Dateien bleiben dabei auf deinem Gerät."
+    toolKey="merge"
+    crumbs={crumbs}
+    faq={faq}
+    steps={steps}
+  >
+    <MergeTool slot="tool" />
+
+    <div class="prose mt-4">
+      <h2>Was „zusammenfügen“ hier bedeutet</h2>
+      <p>
+        Das Ergebnis ist ein einzelnes Bild, in dem die Ausgangsbilder nebeneinander oder
+        untereinander stehen. Es wird nichts überlagert, nichts weichgezeichnet und nichts
+        beschnitten: Jedes Bild behält seinen vollständigen Inhalt, nur die Position wird
+        festgelegt. Die Gesamtfläche ergibt sich aus der Summe der Breiten (waagerecht) oder der
+        Summe der Höhen (senkrecht) plus dem eingestellten Abstand.
+      </p>
+      <p>
+        Diese Einschränkung ist Absicht. Ein Collage-Editor mit frei verschiebbaren Rahmen liefert
+        bei jedem Versuch ein anderes Ergebnis und braucht Maus-Genauigkeit. Eine feste Anordnung
+        liefert immer dasselbe – und lässt sich in vier Klicks wiederholen, wenn zwanzig
+        Produktbilder auf dieselbe Weise gebaut werden sollen.
+      </p>
+
+      <h2>Nebeneinander oder untereinander</h2>
+      <p>
+        <strong>Nebeneinander</strong> passt für Vergleiche: Vorher und Nachher, zwei Screenshots
+        derselben Seite in verschiedenen Breiten, Vorder- und Rückseite eines Produkts. Waagerechte
+        Bildfolgen lassen sich außerdem gut in Chats und in Beiträgen unterbringen, weil sie in der
+        Breite gelesen werden.
+      </p>
+      <p>
+        <strong>Untereinander</strong> passt für Inhalte, die man von oben nach unten liest:
+        Anleitungen, Rezeptschritte, Chatverläufe, eine Reihe von Formularfeldern. Auf dem Handy ist
+        das die einzige Variante, die ohne Zoom lesbar bleibt – ein waagerechter Streifen aus vier
+        Screenshots wird dort auf Daumennagelgröße zusammengedrückt.
+      </p>
+
+      <h2>Gleiche Höhe oder Originalgröße: der Unterschied in Pixeln</h2>
+      <p>
+        Die Voreinstellung „Gleiche Höhe“ skaliert jedes Bild auf die Höhe des größten. Das ergibt
+        eine saubere Kante, hat aber einen Preis: Kleine Bilder werden vergrößert. Ein Beispiel mit
+        zwei Bildern, von denen das zweite deutlich kleiner ist:
+      </p>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Ausgangslage</th>
+              <th>„Gleiche Höhe“</th>
+              <th>„Originalgröße“</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>4000 × 3000 px und 800 × 600 px</td>
+              <td>Ergebnis 8000 × 3000 px, das kleine Bild wird <strong>5-fach</strong> vergrößert</td>
+              <td>Ergebnis 4800 × 3000 px, das kleine Bild bleibt 800 × 600 px</td>
+            </tr>
+            <tr>
+              <td>3000 × 2000 px und 1000 × 1500 px (hoch)</td>
+              <td>Ergebnis 4333 × 2000 px, das hohe Bild wird 1,33-fach vergrößert und 1333 px breit</td>
+              <td>Ergebnis 4000 × 2000 px, das hohe Bild behält 1000 × 1500 px</td>
+            </tr>
+            <tr>
+              <td>Zwei Screenshots mit 1440 px Breite</td>
+              <td>Beide bleiben unverändert – gleiche Höhe ist bereits gegeben</td>
+              <td>Identisch, weil kein Unterschied besteht</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">
+        Beim Vergrößern kommen keine Details hinzu: Der Browser interpoliert benachbarte Pixel. Bei
+        Screenshots mit klaren Kanten fällt das als Weichzeichnen auf, bei Fotos kaum. Faustregel:
+        Solange die Bilder ähnlich groß sind, ist „Gleiche Höhe“ die bequemere Wahl. Sobald ein Bild
+        weniger als die Hälfte der Pixel des größten hat, lieber „Originalgröße“ nehmen und
+        stattdessen vorher mit <a href="/bildgroesse-aendern/">Bildgröße ändern</a> angleichen.
+      </p>
+
+      <h2>Abstand und Hintergrund</h2>
+      <p>
+        Der Abstand ist der leere Streifen zwischen den Bildern. Bei <strong>0 Pixel</strong> stoßen
+        die Bilder direkt aneinander – das ist richtig für Screenshots, die eine durchgehende Fläche
+        ergeben sollen, und für Bildstreifen, die später als Ganzes skaliert werden. Bei Fotos
+        wirken 16 bis 32 Pixel ruhiger, weil die Kante sonst wie ein Bildfehler aussieht.
+      </p>
+      <p>
+        Der Hintergrund betrifft nur die Fläche, die nicht von Bildern bedeckt ist: den Abstand
+        zwischen ihnen und den Rand, der bei „Originalgröße“ durch unterschiedliche Maße entsteht.
+        <strong>Weiß</strong> ist die sichere Wahl, weil es in Dokumenten, Drucken und auf den
+        meisten Webseiten nicht auffällt. <strong>Transparent</strong> ergibt nur als PNG Sinn, etwa
+        wenn die Bildfolge später auf einen farbigen Hintergrund gesetzt wird – ein JPG kennt keine
+        Transparenz, dort wird automatisch weiß gefüllt.
+      </p>
+
+      <h2>PNG oder JPG</h2>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Inhalt</th>
+              <th>Empfehlung</th>
+              <th>Warum</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Screenshots, Text, Diagramme</td><td>PNG</td><td>Scharfe Kanten und Schrift bleiben hart, keine Kompressionsartefakte</td></tr>
+            <tr><td>Fotos</td><td>JPG</td><td>Deutlich kleinere Datei bei kaum sichtbarem Unterschied</td></tr>
+            <tr><td>Freisteller, Logo, Overlay</td><td>PNG, Hintergrund transparent</td><td>Nur PNG kann durchsichtige Bereiche speichern</td></tr>
+            <tr><td>Weiterverarbeitung in einem Layout</td><td>PNG</td><td>Verlustfreier Zwischenschritt, kein Generationsverlust</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Wenn die Datei zu groß wird, ist selten das Format schuld, sondern die Pixelzahl: Eine
+        Fläche von 8000 × 3000 Pixeln hat 24 Megapixel, egal wie sie gespeichert wird. Der wirksamere
+        Hebel ist, die Einzelbilder vorher zu verkleinern – oder sie mit
+        <a href="/bild-komprimieren/">Bild komprimieren</a> auf eine Zielgröße zu bringen.
+      </p>
+
+      <h2>Typische Anwendungen</h2>
+      <ul>
+        <li>
+          <strong>Vorher und Nachher.</strong> Zwei Versionen desselben Fotos nebeneinander, ohne
+          Beschriftung – wer die Bildfolge in einem Beitrag erklärt, braucht keinen Text im Bild.
+        </li>
+        <li>
+          <strong>Produktbilder für Kleinanzeigen.</strong> Vorder-, Rück- und Detailansicht in einer
+          Aufnahme statt in fünf Anhängen. Das erste Bild einer Anzeige entscheidet über den Klick,
+          und mehrere Ansichten in einem Bild sagen mehr als eine einzelne.
+        </li>
+        <li>
+          <strong>Screenshots als Ablauf.</strong> Drei Schritte einer Anmeldung untereinander
+          ergeben eine Anleitung, die man in einem Durchgang erfasst.
+        </li>
+        <li>
+          <strong>Bildstreifen für eine Webseite.</strong> Mehrere Hochkant-Fotos nebeneinander
+          ergeben ein Band, das als eine Datei eingebunden werden kann – ein Ladevorgang statt vier.
+        </li>
+        <li>
+          <strong>Vergleich von Bearbeitungen.</strong> Dasselbe Motiv mit unterschiedlicher
+          Kompression nebeneinander zeigt schneller als jede Zahl, wo der Unterschied sichtbar wird.
+        </li>
+      </ul>
+
+      <h2>Panorama: was hier nicht passiert</h2>
+      <p>
+        Ein echtes Panorama entsteht aus überlappenden Aufnahmen, die an den Nahtstellen
+        ineinander überblendet und geometrisch entzerrt werden. Dieses Werkzeug legt Bilder
+        lediglich aneinander – Überlappungen werden nicht erkannt, Perspektiven nicht korrigiert.
+        Für Bergpanoramen und Innenräume braucht es eine Panoramafunktion der Kamera oder eine
+        Stitching-Software. Für den Fall „zwei Hochkant-Fotos ergeben ein Querformat“ reicht das
+        Aneinanderlegen dagegen völlig.
+      </p>
+
+      <h2>Was dieses Werkzeug nicht macht</h2>
+      <ul>
+        <li>
+          <strong>Kein Raster.</strong> Zwei Reihen mit je drei Bildern braucht einen Collage-Editor.
+        </li>
+        <li>
+          <strong>Kein Text im Bild.</strong> Beschriftungen lassen sich mit
+          <a href="/wasserzeichen-hinzufuegen/">Wasserzeichen hinzufügen</a> setzen – dort als Text
+          über dem Bild.
+        </li>
+        <li>
+          <strong>Kein Zuschneiden.</strong> Wenn ein Bild einen störenden Rand hat, vorher mit
+          <a href="/bild-zuschneiden/">Bild zuschneiden</a> bearbeiten; hier wird immer das ganze
+          Bild übernommen.
+        </li>
+        <li>
+          <strong>Kein PDF.</strong> Wer die Bilder als Dokument statt als Bild braucht, nimmt
+          <a href="/bild-in-pdf/">Bild in PDF umwandeln</a> – dort bekommt jedes Bild eine Seite.
+        </li>
+      </ul>
+
+      <h2>Verwandte Anleitungen</h2>
+      <ul>
+        <li><a href="/bildgroesse-aendern/">Bildgröße ändern</a> – Einzelbilder vorher auf gleiche Maße bringen.</li>
+        <li><a href="/bild-komprimieren/">Bild komprimieren</a> – die Gesamtdatei klein halten.</li>
+        <li><a href="/bild-in-pdf/">Bild in PDF umwandeln</a> – wenn aus den Bildern ein Dokument werden soll.</li>
+        <li><a href="/bild-konvertieren/">Bild konvertieren</a> – PNG, JPG und WebP ineinander umwandeln.</li>
+      </ul>
+    </div>
+  </ToolShell>
+</BaseLayout>

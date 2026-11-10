@@ -1,11 +1,11 @@
-export type ToolKey = 'crop' | 'compress' | 'resize' | 'convert' | 'watermark' | 'pdf';
+export type ToolKey = 'crop' | 'compress' | 'resize' | 'convert' | 'watermark' | 'pdf' | 'merge';
 
 export interface Tool {
   key: ToolKey;
   href: string;
   name: string;
   short: string;
-  icon: 'crop' | 'compress' | 'resize' | 'convert' | 'watermark' | 'pdf';
+  icon: 'crop' | 'compress' | 'resize' | 'convert' | 'watermark' | 'pdf' | 'merge';
   keywords: string;
 }
 
@@ -28,7 +28,7 @@ export const SITE = {
   email: 'oldniko117@gmail.com',
   tagline: 'Bildwerkzeuge direkt im Browser',
   description:
-    'Kostenlose Bildwerkzeuge für Deutschland: Bilder zuschneiden, komprimieren, Größe ändern, konvertieren und Wasserzeichen hinzufügen. Ohne Upload, ohne Anmeldung.'
+    'Kostenlose Bildwerkzeuge für Deutschland: Bilder zuschneiden, komprimieren, Größe ändern, konvertieren, Wasserzeichen hinzufügen, als PDF speichern oder zu einem Bild zusammenfügen. Ohne Upload, ohne Anmeldung.'
 } as const;
 
 export const tools: Tool[] = [
@@ -79,6 +79,14 @@ export const tools: Tool[] = [
     short: 'Mehrere Bilder als seitenfüllendes PDF speichern – ein Dokument, ein Download.',
     icon: 'pdf',
     keywords: 'bild in pdf umwandeln, jpg in pdf, fotos als pdf'
+  },
+  {
+    key: 'merge',
+    href: '/bilder-zusammenfuegen/',
+    name: 'Bilder zusammenfügen',
+    short: 'Mehrere Bilder nebeneinander oder untereinander zu einem Bild verbinden.',
+    icon: 'merge',
+    keywords: 'bilder zusammenfügen, bilder nebeneinander, fotos zusammenfügen'
   }
 ];
 

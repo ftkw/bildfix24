@@ -50,7 +50,7 @@ const baseUrl = await new Promise((resolveUrl, rejectUrl) => {
 console.log(`\nPrüfung gegen ${baseUrl}\n`);
 
 let failed = 0;
-for (const file of ['test-tools.mjs', 'test-tools2.mjs']) {
+for (const file of ['test-tools.mjs', 'test-tools2.mjs', 'test-merge.mjs']) {
   console.log(`\n──────── ${file} ────────`);
   const code = await run(process.execPath, [resolve(root, file)], {
     env: { ...process.env, BASE_URL: baseUrl }

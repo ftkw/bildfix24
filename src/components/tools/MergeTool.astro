@@ -1,0 +1,248 @@
+---
+import Icon from '../Icon.astro';
+---
+
+<div class="tool-panel">
+  <div class="dropzone" id="merge-zone">
+    <span class="dropzone__icon"><Icon name="merge" /></span>
+    <span class="dropzone__title">Bilder hierher ziehen oder klicken</span>
+    <span class="dropzone__hint">Mindestens 2, maximal 12 Dateien · JPG, PNG oder WebP · je max. 30 MB</span>
+    <input
+      type="file"
+      id="merge-input"
+      accept="image/png,image/jpeg,image/webp"
+      multiple
+      aria-label="Bilddateien zum Zusammenfügen auswählen"
+    />
+  </div>
+
+  <div id="merge-workspace" hidden>
+    <ol class="merge-list" id="merge-list" aria-label="Bilder in dieser Reihenfolge"></ol>
+
+    <div class="row">
+      <button class="btn btn--ghost" id="merge-add" type="button">Weitere Bilder hinzufügen</button>
+      <input
+        type="file"
+        id="merge-add-input"
+        accept="image/png,image/jpeg,image/webp"
+        multiple
+        hidden
+        aria-label="Weitere Bilddateien auswählen"
+      />
+    </div>
+
+    <div class="controls controls--split mt-3 merge-controls">
+      <div class="field">
+        <span class="field__label">Anordnung</span>
+        <div class="segmented" id="merge-direction" role="group" aria-label="Anordnung der Bilder">
+          <button type="button" data-direction="h" aria-pressed="true">Nebeneinander</button>
+          <button type="button" data-direction="v" aria-pressed="false">Untereinander</button>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field__label">Größenangleichung</span>
+        <div class="segmented" id="merge-fit" role="group" aria-label="Größenangleichung">
+          <button type="button" data-fit="equal" aria-pressed="true">Gleiche Höhe</button>
+          <button type="button" data-fit="natural" aria-pressed="false">Originalgröße</button>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field__label">Abstand <span class="field__value" id="merge-gap-value">ohne</span></span>
+        <input
+          type="range"
+          id="merge-gap"
+          min="0"
+          max="80"
+          step="4"
+          value="0"
+          aria-label="Abstand zwischen den Bildern in Pixeln"
+        />
+      </div>
+      <div class="field">
+        <span class="field__label">Hintergrund</span>
+        <div class="segmented" id="merge-bg" role="group" aria-label="Hintergrund der Gesamtfläche">
+          <button type="button" data-bg="white" aria-pressed="true">Weiß</button>
+          <button type="button" data-bg="transparent" aria-pressed="false">Transparent</button>
+        </div>
+      </div>
+      <div class="field">
+        <span class="field__label">Dateiformat</span>
+        <div class="segmented" id="merge-format" role="group" aria-label="Dateiformat des Ergebnisses">
+          <button type="button" data-format="image/png" aria-pressed="true">PNG</button>
+          <button type="button" data-format="image/jpeg" aria-pressed="false">JPG</button>
+        </div>
+      </div>
+    </div>
+
+    <p class="small muted mt-2" id="merge-layout-hint"></p>
+
+    <div class="row mt-3" id="merge-actions">
+      <button class="btn btn--primary" id="merge-apply" type="button">Zusammenfügen</button>
+      <a class="btn btn--download" id="merge-download" download hidden><Icon name="download" />Herunterladen</a>
+      <button class="btn btn--ghost" id="merge-clear" type="button">Liste leeren</button>
+    </div>
+
+    <div class="result__stats mt-3" id="merge-stats" hidden></div>
+    <div class="notice mt-2" id="merge-notice" hidden role="status"></div>
+
+    <div class="preview mt-3" id="merge-preview" hidden>
+      <img id="merge-preview-img" alt="Vorschau des zusammengefügten Bildes" />
+    </div>
+  </div>
+</div>
+
+<style>
+  /*
+   * Fünf Bedienelemente in zwei Reihen: erst zwei breite Felder für Anordnung und
+   * Größenangleichung, darunter drei schmalere. Mit dem Standardraster
+   * (auto-fit minmax(200px)) landen vier Felder in der ersten Zeile und das
+   * Dateiformat allein in der zweiten – und „Nebeneinander“ bricht in seine
+   * Einzelteile um. Ein 6-Spalten-Raster mit Spans hält die Reihen geschlossen.
+   */
+  .merge-controls {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+
+  .merge-controls > .field:nth-child(1),
+  .merge-controls > .field:nth-child(2) {
+    grid-column: span 3;
+  }
+
+  .merge-controls > .field:nth-child(n + 3) {
+    grid-column: span 2;
+  }
+
+  @media (max-width: 640px) {
+    .merge-controls {
+      grid-template-columns: 1fr;
+    }
+
+    .merge-controls > .field,
+    .merge-controls > .field:nth-child(n) {
+      grid-column: auto;
+    }
+  }
+</style>
+
+<style is:global>
+  .merge-list {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .merge-item {
+    display: grid;
+    grid-template-columns: 1.6rem 3.2rem minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 0.6rem;
+    background: var(--surface, #fff);
+  }
+
+  .merge-item__num {
+    font-variant-numeric: tabular-nums;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  .merge-item__thumb {
+    width: 3.2rem;
+    height: 2.2rem;
+    object-fit: cover;
+    border-radius: 0.35rem;
+    background: #eef1f5;
+  }
+
+  .merge-item__meta {
+    display: grid;
+    min-width: 0;
+  }
+
+  .merge-item__name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .merge-item__sub {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .merge-item__move {
+    display: inline-flex;
+    gap: 0.15rem;
+  }
+
+  .merge-item__move button {
+    font: inherit;
+    font-size: 0.8rem;
+    line-height: 1;
+    width: 1.7rem;
+    height: 1.7rem;
+    display: grid;
+    place-items: center;
+    color: var(--ink-soft);
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 0.4rem;
+    cursor: pointer;
+  }
+
+  .merge-item__move button:hover:not(:disabled) {
+    border-color: var(--line-strong);
+    color: var(--brand-ink);
+  }
+
+  .merge-item__move button:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+
+  .merge-item__remove {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.6rem;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 560px) {
+    .merge-item {
+      grid-template-columns: 2.6rem minmax(0, 1fr) auto;
+      row-gap: 0.4rem;
+    }
+
+    .merge-item__num {
+      display: none;
+    }
+
+    .merge-item__thumb {
+      width: 2.6rem;
+      height: 2rem;
+    }
+
+    /* Die Pfeile rutschen unter den Text, damit der Name nicht gequetscht wird. */
+    .merge-item__move {
+      grid-column: 2 / 3;
+    }
+
+    .merge-item__remove {
+      grid-column: 3 / 4;
+    }
+  }
+</style>
+
+<script>
+  import '../../scripts/tools/merge';
+</script>
