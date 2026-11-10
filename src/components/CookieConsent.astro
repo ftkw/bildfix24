@@ -1,25 +1,50 @@
 ---
-// DSGVO-Cookie-Hinweis. Es werden ausschließlich notwendige Speicherwerte
-// (Consent-Entscheidung) lokal abgelegt. Statistik/Ads erst nach Zustimmung.
+// DSGVO-/TDDDG-konformer Hinweis.
+// Ohne Einwilligung wird ausschließlich der notwendige Speicherwert abgelegt.
+// Werbeskripte werden erst nach Einwilligung geladen (siehe BaseLayout.astro).
 ---
 
 <div
   class="cookie"
   id="cookie-banner"
   role="dialog"
-  aria-modal="false"
+  aria-labelledby="cookie-title"
   aria-live="polite"
-  aria-label="Datenschutz-Einstellungen"
 >
   <div class="cookie__inner">
-    <p>
-      Diese Website nutzt keine Tracking-Cookies von Drittanbietern. Für die Anzeige von Werbung
-      können nach deiner Einwilligung Cookies gesetzt werden. Mehr dazu in der
-      <a href="/datenschutz/">Datenschutzerklärung</a>.
-    </p>
+    <div class="cookie__text">
+      <p class="cookie__title" id="cookie-title">Datenschutz-Einstellungen</p>
+      <p>
+        Wir setzen keine Tracking-Cookies und legen keine Nutzerprofile an. Nur wenn du einwilligst,
+        laden wir Werbung von Google, die Cookies setzen und Daten in die USA übertragen kann. Details
+        in der <a href="/datenschutz/">Datenschutzerklärung</a>.
+      </p>
+    </div>
+
     <div class="cookie__actions">
-      <button class="btn" type="button" data-consent="essential">Nur notwendige</button>
-      <button class="btn btn--primary" type="button" data-consent="all">Alle akzeptieren</button>
+      <button class="btn" type="button" data-consent="all">Alle akzeptieren</button>
+      <button class="btn" type="button" data-consent="essential">Alle ablehnen</button>
+      <button class="btn btn--ghost" type="button" data-toggle-settings>Einstellungen</button>
+    </div>
+
+    <div class="cookie__panel" id="cookie-settings" hidden>
+      <label class="cookie__opt">
+        <input type="checkbox" checked disabled />
+        <span>
+          <strong>Notwendig</strong> – speichert ausschließlich deine Auswahl hier, lokal in deinem
+          Browser. Immer aktiv.
+        </span>
+      </label>
+      <label class="cookie__opt">
+        <input type="checkbox" id="cookie-opt-ads" />
+        <span>
+          <strong>Werbung</strong> – lädt Google AdSense. Dabei können Cookies gesetzt und Daten in
+          die USA übertragen werden. Standardmäßig aus.
+        </span>
+      </label>
+      <div class="cookie__panel-actions">
+        <button class="btn" type="button" data-save-settings>Auswahl speichern</button>
+      </div>
     </div>
   </div>
 </div>
@@ -27,33 +52,71 @@
 <script>
   const KEY = 'bf-consent';
   const banner = document.getElementById('cookie-banner');
+  const panel = document.getElementById('cookie-settings');
+  const adsBox = document.getElementById('cookie-opt-ads') as HTMLInputElement | null;
 
-  const stored = (() => {
+  type Choice = { ads: boolean };
+
+  // Liest sowohl das alte Format ('all' | 'essential') als auch das neue JSON.
+  const read = (): Choice | null => {
     try {
-      return localStorage.getItem(KEY);
+      const raw = localStorage.getItem(KEY);
+      if (!raw) return null;
+      if (raw === 'all') return { ads: true };
+      if (raw === 'essential') return { ads: false };
+      const parsed = JSON.parse(raw) as { ads?: boolean };
+      return { ads: Boolean(parsed?.ads) };
     } catch {
       return null;
     }
-  })();
+  };
 
-  if (stored) {
-    document.documentElement.dataset.consent = stored;
-  } else {
-    banner?.classList.add('is-open');
-  }
-
-  const apply = (value: string) => {
+  const apply = (choice: Choice) => {
     try {
-      localStorage.setItem(KEY, value);
+      localStorage.setItem(KEY, JSON.stringify({ ads: choice.ads, v: 1, ts: Date.now() }));
     } catch {
       /* Speicher nicht verfügbar – Entscheidung gilt nur für diese Sitzung */
     }
-    document.documentElement.dataset.consent = value;
+    document.documentElement.dataset.consent = choice.ads ? 'all' : 'essential';
+    if (adsBox) adsBox.checked = choice.ads;
     banner?.classList.remove('is-open');
-    window.dispatchEvent(new CustomEvent('bf:consent', { detail: value }));
+    if (panel) panel.hidden = true;
+    window.dispatchEvent(new CustomEvent('bf:consent', { detail: choice }));
   };
 
+  const open = () => {
+    const current = read();
+    if (adsBox) adsBox.checked = current ? current.ads : false;
+    banner?.classList.add('is-open');
+  };
+
+  const stored = read();
+  if (stored) {
+    document.documentElement.dataset.consent = stored.ads ? 'all' : 'essential';
+  } else {
+    open();
+  }
+
   banner?.querySelectorAll<HTMLButtonElement>('[data-consent]').forEach(button => {
-    button.addEventListener('click', () => apply(button.dataset.consent ?? 'essential'));
+    button.addEventListener('click', () => apply({ ads: button.dataset.consent === 'all' }));
   });
+
+  banner?.querySelector<HTMLButtonElement>('[data-toggle-settings]')?.addEventListener('click', () => {
+    if (!panel) return;
+    panel.hidden = !panel.hidden;
+  });
+
+  banner?.querySelector<HTMLButtonElement>('[data-save-settings]')?.addEventListener('click', () => {
+    apply({ ads: Boolean(adsBox?.checked) });
+  });
+
+  // Widerruf nach Art. 7 Abs. 3 DSGVO: jedes Element mit data-open-consent öffnet den Hinweis erneut.
+  document.addEventListener('click', event => {
+    const trigger = (event.target as Element | null)?.closest('[data-open-consent]');
+    if (!trigger) return;
+    event.preventDefault();
+    open();
+  });
+
+  (window as unknown as { bfOpenConsent?: () => void }).bfOpenConsent = open;
 </script>

@@ -1454,6 +1454,60 @@ input[type="range"] {
   font-size: 0.87rem;
 }
 
+/* Beide Hauptoptionen bewusst gleich gewichtet: kein Primary-Hervorheben,
+   sonst liegt rechtlich unzulässiges Nudging vor (vgl. LG Köln, OLG Hamm). */
+.cookie__actions .btn--ghost {
+  border-color: transparent;
+  color: var(--ink-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.cookie__text {
+  flex: 1 1 320px;
+  min-width: 0;
+}
+
+.cookie__title {
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 0.3rem !important;
+}
+
+.cookie__panel {
+  flex-basis: 100%;
+  border-top: 1px solid var(--line);
+  padding-top: 0.85rem;
+  display: grid;
+  gap: 0.6rem;
+}
+
+.cookie__panel[hidden] {
+  display: none;
+}
+
+.cookie__opt {
+  display: flex;
+  gap: 0.55rem;
+  align-items: flex-start;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+.cookie__opt input {
+  margin-top: 0.15rem;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  accent-color: var(--brand);
+}
+
+.cookie__panel-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
 /* --------------------------------------------------------------------------
    Footer
    -------------------------------------------------------------------------- */

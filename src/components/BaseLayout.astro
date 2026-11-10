@@ -21,6 +21,8 @@ const canonical = absolute(path);
 const fullTitle = title.includes(SITE.name) ? title : `${title} | ${SITE.name}`;
 const ogImage = absolute('/og.png');
 const ogImageAlt = `${SITE.name} – Bildwerkzeuge, die im Browser laufen`;
+// Nur laden, wenn eine Publisher-ID gesetzt ist und eine Einwilligung vorliegt.
+const adsClient = import.meta.env.PUBLIC_ADSENSE_CLIENT;
 ---
 
 <!DOCTYPE html>
@@ -75,6 +77,52 @@ const ogImageAlt = `${SITE.name} – Bildwerkzeuge, die im Browser laufen`;
     </main>
     <Footer />
     <CookieConsent />
+
+    {adsClient && (
+      <script is:inline define:vars={{ adsClient }}>
+        // AdSense wird ausschließlich nach Einwilligung geladen (Art. 6 Abs. 1 lit. a DSGVO,
+        // § 25 Abs. 1 TDDDG). Ohne Einwilligung entsteht kein Werbe-Request.
+        (function () {
+          var KEY = 'bf-consent';
+          function adsAllowed() {
+            try {
+              var raw = localStorage.getItem(KEY);
+              if (!raw) return false;
+              if (raw === 'all') return true;
+              if (raw === 'essential') return false;
+              var parsed = JSON.parse(raw);
+              return !!(parsed && parsed.ads);
+            } catch (e) {
+              return false;
+            }
+          }
+          function boot() {
+            if (!adsAllowed() || window.__bfAdsBooted) return;
+            window.__bfAdsBooted = true;
+            var s = document.createElement('script');
+            s.async = true;
+            s.crossOrigin = 'anonymous';
+            s.src =
+              'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' +
+              encodeURIComponent(adsClient);
+            s.onload = function () {
+              var slots = document.querySelectorAll('ins.adsbygoogle');
+              for (var i = 0; i < slots.length; i++) {
+                try {
+                  (window.adsbygoogle = window.adsbygoogle || []).push({});
+                } catch (e) {}
+              }
+            };
+            document.head.appendChild(s);
+          }
+          if (document.readyState !== 'loading') boot();
+          else document.addEventListener('DOMContentLoaded', boot);
+          window.addEventListener('bf:consent', function (e) {
+            if (e.detail && e.detail.ads) boot();
+          });
+        })();
+      </script>
+    )}
   </body>
 </html>
 

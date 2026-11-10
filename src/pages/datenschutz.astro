@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../components/BaseLayout.astro';
 import Breadcrumbs from '../components/Breadcrumbs.astro';
+import { SITE } from '../data/tools';
 import type { Crumb } from '../lib/seo';
 
 const crumbs: Crumb[] = [
@@ -11,7 +12,7 @@ const crumbs: Crumb[] = [
 
 <BaseLayout
   title="Datenschutzerklärung"
-  description="Informationen zur Verarbeitung personenbezogener Daten auf bildfix24 gemäß DSGVO – inklusive Hinweisen zu Bildverarbeitung und Werbung."
+  description="Informationen zur Verarbeitung personenbezogener Daten auf bildfix24 gemäß DSGVO – Hosting, Reichweitenmessung, Bildverarbeitung und Werbung."
   path="/datenschutz/"
 >
   <section class="section" style="padding-top: 2.2rem;">
@@ -22,12 +23,12 @@ const crumbs: Crumb[] = [
 
         <h2>1. Verantwortlicher</h2>
         <p>
-          oldniko<br />
+          Lukas Brenner<br />
           Yinggang East Road 6433<br />
           Qingpu District<br />
           201700 Shanghai<br />
           Volksrepublik China<br />
-          E-Mail: <a href="mailto:oldniko117@gmail.com">oldniko117@gmail.com</a>
+          E-Mail: <a href={`mailto:${SITE.email}`}>{SITE.email}</a>
         </p>
         <p class="small muted">
           Anschrift in Landessprache: 上海市青浦区盈港东路6433号, 201700
@@ -42,47 +43,102 @@ const crumbs: Crumb[] = [
           Nutzung die Netzwerkaktivität in den Entwicklertools deines Browsers beobachtest.
         </p>
 
-        <h2>3. Server-Logfiles</h2>
+        <h2>3. Hosting und Auslieferung über Cloudflare</h2>
         <p>
-          Beim Aufruf der Website erhebt der Hosting-Anbieter automatisch Informationen, die dein
-          Browser übermittelt (IP-Adresse, Datum und Uhrzeit, aufgerufene Seite, Referrer,
-          Browserkennung). Diese Daten dienen der technischen Bereitstellung und der Abwehr von
-          Angriffen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einem
-          sicheren Betrieb).
+          Diese Website wird als statische Website über Cloudflare Pages bereitgestellt und über das
+          globale Netzwerk der Cloudflare, Inc., 101 Townsend Street, San Francisco, CA 94107, USA
+          („Cloudflare“), ausgeliefert. Cloudflare verarbeitet dabei in unserem Auftrag die technisch
+          notwendigen Verbindungsdaten, insbesondere IP-Adresse, Datum und Uhrzeit des Zugriffs,
+          angeforderte Ressource, übertragene Datenmenge, Referrer sowie Browser- und
+          Betriebssystemkennung. Grundlage der Auftragsverarbeitung ist ein Vertrag nach Art. 28
+          DSGVO. Rechtsgrundlage der Verarbeitung ist unser berechtigtes Interesse an einer sicheren,
+          schnellen und stabilen Bereitstellung des Angebots (Art. 6 Abs. 1 lit. f DSGVO).
+        </p>
+        <p>
+          Die Übermittlung in die USA stützt sich auf den Angemessenheitsbeschluss der Europäischen
+          Kommission zum EU-US Data Privacy Framework vom 10. Juli 2023, unter dem Cloudflare
+          zertifiziert ist. Ergänzend gelten die Standardvertragsklauseln nach Art. 46 Abs. 2 lit. c
+          DSGVO.
         </p>
 
-        <h2>4. Cookies und Einwilligung</h2>
+        <h2>4. Server-Logfiles</h2>
         <p>
-          Für die Speicherung deiner Entscheidung zum Datenschutz-Hinweis verwenden wir einen Eintrag
-          im lokalen Speicher deines Browsers (Local Storage). Dieser Eintrag ist technisch notwendig
-          und enthält keine personenbezogenen Daten außer deiner Auswahl.
-        </p>
-        <p>
-          Weitere Cookies – insbesondere zur Anzeige von Werbung – werden ausschließlich nach deiner
-          ausdrücklichen Einwilligung gesetzt (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG). Du
-          kannst deine Einwilligung jederzeit über die Cookie-Einstellungen widerrufen.
+          Beim Aufruf der Website fallen bei Cloudflare technische Protokolldaten an (IP-Adresse,
+          Zeitpunkt, aufgerufene Ressource, Statuscode, Referrer, Browserkennung). Diese Daten dienen
+          der Auslieferung der Inhalte, der Fehleranalyse und der Abwehr von Angriffen. Eine
+          Zusammenführung mit anderen Datenquellen findet nicht statt. Rechtsgrundlage ist Art. 6
+          Abs. 1 lit. f DSGVO.
         </p>
 
-        <h2>5. Werbung</h2>
+        <h2>5. Reichweitenmessung ohne Cookies</h2>
         <p>
-          Diese Website finanziert sich über Werbung. Sofern eine Einwilligung erteilt wurde, können
-          Anzeigen über Google AdSense (Google Ireland Limited, Gordon House, Barrow Street, Dublin 4,
-          Irland) ausgeliefert werden. Dabei können Cookies und vergleichbare Technologien eingesetzt
-          werden, um Anzeigen auszuwählen und deren Ausspielung zu messen.
+          Zur Messung der Reichweite setzen wir Cloudflare Web Analytics ein. Der Dienst arbeitet
+          ohne Cookies und ohne dauerhafte Kennungen im Endgerät und unterliegt deshalb nicht der
+          Einwilligungspflicht nach § 25 Abs. 1 TDDDG.
         </p>
         <p>
-          Ohne Einwilligung werden keine personalisierten Werbecookies gesetzt. Weitere Informationen
-          findest du in der Datenschutzerklärung von Google.
+          Erfasst werden ausschließlich aggregierte Angaben: aufgerufene Seite, verweisende Seite
+          (Referrer), Land, Browser- und Gerätekategorie, Ladezeit sowie eine aus IP-Adresse und
+          User-Agent gebildete, täglich neu erzeugte Prüfsumme, mit der wiederkehrende Aufrufe
+          unterschieden werden können. Die IP-Adresse selbst wird dabei nicht gespeichert und nicht
+          mit anderen Daten zusammengeführt. Eine Rückführung auf einzelne Personen ist uns nicht
+          möglich.
+        </p>
+        <p>
+          Rechtsgrundlage ist Art. 6 Abs. 1 lit. f DSGVO (berechtigtes Interesse an einer
+          datensparsamen Messung der Nutzung). Du kannst dieser Verarbeitung nach Art. 21 DSGVO
+          widersprechen.
         </p>
 
-        <h2>6. Keine externen Schriftarten und keine Tracking-Skripte</h2>
+        <h2>6. Speicherung auf deinem Endgerät und Einwilligung</h2>
         <p>
-          Es werden ausschließlich Systemschriften verwendet. Es werden keine Schriftarten von
-          Drittanbietern geladen. Auf ein Analyse-Tracking mit personenbezogenen Profilen wird
-          verzichtet.
+          <strong>Technisch notwendig:</strong> Für die Speicherung deiner Entscheidung zum
+          Datenschutz-Hinweis legen wir einen Eintrag im lokalen Speicher deines Browsers ab
+          (Schlüssel <code>bf-consent</code>). Er enthält ausschließlich deine Auswahl sowie den
+          Zeitpunkt der Entscheidung und ist für den Betrieb erforderlich; Rechtsgrundlage ist § 25
+          Abs. 2 Nr. 2 TDDDG.
+        </p>
+        <p>
+          <strong>Alles andere nur nach Einwilligung:</strong> Cookies und vergleichbare Technologien
+          zu Werbezwecken werden ausschließlich gesetzt, wenn du dem ausdrücklich zugestimmt hast
+          (Art. 6 Abs. 1 lit. a DSGVO, § 25 Abs. 1 TDDDG). Solange keine Einwilligung vorliegt,
+          werden keine Werbe-Cookies gesetzt und keine Werbeskripte geladen.
+        </p>
+        <p>
+          <strong>Widerruf:</strong> Du kannst deine Einwilligung jederzeit mit Wirkung für die
+          Zukunft widerrufen, über den Link „Cookie-Einstellungen“ im Seitenfuß. Die Rechtmäßigkeit
+          der bis zum Widerruf erfolgten Verarbeitung bleibt davon unberührt.
         </p>
 
-        <h2>7. Deine Rechte</h2>
+        <h2>7. Werbung</h2>
+        <p>
+          Diese Website finanziert sich über Werbung. Wenn du in Werbe-Cookies eingewilligt hast,
+          können Anzeigen über Google AdSense ausgeliefert werden (Google Ireland Limited, Gordon
+          House, Barrow Street, Dublin 4, Irland; „Google“). Google kann dabei Cookies und
+          vergleichbare Technologien einsetzen, um Anzeigen auszuwählen, ihre Ausspielung zu messen
+          und die Häufigkeit zu begrenzen. Dabei können Daten an Google in die USA übermittelt
+          werden; Grundlage sind der Angemessenheitsbeschluss zum EU-US Data Privacy Framework bzw.
+          die Standardvertragsklauseln.
+        </p>
+        <p>
+          Ohne deine Einwilligung werden keine personalisierten Anzeigen ausgeliefert und keine
+          Werbeskripte geladen.
+        </p>
+        <p>
+          Weitere Informationen: Datenschutzerklärung von Google
+          (<a href="https://policies.google.com/privacy" rel="noopener nofollow" target="_blank">policies.google.com/privacy</a>)
+          und Informationen zu den von Google verwendeten Werbetechnologien
+          (<a href="https://policies.google.com/technologies/ads" rel="noopener nofollow" target="_blank">policies.google.com/technologies/ads</a>).
+        </p>
+
+        <h2>8. Keine externen Schriftarten, keine Profilbildung</h2>
+        <p>
+          Es werden ausschließlich Systemschriften verwendet; Schriftarten werden nicht von Servern
+          Dritter geladen. Wir betreiben kein websiteübergreifendes Tracking, legen keine
+          Nutzerprofile an und binden keine Social-Media-Plugins ein.
+        </p>
+
+        <h2>9. Deine Rechte</h2>
         <p>Dir stehen nach der DSGVO folgende Rechte zu:</p>
         <ul>
           <li>Auskunft über die verarbeiteten Daten (Art. 15 DSGVO)</li>
@@ -94,14 +150,18 @@ const crumbs: Crumb[] = [
           <li>Widerruf einer Einwilligung mit Wirkung für die Zukunft (Art. 7 Abs. 3 DSGVO)</li>
         </ul>
 
-        <h2>8. Beschwerderecht</h2>
+        <h2>10. Beschwerderecht</h2>
         <p>
           Du hast das Recht, dich bei einer Datenschutz-Aufsichtsbehörde zu beschweren. Zuständig ist
-          in der Regel die Behörde deines Wohnsitzes oder unseres Sitzes.
+          in der Regel die Behörde deines gewöhnlichen Aufenthaltsorts oder die Behörde, die sich mit
+          dem Angebot befasst.
         </p>
 
-        <h2>9. Stand</h2>
-        <p>Diese Datenschutzerklärung wurde im November 2026 erstellt.</p>
+        <h2>11. Stand</h2>
+        <p>
+          Diese Datenschutzerklärung wurde im November 2026 erstellt. Wir passen sie an, sobald sich
+          die eingesetzten Dienste ändern.
+        </p>
       </div>
     </div>
   </section>
