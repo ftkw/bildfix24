@@ -87,8 +87,8 @@ const jsonLd = [
 ---
 
 <BaseLayout
-  title="Bilder zusammenfügen – nebeneinander oder untereinander"
-  description="Mehrere Bilder zu einem zusammenfügen: nebeneinander oder untereinander, gleiche Höhe oder Originalgröße, Abstand und transparenter Hintergrund einstellbar. Im Browser, ohne Upload."
+  title="Bilder zusammenfügen – ein Bild aus mehreren"
+  description="Mehrere Bilder zu einem zusammenfügen: nebeneinander oder untereinander, gleiche Höhe oder Originalgröße, Abstand und Hintergrund wählbar. Ohne Upload."
   path="/bilder-zusammenfuegen/"
   jsonLd={jsonLd}
 >
@@ -214,12 +214,20 @@ const jsonLd = [
         Hebel ist, die Einzelbilder vorher zu verkleinern – oder sie mit
         <a href="/bild-komprimieren/">Bild komprimieren</a> auf eine Zielgröße zu bringen.
       </p>
+      <p>
+        Liegt ein Motiv nur als JPG vor und soll in ein Layout, in dem später weitergearbeitet wird,
+        führt <a href="/bild-konvertieren/jpg-in-png/">JPG in PNG umwandeln</a> dorthin. Dabei bleibt
+        die bereits verlorene Kompression des Originals verloren – der Wechsel zurück nach PNG
+        stellt keine Details wieder her, er verhindert nur weiteren Verlust.
+      </p>
 
       <h2>Typische Anwendungen</h2>
       <ul>
         <li>
           <strong>Vorher und Nachher.</strong> Zwei Versionen desselben Fotos nebeneinander, ohne
           Beschriftung – wer die Bildfolge in einem Beitrag erklärt, braucht keinen Text im Bild.
+          Für Feed und Story gelten dabei feste Formate; die Pixelmaße dafür stehen unter
+          <a href="/instagram-bild-zuschneiden/">Instagram-Bild zuschneiden</a>.
         </li>
         <li>
           <strong>Produktbilder für Kleinanzeigen.</strong> Vorder-, Rück- und Detailansicht in einer
@@ -276,6 +284,7 @@ const jsonLd = [
         <li><a href="/bildgroesse-aendern/">Bildgröße ändern</a> – Einzelbilder vorher auf gleiche Maße bringen.</li>
         <li><a href="/bild-komprimieren/">Bild komprimieren</a> – die Gesamtdatei klein halten.</li>
         <li><a href="/bild-in-pdf/">Bild in PDF umwandeln</a> – wenn aus den Bildern ein Dokument werden soll.</li>
+        <li><a href="/produktbild-komprimieren/">Produktbild komprimieren</a> – wenn die zusammengesetzte Datei anschließend in einen Shop geht.</li>
         <li><a href="/bild-konvertieren/">Bild konvertieren</a> – PNG, JPG und WebP ineinander umwandeln.</li>
       </ul>
     </div>

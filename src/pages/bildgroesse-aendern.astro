@@ -88,7 +88,7 @@ const jsonLd = [
 
 <BaseLayout
   title="Bildgröße ändern – Pixel, cm und Prozent"
-  description="Bildgröße ändern in Pixel, Zentimeter oder Zoll: mit dpi-Angabe für den Druck, Druckformaten wie 10 × 15 cm und A4, Prozentregler und gesperrtem Seitenverhältnis. Ohne Upload."
+  description="Bildgröße ändern in Pixel, Zentimeter oder Zoll: mit dpi für den Druck, Formaten wie 10 × 15 cm und A4, Prozentregler, gesperrtem Seitenverhältnis. Ohne Upload."
   path="/bildgroesse-aendern/"
   jsonLd={jsonLd}
 >
@@ -244,6 +244,24 @@ const jsonLd = [
         Dateigröße weiter zu senken. Für einen anderen Ausschnitt nutze
         <a href="/bild-zuschneiden/">Bild zuschneiden</a>.
       </p>
+
+      <h2>Feste Formate statt freier Maße</h2>
+      <p>
+        Die Felder oben nehmen jedes Maß an, das du eintippst. Für einige Ziele ist das aber der
+        falsche Weg, weil nicht die Kantenlänge, sondern das Seitenverhältnis vorgeschrieben ist –
+        und ein Bild, das nur ungefähr passt, wird beim Upload beschnitten oder verzerrt. Für diese
+        Fälle gibt es eigene Werkzeuge mit den hinterlegten Vorgaben:
+      </p>
+      <ul>
+        <li>
+          <a href="/instagram-bild-zuschneiden/">Instagram-Bild zuschneiden</a> – 1:1, 4:5 und 9:16
+          mit den Pixelmaßen für Feed, Story und Reels.
+        </li>
+        <li>
+          <a href="/passfoto-zuschneiden/">Passfoto zuschneiden</a> – 35 × 45 mm, also 413 × 531
+          Pixel bei 300 dpi, mit den Vorgaben an Kopfhöhe und Hintergrund.
+        </li>
+      </ul>
     </div>
   </ToolShell>
 

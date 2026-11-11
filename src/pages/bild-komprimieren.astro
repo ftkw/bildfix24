@@ -57,8 +57,8 @@ const jsonLd = [
 ---
 
 <BaseLayout
-  title="Bild komprimieren – ohne sichtbaren Qualitätsverlust"
-  description="Bilder komprimieren ohne sichtbaren Qualitätsverlust: erst Pixel reduzieren, dann Qualität wählen, Ersparnis sofort sehen. JPG, PNG, WebP – ohne Upload im Browser."
+  title="Bild komprimieren: Qualitätsverlust vermeiden"
+  description="Bilder komprimieren ohne sichtbaren Qualitätsverlust: erst Pixel reduzieren, dann Qualität wählen, Ersparnis sofort sehen. JPG, PNG und WebP, ohne Upload."
   path="/bild-komprimieren/"
   jsonLd={jsonLd}
 >
@@ -202,6 +202,13 @@ const jsonLd = [
         Wenn du zusätzlich die Pixelmaße verkleinern möchtest, nutze zuerst
         <a href="/bildgroesse-aendern/">Bildgröße ändern</a> und komprimiere danach. Das liefert in
         der Regel die kleinste Datei bei guter Qualität.
+      </p>
+      <p>
+        Ein Sonderfall, bei dem kein Qualitätsregler hilft: ein Foto, das als PNG gespeichert ist.
+        PNG komprimiert verlustfrei, kann also kein Detail wegwerfen – und bleibt deshalb bei
+        Fotomotiven oft ein Vielfaches derselben Aufnahme als JPG. Dort ist nicht die Stufe das
+        Problem, sondern das Format: <a href="/bild-konvertieren/png-in-jpg/">PNG in JPG umwandeln</a>
+        löst es an der Wurzel.
       </p>
 
       <h2>Anleitungen für feste Zielgrößen</h2>

@@ -8,7 +8,12 @@
 //
 // 所以这里再生成一份最保守的形式：单层 urlset，只保留 loc 与 lastmod，
 // 去掉 news / image / video / xhtml 等额外命名空间——这是 Google 兼容性最好
-// 的写法。提交这一个就够，index 与分片可以忽略。
+// 的写法。
+//
+// index 与分片必须删掉，不能只是"忽略"：只要文件还在 dist 里，它就随部署一起
+// 上线，而 GSC 里那两条记录一直存在并持续报"无法抓取"。同一批 URL 由三份
+// sitemap 声明，Google 侧无法判断哪份是权威版本。构建产物里只留一份，是消除
+// 这个歧义最直接的办法。
 
 import fs from 'node:fs';
 import path from 'node:path';
@@ -51,3 +56,36 @@ fs.writeFileSync(
 
 const size = fs.statSync(OUT).size;
 console.log(`dist/sitemap.xml 已生成：${urls.length} 条 URL，${size} 字节${lastmod ? `，lastmod=${lastmod}` : ''}`);
+
+// @astrojs/sitemap 的产物在这里退场。删掉是为了让线上只存在一份 sitemap——
+// 留着它们既不会带来任何好处，又会让 GSC 里那两条失败的记录永远有文件可抓。
+for (const name of ['sitemap-index.xml', 'sitemap-0.xml']) {
+  const file = path.join(DIST, name);
+  if (fs.existsSync(file)) {
+    fs.rmSync(file);
+    console.log(`已删除 ${name}`);
+  }
+}
+
+// @astrojs/sitemap 会往每个页面的 head 里塞一条
+// `<link rel="sitemap" href="/sitemap-index.xml">`。上面把文件删了之后这条指向
+// 空处，于是 26 个页面各有一个死链，而且死的正好是那条"请来抓 sitemap"的指令。
+// 所以统一改成扁平版。改的是构建产物而不是源码：这行由插件注入，源码里没有。
+const htmlFiles = [];
+const collect = (dir) => {
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) collect(full);
+    else if (entry.name.endsWith('.html')) htmlFiles.push(full);
+  }
+};
+collect(DIST);
+
+let rewritten = 0;
+for (const file of htmlFiles) {
+  const html = fs.readFileSync(file, 'utf8');
+  if (!html.includes('/sitemap-index.xml')) continue;
+  fs.writeFileSync(file, html.replaceAll('/sitemap-index.xml', '/sitemap.xml'), 'utf8');
+  rewritten += 1;
+}
+console.log(`sitemap 引用已改为 /sitemap.xml：${rewritten}/${htmlFiles.length} 个页面`);
