@@ -1,0 +1,283 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import ToolShell from '../components/ToolShell.astro';
+import HeicTool from '../components/tools/HeicTool.astro';
+import { breadcrumbSchema, faqSchema, softwareSchema, type Crumb, type FaqItem } from '../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'HEIC in JPG', href: '/heic-in-jpg/' }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Werden meine Fotos hochgeladen?',
+    a: 'Nein. Die Dateien werden im Browser gelesen und dort umgerechnet. Es gibt keinen Server, der Bilder empfängt, und keine Speicherung. Wenn du es prüfen willst, öffne die Netzwerkanzeige deines Browsers während der Umwandlung: Dort taucht keine Bilddatei auf.'
+  },
+  {
+    q: 'Warum ist die JPG-Datei größer als das HEIC?',
+    a: 'Weil HEIC effizienter komprimiert. Bei vergleichbarer Bildqualität braucht HEVC etwa die halbe Datenmenge von JPEG. Aus 2 MB HEIC werden deshalb typischerweise 4 bis 6 MB JPG. Das ist kein Fehler des Werkzeugs, sondern der Preis für ein Format, das jedes Gerät öffnet. Über den Qualitätsregler lässt sich die Größe wieder senken.'
+  },
+  {
+    q: 'Bleiben Aufnahmedatum und GPS-Koordinaten erhalten?',
+    a: 'Nein. Das Werkzeug liest ausschließlich die Bildpunkte und schreibt eine neue JPEG-Datei; EXIF-Daten werden weder gelesen noch übernommen. Wer Aufnahmedatum, Kameraangaben oder Standort braucht, exportiert die Fotos stattdessen in der Fotos-App. Für Bilder, die öffentlich ins Netz gehen, ist das Fehlen der Standortdaten übrigens ein Vorteil.'
+  },
+  {
+    q: 'Kann ich mehrere Fotos gleichzeitig umwandeln?',
+    a: 'Ja, bis zu 40 Dateien pro Vorgang. Bei mehr als einem Ergebnis bekommst du ein ZIP-Archiv mit allen JPGs; bei genau einer Datei direkt das Bild. Die Verarbeitung läuft Datei für Datei, der Fortschritt wird angezeigt.'
+  },
+  {
+    q: 'Funktioniert das auch auf dem iPhone selbst?',
+    a: 'Grundsätzlich ja – Safari auf iOS unterstützt WebAssembly und Downloads, das Werkzeug läuft also auch dort. Bei vielen oder sehr großen Fotos ist der Arbeitsspeicher des Telefons aber schneller am Ende als bei einem Rechner. Für eine Handvoll Bilder ist es bequem, für einen ganzen Urlaub ist der Umweg über den Rechner der sicherere Weg.'
+  },
+  {
+    q: 'Was passiert mit Live Photos?',
+    a: 'Ein Live Photo besteht aus zwei Teilen: einem HEIC-Standbild und einer separaten MOV-Datei mit der Bewegung. Umgewandelt wird das Standbild. Willst du die Bewegung behalten, musst du das Live Photo in der Fotos-App exportieren.'
+  },
+  {
+    q: 'Ist HEIC besser als JPG?',
+    a: 'Technisch ist es das effizientere Format: gleiche Qualität bei etwa halber Dateigröße, dazu 10 Bit Farbtiefe und Transparenz. Praktisch entscheidet die Kompatibilität. HEIC für das Archiv auf dem iPhone, JPG für alles, was das Gerät oder die Anwendung wechselt.'
+  },
+  {
+    q: 'Was ist der Unterschied zwischen HEIC und HEIF?',
+    a: 'HEIF ist der Container, HEIC die Variante mit HEVC-kodierten Bildern darin. Dateien mit der Endung .heif werden hier genauso verarbeitet. AVIF ist ein anderer Codec im selben Container und wird von diesem Werkzeug nicht angenommen.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'HEIC in JPG umwandeln',
+    description:
+      'HEIC- und HEIF-Dateien kostenlos als JPG speichern – mehrere auf einmal, gebündelt als ZIP, ohne Upload direkt im Browser.',
+    path: '/heic-in-jpg/'
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="HEIC in JPG umwandeln – ohne Upload"
+  description="HEIC und HEIF in JPG umwandeln: iPhone-Fotos auf einmal, direkt im Browser, ohne Upload. Mit Qualitätsregler, Vorschau der Dateigrößen und ZIP-Download."
+  path="/heic-in-jpg/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="HEIC in JPG umwandeln"
+    kicker="iPhone-Fotos, die überall öffnen"
+    lead="Fotos aus der iPhone-Kamera liegen als HEIC auf dem Rechner und lassen sich in Windows, auf Android oder in einem Webformular oft nicht öffnen. Hier werden sie zu JPG – bis zu 40 auf einmal, im Browser, ohne dass ein Bild hochgeladen wird."
+    toolKey="heic"
+    crumbs={crumbs}
+    faq={faq}
+    steps={[
+      {
+        title: 'HEIC-Dateien auswählen',
+        text: 'Ziehe die Dateien in das Feld oder klicke hinein. Mehrfachauswahl ist möglich, die Reihenfolge spielt keine Rolle. Bis zu 40 Dateien, je maximal 100 MB.'
+      },
+      {
+        title: 'Qualität festlegen',
+        text: '88 Prozent ist ein guter Ausgangswert: mit bloßem Auge kaum vom Original zu unterscheiden, aber deutlich kleiner als 95. Für Anhänge und Formulare reichen 75 bis 80.'
+      },
+      {
+        title: 'Umwandeln und herunterladen',
+        text: 'Ein Klick rechnet alle Dateien nacheinander um. Du bekommst ein einzelnes JPG oder ein ZIP-Archiv mit allen Ergebnissen.'
+      }
+    ]}
+  >
+    <div slot="tool">
+      <HeicTool />
+    </div>
+
+    <div class="prose mt-4">
+      <h2>Warum HEIC sich nicht einfach öffnen lässt</h2>
+      <p>
+        HEIC steht für <em>High Efficiency Image Container</em>. Das ist kein Bildformat im
+        klassischen Sinn, sondern ein Behälter: Innen liegt ein mit HEVC komprimiertes Bild –
+        derselbe Codec, der auch bei 4K-Video verwendet wird. Apple speichert Fotos seit iOS 11
+        (2017) so, weil sich damit bei gleicher Qualität ungefähr die halbe Datenmenge
+        unterbringen lässt.
+      </p>
+      <p>
+        Das Problem ist nicht die Datei, sondern der fehlende Decoder. Windows bringt von Haus aus
+        keinen HEVC-Decoder mit und braucht zwei getrennte Pakete: <strong>HEIF Image
+        Extensions</strong>, das den Container versteht, und <strong>HEVC Video
+        Extensions</strong>, das den Codec liefert. Fehlt eines von beiden, zeigt der Bildbetrachter
+        ein schwarzes Feld oder eine Kaufaufforderung. Chrome und Firefox dekodieren HEIC gar nicht.
+        Auf Apple-Geräten fällt das nie auf – der Ärger beginnt erst beim Kopieren auf einen anderen
+        Rechner.
+      </p>
+
+      <h3>Umbenennen hilft nicht</h3>
+      <p>
+        Der naheliegende Versuch ist, aus <code>IMG_4821.HEIC</code> einfach
+        <code>IMG_4821.jpg</code> zu machen. Das ändert nur, welches Programm sich zuständig fühlt –
+        nicht, wie die Daten im Inneren kodiert sind. Im Container steht weiterhin HEVC, und der
+        Betrachter scheitert weiterhin, nur mit einer anderen Fehlermeldung. Umgewandelt wird erst,
+        wenn die Bildpunkte tatsächlich neu kodiert werden.
+      </p>
+
+      <h2>Was dieses Werkzeug tut – und was nicht</h2>
+      <p>
+        Es dekodiert HEVC im Browser und schreibt das Ergebnis als JPEG neu. Der Decoder kommt als
+        WebAssembly nach; die Datei wird per JavaScript gelesen, nicht gesendet. Auf allen anderen
+        Seiten dieser Website wird er nicht geladen – dort gibt es nichts zu dekodieren.
+      </p>
+      <p>
+        Die Dateien werden <strong>nacheinander</strong> verarbeitet, nicht alle gleichzeitig. Das
+        ist Absicht: Ein 12-Megapixel-Foto belegt beim Dekodieren 48 MB als Rohdaten, ein
+        48-Megapixel-Foto 192 MB. Vierzig davon parallel wären schneller am Speicherende als am
+        Ergebnis. Deshalb: eine Datei, ein Ergebnis, Speicher wieder frei.
+      </p>
+      <p>
+        Grenzen: 50 Megapixel pro Bild – die größten iPhones liefern 48 –, 100 MB pro Datei und 40
+        Dateien pro Vorgang.
+      </p>
+
+      <h2>Was dabei verloren geht</h2>
+      <p>
+        Dieser Abschnitt steht in den meisten Anleitungen nicht, und er ist der wichtigste. Das
+        Werkzeug arbeitet bewusst nur mit Bildpunkten:
+      </p>
+      <ul>
+        <li>
+          <strong>Aufnahmedatum, Kameraangaben und GPS</strong> werden nicht übernommen. Wer die
+          Metadaten braucht, exportiert in der Fotos-App.
+        </li>
+        <li>
+          <strong>10 Bit werden zu 8 Bit.</strong> HEIC kann 10 Bit pro Farbkanal, JPEG nur 8. Bei
+          normalen Tageslichtfotos sieht man das kaum; bei Gegenlicht, Sonnenuntergang oder Himmel
+          verliert man Zeichnung in den Lichtern.
+        </li>
+        <li>
+          <strong>Live Photos verlieren ihre Bewegung.</strong> Das Standbild steckt im HEIC, die
+          Bewegung in einer separaten MOV-Datei daneben.
+        </li>
+      </ul>
+      <p>
+        Für Bewerbungsfotos, Formulare und alles, was weitergegeben wird, ist das selten ein
+        Problem – und fehlende Standortdaten sind es eher ein Vorteil. Für ein Fotoarchiv, in dem
+        das Aufnahmedatum zählt, ist es der falsche Weg.
+      </p>
+
+      <h2>HEIC oder JPG – was wofür</h2>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Eigenschaft</th>
+              <th>HEIC</th>
+              <th>JPG</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Dateigröße bei gleicher Qualität</td>
+              <td class="num">etwa die Hälfte</td>
+              <td class="num">Referenz</td>
+            </tr>
+            <tr>
+              <td>iPhone, iPad, Mac</td>
+              <td>von Haus aus</td>
+              <td>von Haus aus</td>
+            </tr>
+            <tr>
+              <td>Windows ohne Zusatzsoftware</td>
+              <td>nein</td>
+              <td>ja</td>
+            </tr>
+            <tr>
+              <td>Android, Webformulare, ältere Programme</td>
+              <td>unzuverlässig</td>
+              <td>überall</td>
+            </tr>
+            <tr>
+              <td>Farbtiefe</td>
+              <td class="num">10 Bit</td>
+              <td class="num">8 Bit</td>
+            </tr>
+            <tr>
+              <td>Transparenz</td>
+              <td>möglich</td>
+              <td>nein</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Die Kurzfassung: HEIC für das Archiv auf dem iPhone, weil es Speicher spart. JPG für alles,
+        was das Gerät oder die Anwendung wechselt – also für den Weg nach draußen.
+      </p>
+
+      <h2>Künftig direkt als JPG aufnehmen</h2>
+      <p>
+        Wenn HEIC dauerhaft stört, lässt es sich an der Quelle abschalten: <strong>Einstellungen →
+        Kamera → Formate → Hochkompatibilität</strong>. Ab dann speichert die Kamera JPG statt HEIC.
+        Der Preis ist etwa doppelter Speicherbedarf, und einige Video-Funktionen bleiben der
+        effizienten Einstellung vorbehalten.
+      </p>
+      <p>
+        Für Fotos, die schon auf dem Telefon liegen, gibt es einen zweiten Schalter:
+        <strong>Einstellungen → Fotos → Auf Mac oder PC übertragen → Automatisch</strong>. Beim
+        Kopieren über ein Kabel wandelt iOS dann unterwegs um. Praktisch, wenn man ohnehin ein Kabel
+        zur Hand hat – per AirDrop und in der iCloud bleiben die Dateien HEIC. Die genaue
+        Beschriftung kann je nach iOS-Version leicht abweichen.
+      </p>
+
+      <h2>Wann du das hier brauchst</h2>
+      <ul>
+        <li>Ein Bewerbungsportal oder Formular akzeptiert nur <code>.jpg</code>.</li>
+        <li>Die Fotos sollen auf einem Windows-Rechner oder einem älteren Android-Gerät geöffnet werden.</li>
+        <li>Ein Druckdienst, ein Onlineshop oder eine Bildbearbeitung von 2015 nimmt HEIC nicht an.</li>
+        <li>Die Fotos sollen in ein Dokument, eine Präsentation oder ein PDF – dort ist JPG der reibungslose Weg.</li>
+      </ul>
+      <p>
+        Wenn eine feste Obergrenze dazukommt, hilft danach
+        <a href="/bild-auf-500-kb-verkleinern/">Bild auf 500 KB verkleinern</a> oder
+        <a href="/bild-auf-100-kb-verkleinern/">Bild auf 100 KB verkleinern</a>. Wichtig ist die
+        Reihenfolge: erst konvertieren, dann verkleinern – nicht umgekehrt.
+      </p>
+
+      <h2>Verwandte Anleitungen</h2>
+      <ul>
+        <li>
+          <a href="/bild-komprimieren/">Bild komprimieren</a> – die JPG-Datei wieder auf ein
+          handliches Maß bringen, mit sichtbarem Vergleich.
+        </li>
+        <li>
+          <a href="/bildgroesse-aendern/">Bildgröße ändern</a> – Pixelmaße exakt setzen, etwa
+          1600 Pixel für Shop und Marktplatz.
+        </li>
+        <li>
+          <a href="/bild-konvertieren/">Bild konvertieren</a> – JPG, PNG und WebP ineinander
+          umwandeln, wenn es nicht um HEIC geht.
+        </li>
+        <li>
+          <a href="/bildgroessen-tabelle/">Bildgrößen-Tabelle</a> – welche Maße Instagram,
+          Facebook, LinkedIn und der Druck erwarten.
+        </li>
+        <li>
+          <a href="/bildschutz/bilder-vor-diebstahl-schuetzen/">Bilder vor Diebstahl schützen</a> –
+          was Standortdaten in Fotos verraten und was dagegen hilft.
+        </li>
+      </ul>
+    </div>
+  </ToolShell>
+</BaseLayout>
+
+<style>
+  .table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* „etwa die Hälfte" und „10 Bit" sind Angaben, keine Fließtexte – sie sollen
+     nicht über drei Zeilen umbrechen. Auf schmalen Geräten scrollt die Tabelle. */
+  .table-scroll table {
+    min-width: 520px;
+  }
+
+  .table-scroll td.num {
+    white-space: nowrap;
+  }
+</style>

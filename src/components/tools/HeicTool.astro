@@ -1,0 +1,215 @@
+---
+import Icon from '../Icon.astro';
+---
+
+<div class="tool-panel">
+  <div class="dropzone" id="heic-zone">
+    <span class="dropzone__icon"><Icon name="heic" /></span>
+    <span class="dropzone__title">HEIC-Dateien hierher ziehen oder klicken</span>
+    <span class="dropzone__hint">Bis zu 40 Dateien · HEIC und HEIF · je max. 100 MB</span>
+    <input
+      type="file"
+      id="heic-input"
+      accept=".heic,.heif,image/heic,image/heif"
+      multiple
+      aria-label="HEIC-Dateien zum Umwandeln auswählen"
+    />
+  </div>
+
+  <div id="heic-workspace" hidden>
+    <ol class="heic-list" id="heic-list" aria-label="Ausgewählte Dateien"></ol>
+
+    <div class="row">
+      <button class="btn btn--ghost" id="heic-add" type="button">Weitere Dateien hinzufügen</button>
+      <input
+        type="file"
+        id="heic-add-input"
+        accept=".heic,.heif,image/heic,image/heif"
+        multiple
+        hidden
+        aria-label="Weitere HEIC-Dateien auswählen"
+      />
+    </div>
+
+    <div class="controls controls--split mt-3">
+      <div class="field">
+        <span class="field__label">
+          JPEG-Qualität <span class="field__value" id="heic-quality-value">88 %</span>
+        </span>
+        <input
+          type="range"
+          id="heic-quality"
+          min="60"
+          max="95"
+          step="1"
+          value="88"
+          aria-label="JPEG-Qualität in Prozent"
+        />
+      </div>
+    </div>
+
+    <div class="row mt-3" id="heic-actions">
+      <button class="btn btn--primary" id="heic-apply" type="button">In JPG umwandeln</button>
+      <a class="btn btn--download" id="heic-download" download hidden>
+        <Icon name="download" /><span id="heic-download-label">Herunterladen</span>
+      </a>
+      <button class="btn btn--ghost" id="heic-clear" type="button">Liste leeren</button>
+    </div>
+
+    <div class="result__stats mt-3" id="heic-stats" hidden></div>
+    <div class="notice mt-2" id="heic-notice" hidden role="status"></div>
+  </div>
+</div>
+
+<p class="heic-note">
+  <Icon name="info" size={16} />
+  <span>
+    <strong>Was nicht mitkommt:</strong> Aufnahmedatum, GPS-Koordinaten und HDR-Werte. Das
+    Werkzeug liest ausschließlich die Bildpunkte – Metadaten werden weder gelesen noch
+    weitergeschrieben. Wer sie behalten muss, exportiert in der Fotos-App.
+  </span>
+</p>
+
+<style>
+  .heic-note {
+    display: flex;
+    gap: 0.55rem;
+    align-items: flex-start;
+    margin: 0.9rem 0 0;
+    font-size: 0.84rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  .heic-note strong {
+    color: var(--ink-soft);
+    font-weight: 650;
+  }
+
+  .heic-note svg {
+    flex: none;
+    margin-top: 0.15rem;
+  }
+</style>
+
+<style is:global>
+  .heic-list {
+    list-style: none;
+    margin: 0 0 1rem;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .heic-item {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--line);
+    border-radius: 0.6rem;
+    background: var(--surface);
+  }
+
+  .heic-item__body {
+    display: grid;
+    min-width: 0;
+    gap: 0.1rem;
+  }
+
+  .heic-item__name {
+    font-weight: 600;
+    font-size: 0.9rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .heic-item__meta {
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .heic-item__state {
+    font-size: 0.78rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .heic-item[data-status='done'] .heic-item__state {
+    color: var(--ok);
+    font-weight: 600;
+  }
+
+  .heic-item[data-status='error'] .heic-item__state,
+  .heic-item[data-status='error'] .heic-item__meta {
+    color: var(--err);
+  }
+
+  .heic-item[data-status='error'] .heic-item__state {
+    font-weight: 600;
+  }
+
+  .heic-item__get {
+    font-size: 0.78rem;
+    padding: 0.3rem 0.65rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 0.4rem;
+    color: var(--brand-ink);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .heic-item__get:hover {
+    border-color: var(--brand);
+    background: var(--brand-soft);
+  }
+
+  .heic-item__remove {
+    width: 1.8rem;
+    height: 1.8rem;
+    display: grid;
+    place-items: center;
+    font: inherit;
+    font-size: 0.95rem;
+    line-height: 1;
+    color: var(--ink-soft);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 0.4rem;
+    cursor: pointer;
+  }
+
+  .heic-item__remove:hover {
+    border-color: var(--line-strong);
+    color: var(--err);
+  }
+
+  @media (max-width: 560px) {
+    .heic-item {
+      grid-template-columns: minmax(0, 1fr) auto;
+      row-gap: 0.35rem;
+    }
+
+    /* Der Status rutscht unter den Dateinamen, die Aktion bleibt rechts. */
+    .heic-item__state {
+      grid-column: 1 / 2;
+      grid-row: 2;
+    }
+
+    .heic-item__get,
+    .heic-item__remove {
+      grid-row: 1 / 3;
+      grid-column: 2;
+    }
+  }
+</style>
+
+<script>
+  import '../../scripts/tools/heic-jpg';
+</script>

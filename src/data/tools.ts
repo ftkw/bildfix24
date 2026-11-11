@@ -6,14 +6,15 @@ export type ToolKey =
   | 'watermark'
   | 'pdf'
   | 'merge'
-  | 'grayscale';
+  | 'grayscale'
+  | 'heic';
 
 export interface Tool {
   key: ToolKey;
   href: string;
   name: string;
   short: string;
-  icon: 'crop' | 'compress' | 'resize' | 'convert' | 'watermark' | 'pdf' | 'merge' | 'grayscale';
+  icon: 'crop' | 'compress' | 'resize' | 'convert' | 'watermark' | 'pdf' | 'merge' | 'grayscale' | 'heic';
   keywords: string;
 }
 
@@ -71,6 +72,14 @@ export const tools: Tool[] = [
     short: 'JPG, PNG und WebP ineinander umwandeln – verlustfrei oder komprimiert.',
     icon: 'convert',
     keywords: 'bild konvertieren, jpg in png, png in jpg'
+  },
+  {
+    key: 'heic',
+    href: '/heic-in-jpg/',
+    name: 'HEIC in JPG umwandeln',
+    short: 'iPhone-Fotos im HEIC-Format als JPG speichern – mehrere Dateien auf einmal, gebündelt als ZIP.',
+    icon: 'heic',
+    keywords: 'heic in jpg, heic umwandeln, heif in jpg, iphone fotos jpg'
   },
   {
     key: 'watermark',

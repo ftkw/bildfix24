@@ -21,7 +21,7 @@ const faq: FaqItem[] = [
   },
   {
     q: 'Welche Bildformate werden unterstützt?',
-    a: 'JPG, PNG und WebP – als Ausgabe je nach Werkzeug ebenfalls JPG, PNG oder WebP. Dateien bis 100 MB werden angenommen. Die zweite Grenze ist die Pixelzahl, und die sieht man der Datei nicht an: ein 100-MB-JPEG hat rund 100 Megapixel und belegt im Browser über 400 MB Arbeitsspeicher. Deshalb werden auf dem Desktop bis 110 Megapixel verarbeitet, auf Smartphones bis 40 – darüber erscheint ein Hinweis mit dem Vorschlag, das Bild zuerst zu verkleinern, statt stillschweigend ein leeres Bild zu erzeugen.'
+    a: 'JPG, PNG und WebP – als Ausgabe je nach Werkzeug ebenfalls JPG, PNG oder WebP. HEIC und HEIF, das Format der iPhone-Kamera, werden gelesen und als JPG ausgegeben; dafür lädt die HEIC-Seite einen Decoder nach, alle anderen Seiten brauchen ihn nicht. Dateien bis 100 MB werden angenommen. Die zweite Grenze ist die Pixelzahl, und die sieht man der Datei nicht an: ein 100-MB-JPEG hat rund 100 Megapixel und belegt im Browser über 400 MB Arbeitsspeicher. Deshalb werden auf dem Desktop bis 110 Megapixel verarbeitet, auf Smartphones bis 40 – darüber erscheint ein Hinweis mit dem Vorschlag, das Bild zuerst zu verkleinern, statt stillschweigend ein leeres Bild zu erzeugen.'
   },
   {
     q: 'Setzt bildfix24 eigene Wasserzeichen in meine Bilder?',
@@ -113,7 +113,7 @@ const jsonLd = [websiteSchema(), organizationSchema(), faqSchema(faq)];
       <div class="row" style="justify-content: space-between; align-items: flex-end;">
         <div>
           <h2>Die wichtigsten Bildwerkzeuge</h2>
-          <p class="muted mb-0">Acht Werkzeuge, die die meisten Aufgaben abdecken – ohne Installation.</p>
+          <p class="muted mb-0">Neun Werkzeuge, die die meisten Aufgaben abdecken – ohne Installation.</p>
         </div>
         <a class="tool-card__link" href="/werkzeuge/">Alle Werkzeuge ansehen</a>
       </div>
