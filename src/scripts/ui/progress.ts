@@ -22,6 +22,12 @@ export interface ProgressOptions {
 export interface ProgressController {
   readonly el: HTMLElement;
   start(duration: number): void;
+  /**
+   * Setzt den Fortschritt direkt (0–1), statt ihn hochlaufen zu lassen.
+   * Gedacht für Vorgänge mit bekannter Schrittzahl – etwa eine Liste von
+   * Dateien, bei der nach jeder Datei ein Schritt weitergezählt wird.
+   */
+  setValue(value: number, text?: string): void;
   finish(): Promise<void>;
   fail(message?: string): void;
   reset(): void;
@@ -118,8 +124,17 @@ export function createProgress(anchor: HTMLElement, options: ProgressOptions = {
     raf = requestAnimationFrame(tick);
   };
 
-  const finish = async (): Promise<void> => {
+  const setValue = (value: number, text?: string): void => {
+    window.clearTimeout(hideTimer);
     stop();
+    el.hidden = false;
+    el.classList.remove('progress--done', 'progress--error');
+    el.classList.add('is-running');
+    if (text) textEl.textContent = text;
+    paint(Math.min(1, Math.max(0, value)));
+  };
+
+  const finish = async (): Promise<void> => {    stop();
     const current = Number(el.getAttribute('aria-valuenow') ?? 0) / 100;
     if (!reduced() && current < 1) {
       const from = performance.now();
@@ -156,7 +171,7 @@ export function createProgress(anchor: HTMLElement, options: ProgressOptions = {
     }, 2400);
   };
 
-  return { el, start, finish, fail, reset };
+  return { el, start, setValue, finish, fail, reset };
 }
 
 export interface WithProgressOptions {

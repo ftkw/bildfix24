@@ -2,6 +2,11 @@ node_modules/
 dist/
 .astro/
 shots/
+
+# Der HEIF-Decoder (1,4 MB wasm) wird bei jedem Build aus node_modules nach
+# public/heic/ kopiert. Er gehört nicht ins Repository, die Version steht in
+# package.json.
+public/heic/
 .DS_Store
 *.log
 .env

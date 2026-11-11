@@ -21,6 +21,30 @@ aus React Bits Pro.
 Der vollständige Lizenztext ist unter
 https://github.com/DavidHDev/react-bits/blob/main/LICENSE.md einsehbar.
 
+## libheif – HEIC-Decoder (https://github.com/strukturag/libheif)
+
+Die Seite `/heic-in-jpg/` liest HEIC-Dateien, also HEIF-Container mit
+HEVC-kodierten Bildern. Das lässt sich nicht in wenigen Zeilen nachbauen – dafür
+braucht es einen echten Codec. Verwendet wird libheif über das npm-Paket
+[libheif-js](https://github.com/catdad-experiments/libheif-js):
+
+- `public/heic/libheif.js` – Lader (Emscripten-Glue)
+- `public/heic/libheif.wasm` – Decoder, enthält libde265 für HEVC
+
+**Lizenz:** GNU Lesser General Public License, Version 3 (LGPL-3.0).
+Der vollständige Lizenztext liegt unter `/heic/LICENSE.txt`.
+
+Die Dateien werden unverändert aus dem npm-Paket übernommen; die Version steht in
+`package.json`. Sie werden nicht mit eigenem Code vermischt und erst dann geladen,
+wenn auf der HEIC-Seite wirklich eine Datei umgewandelt wird – alle anderen Seiten
+dieser Website kommen ohne den Decoder aus. Weil er als eigene Datei ausgeliefert
+wird, lässt er sich durch eine andere Build-Variante ersetzen, ohne dass Code
+dieser Website angepasst werden muss.
+
+**Hinweis zu Patenten:** HEVC (H.265) ist patentrechtlich geschützt. libheif
+enthält selbst keine Patentlizenz; die Nutzung erfolgt ohne gesonderte
+Lizenzierung.
+
 ## Schriften
 
 Es werden ausschließlich Systemschriften verwendet. Es werden keine

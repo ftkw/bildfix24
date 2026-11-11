@@ -7,7 +7,7 @@ Konto, kein Server, der die Dateien zu sehen bekommt.
 
 ## Was drin ist
 
-Acht Werkzeuge:
+Neun Werkzeuge:
 
 | Werkzeug | Route |
 | --- | --- |
@@ -15,6 +15,7 @@ Acht Werkzeuge:
 | Bild komprimieren | `/bild-komprimieren/` |
 | Bildgröße ändern | `/bildgroesse-aendern/` |
 | Bild konvertieren (JPEG, PNG, WebP) | `/bild-konvertieren/` |
+| HEIC in JPG umwandeln | `/heic-in-jpg/` |
 | Wasserzeichen hinzufügen | `/wasserzeichen-hinzufuegen/` |
 | Bild in PDF umwandeln | `/bild-in-pdf/` |
 | Bilder zusammenfügen | `/bilder-zusammenfuegen/` |
@@ -37,6 +38,22 @@ Web APIs im Browser.
 
 Bewusst kein externes CDN, keine Analytics, keine Fremd-Fonts. Die Seite lädt
 nichts, was nicht auf ihrem eigenen Host liegt.
+
+### HEIC-Decoder
+
+HEIC ist HEIF-Container mit HEVC-kodierten Bildern; das lässt sich nicht von Hand
+dekodieren. Für `/heic-in-jpg/` wird deshalb [libheif](https://github.com/strukturag/libheif)
+über [libheif-js](https://github.com/catdad-experiments/libheif-js) als
+WebAssembly geladen – 356 KB (Brotli), und nur auf dieser einen Seite.
+
+`scripts/copy-heic.mjs` kopiert `libheif.js`, `libheif.wasm` und die Lizenz vor
+jedem `dev` und `build` aus `node_modules` nach `public/heic/`. Das Verzeichnis
+ist nicht eingecheckt; maßgeblich ist die Version in `package.json`. Lizenz:
+LGPL-3.0, siehe `CREDITS.md` und `public/heic/LICENSE.txt`.
+
+Die Testdatei `test-fixtures/heic-beispiel.heic` ist ein echtes HEIC, erzeugt aus
+dem eigenen Titelbild – `npm run test:e2e` prüft damit, dass am Ende eine Datei
+herauskommt, die wirklich JPEG ist.
 
 ## Lokal starten
 

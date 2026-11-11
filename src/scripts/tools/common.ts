@@ -1,4 +1,6 @@
-import { readDimensions } from './dimensions';
+import { assertDecodedBudget, assertPixelBudget } from './budget';
+import { inspect, type FileKind } from './dimensions';
+import { decodeHeif } from './heic';
 
 export interface LoadedImage {
   bitmap: ImageBitmap;
@@ -17,35 +19,10 @@ export const MAX_BYTES = 100 * 1024 * 1024;
 export const MAX_TOTAL_BYTES = 200 * 1024 * 1024;
 
 /**
- * Pixel-Budget: die Dateigröße ist nicht die eigentliche Grenze, die Fläche ist es.
- *
- * Gemessen in Chromium (Desktop): ein 12000 × 9000 großes JPEG mit 68 MB braucht
- * 444 ms zum Dekodieren, 2 ms zum Zeichnen und lässt sich fehlerfrei wieder
- * ausgeben (108 Megapixel). Der Speicherbedarf auf der Leinwand ist aber
- * Breite × Höhe × 4 Byte – bei 108 MP sind das 432 MB.
- *
- * Auf Mobilgeräten ist die Leinwandfläche kleiner, und wenn sie überschritten
- * wird, schlägt das Zeichnen **still** fehl: kein Fehler, nur ein leeres Bild.
- * Deshalb hier eine konservative Obergrenze je Geräteklasse, statt sich auf den
- * Browser zu verlassen.
+ * Formate, die dieses Modul selbst dekodieren kann. Alles andere wird an den
+ * Browser weitergereicht; ob das gelingt, entscheidet `createImageBitmap`.
  */
-function pixelBudget(): number {
-  const coarse = window.matchMedia?.('(pointer: coarse)').matches ?? false;
-  return (coarse ? 40 : 110) * 1e6;
-}
-
-function tooManyPixels(width: number, height: number): Error {
-  const megapixel = (width * height) / 1e6;
-  const budget = pixelBudget() / 1e6;
-  // Ganze Zahlen ohne Nachkommastelle: „40 Megapixel“ statt „40,0 Megapixel“.
-  const format = (value: number) =>
-    Number.isInteger(value) ? String(value) : value.toFixed(1).replace('.', ',');
-  return new Error(
-    `Dieses Bild hat ${format(megapixel)} Megapixel (${width} × ${height}). ` +
-      `Dein Browser verarbeitet hier bis ${format(budget)} Megapixel in einem Schritt. ` +
-      'Verkleinere es zuerst mit „Bildgröße ändern“ und lade die kleinere Datei erneut.'
-  );
-}
+const NATIVE_KINDS = new Set<FileKind>(['jpeg', 'png', 'webp']);
 
 export function $<T extends Element = HTMLElement>(selector: string, root: ParentNode = document): T | null {
   return root.querySelector<T>(selector);
@@ -100,32 +77,41 @@ function decodeFallback(file: File): Promise<ImageBitmap> {
 }
 
 export async function loadImage(file: File): Promise<LoadedImage> {
-  if (!file.type.startsWith('image/')) {
-    throw new Error('Bitte wähle eine Bilddatei (JPG, PNG oder WebP).');
-  }
   if (file.size > MAX_BYTES) {
     throw new Error(
       'Die Datei ist zu groß. Maximal 100 MB werden unterstützt.'
     );
   }
 
-  // Vor dem Dekodieren prüfen: ein 100-MB-JPEG belegt beim Dekodieren über
-  // 400 MB. Danach zu prüfen wäre auf Smartphones zu spät – dort stirbt der Tab.
-  const known = await readDimensions(file);
-  if (known && known.width * known.height > pixelBudget()) {
-    throw tooManyPixels(known.width, known.height);
+  // Format und Maße aus dem Dateikopf lesen, **bevor** dekodiert wird: ein
+  // 100-MB-JPEG belegt beim Dekodieren über 400 MB, ein HEIC zusätzlich den
+  // Speicher des Wasm-Decoders. Danach zu prüfen wäre auf Smartphones zu spät.
+  const inspection = await inspect(file);
+  if (inspection.kind === 'other' && !file.type.startsWith('image/')) {
+    throw new Error('Bitte wähle eine Bilddatei (JPG, PNG, WebP oder HEIC).');
   }
+  assertPixelBudget(inspection.dimensions, inspection.kind);
 
   let bitmap: ImageBitmap;
-  try {
-    bitmap = await createImageBitmap(file);
-  } catch {
+  if (inspection.kind === 'heif') {
+    const decoded = await decodeHeif(file);
+    bitmap = await createImageBitmap(new ImageData(decoded.data, decoded.width, decoded.height));
+  } else if (NATIVE_KINDS.has(inspection.kind)) {
+    try {
+      bitmap = await createImageBitmap(file);
+    } catch {
+      bitmap = await decodeFallback(file);
+    }
+  } else {
+    // Kein erkennbares Format, aber ein Bild-MIME-Typ: den Browser entscheiden
+    // lassen. Er kann mehr Formate, als hier aufgelistet sind (z. B. AVIF).
     bitmap = await decodeFallback(file);
   }
 
-  if (bitmap.width * bitmap.height > pixelBudget()) {
-    // close() setzt Breite und Höhe auf 0 – die Meldung muss vorher entstehen.
-    const error = tooManyPixels(bitmap.width, bitmap.height);
+  // close() setzt Breite und Höhe auf 0 – die Meldung muss vorher entstehen.
+  try {
+    assertDecodedBudget(bitmap.width, bitmap.height, inspection.kind);
+  } catch (error) {
     bitmap.close();
     throw error;
   }
@@ -134,7 +120,12 @@ export async function loadImage(file: File): Promise<LoadedImage> {
     bitmap,
     file,
     name: file.name,
-    type: file.type === 'image/jpg' ? 'image/jpeg' : file.type,
+    type:
+      inspection.kind === 'heif'
+        ? 'image/heic'
+        : file.type === 'image/jpg'
+          ? 'image/jpeg'
+          : file.type,
     width: bitmap.width,
     height: bitmap.height,
     bytes: file.size,

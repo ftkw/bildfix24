@@ -4,8 +4,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "astro dev",
-    "build": "astro build && node scripts/flat-sitemap.mjs",
+    "dev": "node scripts/copy-heic.mjs && astro dev",
+    "build": "node scripts/copy-heic.mjs && astro build && node scripts/flat-sitemap.mjs",
+    "heic": "node scripts/copy-heic.mjs",
     "preview": "astro preview",
     "serve": "node scripts/serve.mjs",
     "test:e2e": "node scripts/e2e.mjs",
@@ -16,6 +17,7 @@
     "@astrojs/react": "^7.1.0",
     "@astrojs/sitemap": "^3.7.4",
     "astro": "^7.4.1",
+    "libheif-js": "^1.23.5",
     "react": "^19.3.1",
     "react-dom": "^19.3.1"
   },
