@@ -1,0 +1,191 @@
+{
+  "title": "Bildgrößen für Social Media, Druck und Behörden",
+  "description": "Pixelmaße und Seitenverhältnisse für 16 Plattform-Formate sowie vier Druckformate bei 300 dpi.",
+  "updated": "2026-11",
+  "license": "CC BY 4.0",
+  "source": "https://bildfix24.de/bildgroessen-tabelle/",
+  "attribution": "bildfix24 – Bildgrößen für Social Media, Druck und Behörden, Stand November 2026, https://bildfix24.de/bildgroessen-tabelle/",
+  "count": 20,
+  "items": [
+    {
+      "category": "social",
+      "platform": "Instagram",
+      "format": "Feed, quadratisch",
+      "width_px": 1080,
+      "height_px": 1080,
+      "aspect_ratio": "1:1",
+      "note": "Sicherste Form für Zitate, Produkte und Raster."
+    },
+    {
+      "category": "social",
+      "platform": "Instagram",
+      "format": "Feed, hochkant",
+      "width_px": 1080,
+      "height_px": 1350,
+      "aspect_ratio": "4:5",
+      "note": "Standard für Fotos: füllt im Feed 25 % mehr Höhe als ein Quadrat."
+    },
+    {
+      "category": "social",
+      "platform": "Instagram",
+      "format": "Feed, maximal hoch",
+      "width_px": 1080,
+      "height_px": 1440,
+      "aspect_ratio": "3:4",
+      "note": "Die höchste Form, die Instagram im Feed unbeschnitten annimmt."
+    },
+    {
+      "category": "social",
+      "platform": "Instagram",
+      "format": "Story und Reels",
+      "width_px": 1080,
+      "height_px": 1920,
+      "aspect_ratio": "9:16",
+      "note": "Text nicht in die oberen und unteren 250 Pixel legen – dort liegen Bedienelemente."
+    },
+    {
+      "category": "social",
+      "platform": "Instagram",
+      "format": "Reel-Cover",
+      "width_px": 420,
+      "height_px": 654,
+      "aspect_ratio": "etwa 1:1,55",
+      "note": "Wird im Profilraster beschnitten; Motiv mittig halten."
+    },
+    {
+      "category": "social",
+      "platform": "TikTok",
+      "format": "Foto- und Videobeitrag",
+      "width_px": 1080,
+      "height_px": 1920,
+      "aspect_ratio": "9:16",
+      "note": "Sehr starke Neukomprimierung. JPG oder WebP, keine PNG-Screenshots."
+    },
+    {
+      "category": "social",
+      "platform": "Pinterest",
+      "format": "Standard-Pin",
+      "width_px": 1000,
+      "height_px": 1500,
+      "aspect_ratio": "2:3",
+      "note": "Höher als 2:3 wird im Feed abgeschnitten. Datei max. 20 MB."
+    },
+    {
+      "category": "social",
+      "platform": "Pinterest",
+      "format": "Idea Pin",
+      "width_px": 1080,
+      "height_px": 1920,
+      "aspect_ratio": "9:16",
+      "note": "Vollbild-Format, wie Story."
+    },
+    {
+      "category": "social",
+      "platform": "Facebook",
+      "format": "Feed-Beitrag",
+      "width_px": 1080,
+      "height_px": 1350,
+      "aspect_ratio": "4:5",
+      "note": "Nimmt dieselbe Datei an wie Instagram – kein zweiter Export nötig."
+    },
+    {
+      "category": "social",
+      "platform": "Facebook",
+      "format": "Seiten-Titelbild",
+      "width_px": 851,
+      "height_px": 315,
+      "aspect_ratio": "etwa 2,7:1",
+      "note": "Wird auf dem Smartphone seitlich beschnitten; Inhalt mittig platzieren."
+    },
+    {
+      "category": "social",
+      "platform": "LinkedIn",
+      "format": "Beitragsbild und Link-Vorschau",
+      "width_px": 1200,
+      "height_px": 627,
+      "aspect_ratio": "1,91:1",
+      "note": "Für die Link-Vorschau zählt das og:image der Zielseite, nicht der Upload."
+    },
+    {
+      "category": "social",
+      "platform": "LinkedIn",
+      "format": "Profil-Hintergrund",
+      "width_px": 1584,
+      "height_px": 396,
+      "aspect_ratio": "4:1",
+      "note": "Sehr flach – Kontaktinformationen ins untere Drittel."
+    },
+    {
+      "category": "social",
+      "platform": "X",
+      "format": "Beitragsbild",
+      "width_px": 1600,
+      "height_px": 900,
+      "aspect_ratio": "16:9",
+      "note": "Ohne Premium-Abo starke Neukomprimierung; Flächen mit Text als PNG hochladen."
+    },
+    {
+      "category": "social",
+      "platform": "X",
+      "format": "Header",
+      "width_px": 1500,
+      "height_px": 500,
+      "aspect_ratio": "3:1",
+      "note": "Oben und unten wird je nach Gerät beschnitten."
+    },
+    {
+      "category": "social",
+      "platform": "YouTube",
+      "format": "Vorschaubild",
+      "width_px": 1280,
+      "height_px": 720,
+      "aspect_ratio": "16:9",
+      "note": "Mindestens 640 Pixel breit, JPG oder PNG, Datei max. 2 MB."
+    },
+    {
+      "category": "social",
+      "platform": "YouTube",
+      "format": "Kanalbanner",
+      "width_px": 2560,
+      "height_px": 1440,
+      "aspect_ratio": "16:9",
+      "note": "Nur die mittlere Fläche ist auf allen Geräten sichtbar – Text dort bündeln."
+    },
+    {
+      "category": "print_300dpi",
+      "platform": "Druck",
+      "format": "Passfoto (biometrisch) (35 × 45 mm)",
+      "width_px": 413,
+      "height_px": 531,
+      "aspect_ratio": null,
+      "note": "Zusätzlich gelten Vorgaben an Kopfhöhe und Hintergrund."
+    },
+    {
+      "category": "print_300dpi",
+      "platform": "Druck",
+      "format": "Bewerbungsfoto (45 × 60 mm)",
+      "width_px": 531,
+      "height_px": 709,
+      "aspect_ratio": null,
+      "note": "Kein amtliches Format, aber der übliche Bewerbungsstandard."
+    },
+    {
+      "category": "print_300dpi",
+      "platform": "Druck",
+      "format": "Fotoabzug klein (10 × 15 cm)",
+      "width_px": 1181,
+      "height_px": 1772,
+      "aspect_ratio": null,
+      "note": "Das klassische Drogeriemarkt-Format."
+    },
+    {
+      "category": "print_300dpi",
+      "platform": "Druck",
+      "format": "DIN A4 (21 × 29,7 cm)",
+      "width_px": 2480,
+      "height_px": 3508,
+      "aspect_ratio": null,
+      "note": "Volle Seite randlos, etwa für Anschreiben oder Portfolio."
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+category,platform,format,width_px,height_px,aspect_ratio,note
+social,Instagram,"Feed, quadratisch",1080,1080,1:1,"Sicherste Form für Zitate, Produkte und Raster."
+social,Instagram,"Feed, hochkant",1080,1350,4:5,Standard für Fotos: füllt im Feed 25 % mehr Höhe als ein Quadrat.
+social,Instagram,"Feed, maximal hoch",1080,1440,3:4,"Die höchste Form, die Instagram im Feed unbeschnitten annimmt."
+social,Instagram,Story und Reels,1080,1920,9:16,Text nicht in die oberen und unteren 250 Pixel legen – dort liegen Bedienelemente.
+social,Instagram,Reel-Cover,420,654,"etwa 1:1,55",Wird im Profilraster beschnitten; Motiv mittig halten.
+social,TikTok,Foto- und Videobeitrag,1080,1920,9:16,"Sehr starke Neukomprimierung. JPG oder WebP, keine PNG-Screenshots."
+social,Pinterest,Standard-Pin,1000,1500,2:3,Höher als 2:3 wird im Feed abgeschnitten. Datei max. 20 MB.
+social,Pinterest,Idea Pin,1080,1920,9:16,"Vollbild-Format, wie Story."
+social,Facebook,Feed-Beitrag,1080,1350,4:5,Nimmt dieselbe Datei an wie Instagram – kein zweiter Export nötig.
+social,Facebook,Seiten-Titelbild,851,315,"etwa 2,7:1",Wird auf dem Smartphone seitlich beschnitten; Inhalt mittig platzieren.
+social,LinkedIn,Beitragsbild und Link-Vorschau,1200,627,"1,91:1","Für die Link-Vorschau zählt das og:image der Zielseite, nicht der Upload."
+social,LinkedIn,Profil-Hintergrund,1584,396,4:1,Sehr flach – Kontaktinformationen ins untere Drittel.
+social,X,Beitragsbild,1600,900,16:9,Ohne Premium-Abo starke Neukomprimierung; Flächen mit Text als PNG hochladen.
+social,X,Header,1500,500,3:1,Oben und unten wird je nach Gerät beschnitten.
+social,YouTube,Vorschaubild,1280,720,16:9,"Mindestens 640 Pixel breit, JPG oder PNG, Datei max. 2 MB."
+social,YouTube,Kanalbanner,2560,1440,16:9,Nur die mittlere Fläche ist auf allen Geräten sichtbar – Text dort bündeln.
+print_300dpi,Druck,Passfoto (biometrisch) (35 × 45 mm),413,531,,Zusätzlich gelten Vorgaben an Kopfhöhe und Hintergrund.
+print_300dpi,Druck,Bewerbungsfoto (45 × 60 mm),531,709,,"Kein amtliches Format, aber der übliche Bewerbungsstandard."
+print_300dpi,Druck,Fotoabzug klein (10 × 15 cm),1181,1772,,Das klassische Drogeriemarkt-Format.
+print_300dpi,Druck,"DIN A4 (21 × 29,7 cm)",2480,3508,,"Volle Seite randlos, etwa für Anschreiben oder Portfolio."
