@@ -1,6 +1,5 @@
 import { assertDecodedBudget, assertPixelBudget } from './budget';
 import { inspect, type FileKind } from './dimensions';
-import { decodeHeif } from './heic';
 
 export interface LoadedImage {
   bitmap: ImageBitmap;
@@ -94,6 +93,11 @@ export async function loadImage(file: File): Promise<LoadedImage> {
 
   let bitmap: ImageBitmap;
   if (inspection.kind === 'heif') {
+    // Dynamisch geladen, damit die HEIC-Anbindung in einem eigenen Schnipsel
+    // landet: die übrigen Werkzeuge importieren dieses Modul und sollen die
+    // paar Kilobyte nicht mitbezahlen. Der Dekoder selbst (Wasm) hängt
+    // ohnehin an `/heic/` und wird erst bei Bedarf geholt.
+    const { decodeHeif } = await import('./heic');
     const decoded = await decodeHeif(file);
     bitmap = await createImageBitmap(new ImageData(decoded.data, decoded.width, decoded.height));
   } else if (NATIVE_KINDS.has(inspection.kind)) {

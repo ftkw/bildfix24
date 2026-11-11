@@ -177,7 +177,35 @@ push('Fremdformat wird erklärt, nicht verschluckt', /keine HEIC|HEIF/i.test(rej
 push('Fehlerzeile ist als Fehler markiert', rejection.state === 'Fehler', rejection.state);
 push('Nach dem Fehler bleibt das Werkzeug bedienbar', rejection.applyEnabled === true);
 
-/* ---------- 5. Keine Ausnahmen im Browser ---------- */
+/* ---------- 5. Andere Seiten zahlen den Decoder nicht mit ---------- */
+/*
+ * Die Zusage der Seite lautet: nur hier wird der Decoder geladen. Das ist ohne
+ * Prüfung eine Behauptung, die beim nächsten Umbau still falsch wird – ein
+ * statischer Import irgendwo in `common.ts` genügt. Deshalb wird ein anderes
+ * Werkzeug geöffnet und die Netzwerklast mitgeschrieben.
+ */
+const decoderRequests = [];
+const watchDecoder = request => {
+  try {
+    if (new URL(request.url()).pathname.startsWith('/heic/')) {
+      decoderRequests.push(new URL(request.url()).pathname);
+    }
+  } catch {
+    /* data:-URLs u. ä. interessieren nicht */
+  }
+};
+page.on('request', watchDecoder);
+await page.goto(base + '/bild-komprimieren/', { waitUntil: 'networkidle' });
+await page.setInputFiles('#compress-input', 'public/og.png');
+await page.waitForTimeout(1200);
+page.off('request', watchDecoder);
+push(
+  'Andere Werkzeuge laden den HEIC-Decoder nicht',
+  decoderRequests.length === 0,
+  decoderRequests.join(', ')
+);
+
+/* ---------- 6. Keine Ausnahmen im Browser ---------- */
 push('Keine JavaScript-Fehler', errors.length === 0, errors.slice(0, 2).join(' | '));
 
 await browser.close();
