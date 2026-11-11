@@ -1,0 +1,251 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import ToolShell from '../components/ToolShell.astro';
+import Icon from '../components/Icon.astro';
+import { breadcrumbSchema, faqSchema, howToSchema, softwareSchema, type Crumb, type FaqItem } from '../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bild zuschneiden', href: '/bild-zuschneiden/' },
+  { name: 'Bewerbungsfoto zuschneiden', href: '/bewerbungsfoto-zuschneiden/' }
+];
+
+const steps = [
+  {
+    title: 'Bild auswählen',
+    text: 'Ziehe ein Porträt in das Feld oben – am besten eine Aufnahme mit ruhigem Hintergrund und Tageslicht von vorn. Die Datei bleibt auf deinem Gerät.'
+  },
+  {
+    title: 'Format wählen: 4:5 oder 3:4',
+    text: '4:5 passt in moderne Lebenslauf-Layouts, 3:4 entspricht dem klassischen Bewerbungsfoto mit 45 × 60 mm. 1:1 brauchst du für LinkedIn und andere Profile.'
+  },
+  {
+    title: 'Ausschnitt setzen: Augen auf das obere Drittel',
+    text: 'Ziehe den Rahmen so, dass über dem Kopf ein kleiner Rand bleibt und unten bis zur Brust oder zum oberen Oberkörper reicht. Die Augen liegen etwa auf Höhe des oberen Drittels.'
+  },
+  {
+    title: 'Zuschneiden, herunterladen, passend benennen',
+    text: 'Lade die Datei herunter und benenne sie sprechend, etwa Vorname_Nachname_Foto.jpg. Für eine Online-Bewerbung prüfe danach noch die Dateigröße, die das Portal vorgibt.'
+  }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Gibt es eine gesetzliche Vorgabe für Bewerbungsfotos?',
+    a: 'Nein. Die biometrischen Anforderungen mit Kopfhöhe und festem Hintergrund gelten nur für Ausweisdokumente wie Personalausweis und Reisepass. Für Bewerbungen existiert keine Norm – eingebürgert haben sich Formate zwischen 35 × 45 und 45 × 60 Millimetern im Hochformat, verbindlich ist davon nichts.'
+  },
+  {
+    q: 'Braucht man 2026 überhaupt noch ein Foto in der Bewerbung?',
+    a: 'Das hängt vom Arbeitgeber ab, und die Richtung ist eindeutig: weniger. Viele große Unternehmen setzen auf anonymisierte Verfahren, in denen Bewerbungen ohne Foto und ohne Angaben zu Alter und Herkunft geprüft werden – der Hintergrund ist das Allgemeine Gleichbehandlungsgesetz, das Diskriminierung nach Herkunft, Geschlecht, Alter, Religion und Behinderung verbietet. In konservativen Branchen wie Banken, Versicherungen, im öffentlichen Dienst und im Handwerk gehört das Foto dagegen oft weiterhin zum erwarteten Bild. Verlässlich ist nur eines: die Ausschreibung. Steht dort nichts, ist ein gutes Foto kein Fehler und kein Foto selten ein Ausschlusskriterium.'
+  },
+  {
+    q: 'Welche Auflösung brauche ich?',
+    a: 'Für den Ausdruck mindestens 600 × 800 Pixel, besser 900 × 1200. Für die Bildschirmanzeige im Bewerbungsportal reichen 600 × 750 Pixel vollständig aus – mehr wird ohnehin herunterskaliert. Für LinkedIn sind 800 × 800 Pixel ein guter Wert; angezeigt wird das Bild dort deutlich kleiner.'
+  },
+  {
+    q: 'Kann ich ein Selfie mit dem Smartphone verwenden?',
+    a: 'Ja, wenn die Aufnahmebedingungen stimmen: Tageslicht von vorn oder seitlich, ruhiger Hintergrund, Kamera auf Augenhöhe, kein Weitwinkel direkt vor dem Gesicht. Die Frontkamera verzerrt bei kurzem Abstand Nase und Stirn – besser mit der Hauptkamera und Stativ oder einem Stapel Bücher fotografieren, oder jemanden bitten, das Bild zu machen. Ein Selfie aus dem ausgestreckten Arm sieht man dem Ergebnis meist an.'
+  },
+  {
+    q: 'Muss der Hintergrund weiß sein?',
+    a: 'Nein, das ist eine Verwechslung mit dem biometrischen Passfoto. Für Bewerbungen ist ein heller, einfarbiger Hintergrund die sichere Wahl, ein dezenter Verlauf wird ebenfalls akzeptiert. Wichtig ist, dass der Hintergrund ruhig ist: keine Regale, keine Pflanzen, keine Türkanten, die aus dem Kopf herauszuwachsen scheinen.'
+  },
+  {
+    q: 'Wie groß darf die Datei sein?',
+    a: 'Das gibt der Empfänger vor – Bewerbungsportale setzen sehr unterschiedliche Grenzen, häufig zwischen 500 KB und einigen Megabyte. Ohne Vorgabe ist alles unter 500 KB unproblematisch und lässt sich in jeder Mail öffnen. Gibt es eine harte Grenze, steht für 500 KB und für 100 KB je eine eigene Anleitung bereit – verlinkt im Abschnitt zur Dateigröße weiter unten.'
+  },
+  {
+    q: 'Wird mein Foto irgendwohin hochgeladen?',
+    a: 'Nein. Der Zuschnitt läuft vollständig in deinem Browser. Es gibt keinen Server, der das Bild empfängt – bei einem Bewerbungsfoto, das eine Person eindeutig identifiziert, ist das kein Nebenaspekt.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'Bewerbungsfoto zuschneiden',
+    description:
+      'Ein Porträt im Browser auf das richtige Format für Bewerbung und Profil zuschneiden – 4:5, 3:4 oder 1:1, mit Hilfslinien für den Bildaufbau.',
+    path: '/bewerbungsfoto-zuschneiden/'
+  }),
+  howToSchema({
+    name: 'Bewerbungsfoto zuschneiden',
+    description:
+      'Ein vorhandenes Porträt auf das passende Format und den richtigen Ausschnitt für eine Bewerbung bringen.',
+    path: '/bewerbungsfoto-zuschneiden/',
+    steps
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="Bewerbungsfoto zuschneiden – Format und Ausschnitt"
+  description="Bewerbungsfoto ohne Behördengänge: Format wählen, Ausschnitt richtig setzen, Datei passend benennen. Direkt im Browser, ohne Upload und ohne Anmeldung."
+  path="/bewerbungsfoto-zuschneiden/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="Bewerbungsfoto zuschneiden"
+    lead="Ein Bewerbungsfoto muss keine behördlichen Vorgaben erfüllen – es muss nur gut aussehen und ins Layout passen. Hier setzt du Format und Ausschnitt selbst, statt ein fertiges Passfoto zu übernehmen."
+    toolKey="crop"
+    crumbs={crumbs}
+    faq={faq}
+    steps={steps}
+  >
+    <div slot="tool" class="tool-panel">
+      <div class="dropzone" id="crop-zone">
+        <span class="dropzone__icon"><Icon name="upload" /></span>
+        <span class="dropzone__title">Bild hierher ziehen oder klicken</span>
+        <span class="dropzone__hint">JPG, PNG oder WebP · max. 100 MB</span>
+        <input type="file" id="crop-input" accept="image/png,image/jpeg,image/webp" aria-label="Bilddatei auswählen" />
+      </div>
+
+      <div id="crop-workspace" hidden>
+        <div class="preview">
+          <div class="preview__stage" id="crop-stage">
+            <img id="crop-img" alt="Vorschau des zugeschnittenen Bewerbungsfotos" />
+            <div class="crop-layer" id="crop-layer">
+              <div class="crop-box" id="crop-box" role="group" aria-label="Zuschnittrahmen">
+                <span class="crop-handle" data-corner="nw"></span>
+                <span class="crop-handle" data-corner="ne"></span>
+                <span class="crop-handle" data-corner="sw"></span>
+                <span class="crop-handle" data-corner="se"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="field">
+            <span class="field__label" id="crop-ratio-label">Format</span>
+            <div class="segmented" id="crop-ratio" role="group" aria-labelledby="crop-ratio-label">
+              <button type="button" data-ratio="0.8" aria-pressed="true">4:5</button>
+              <button type="button" data-ratio="0.75" aria-pressed="false">3:4</button>
+              <button type="button" data-ratio="1" aria-pressed="false">1:1</button>
+              <button type="button" data-ratio="free" aria-pressed="false">Frei</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3" id="crop-actions">
+          <button class="btn btn--primary" id="crop-apply" type="button">Zuschneiden</button>
+          <a class="btn btn--download" id="crop-download" download hidden><Icon name="download" />Herunterladen</a>
+          <button class="btn btn--ghost" id="crop-reset" type="button">Anderes Bild</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="prose mt-4">
+      <h2>Bewerbungsfoto ist nicht Passfoto</h2>
+      <p>
+        Die beiden werden ständig verwechselt, dabei trennt sie ein grundsätzlicher Unterschied: Das
+        Passfoto ist ein Dokument, das Bewerbungsfoto ist ein Bild von dir. Für den Personalausweis
+        gelten präzise Vorgaben – Kopfhöhe zwischen 32 und 36 Millimetern, gleichmäßiger Hintergrund,
+        neutraler Gesichtsausdruck, keine Kopfbedeckung. Nichts davon ist bei einer Bewerbung
+        vorgeschrieben.
+      </p>
+      <p>
+        Das eröffnet Spielraum, den viele ungenutzt lassen. Ein Bewerbungsfoto darf bis zur Brust oder
+        zum oberen Oberkörper reichen, leicht seitlich aufgenommen sein, einen dezenten
+        Hintergrundverlauf haben und ein freundliches statt neutrales Gesicht zeigen. Wer einfach ein
+        vorhandenes biometrisches Lichtbild aufs Anschreiben klebt, verschenkt genau diesen Spielraum.
+      </p>
+
+      <h2>Welches Format wofür</h2>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Format</th>
+              <th>Pixel bei 300 dpi</th>
+              <th>Typischer Einsatz</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>4:5</td>
+              <td>1200 × 1500</td>
+              <td>moderne Lebenslauf-Vorlagen, Online-Portale</td>
+            </tr>
+            <tr>
+              <td>3:4</td>
+              <td>1350 × 1800</td>
+              <td>klassisches Bewerbungsfoto, 45 × 60 mm</td>
+            </tr>
+            <tr>
+              <td>1:1</td>
+              <td>1200 × 1200</td>
+              <td>LinkedIn, XING, Firmenprofile</td>
+            </tr>
+            <tr>
+              <td>35:45</td>
+              <td>1050 × 1350</td>
+              <td>nur für Ausweisdokumente gedacht</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">
+        Die Pixelwerte gelten für den Fall, dass das Foto gedruckt wird. Für eine rein digitale
+        Bewerbung sind 600 × 750 Pixel bereits ausreichend – die Portale zeigen das Bild ohnehin
+        kleiner an.
+      </p>
+
+      <h2>Der Ausschnitt entscheidet mehr als das Format</h2>
+      <p>
+        Ein formal korrekt zugeschnittenes Foto mit schlechtem Ausschnitt wirkt schlechter als ein
+        freier Zuschnitt, der stimmt. Fünf Punkte, an denen sich das festmacht:
+      </p>
+      <ul>
+        <li><strong>Augen ins obere Drittel.</strong> Diese Lage wirkt ruhig; sitzen die Augen in der Mitte, wirkt das Bild gedrückt.</li>
+        <li><strong>Kleiner Rand über dem Kopf.</strong> Etwa eine Fingerbreite. Kein Rand lässt den Kopf anstoßen, zu viel Rand macht die Person klein.</li>
+        <li><strong>Unten bis zur Brust.</strong> Ein reiner Kopfausschnitt wie beim Passfoto wirkt bei einer Bewerbung streng. Schultern im Bild signalisieren Offenheit.</li>
+        <li><strong>Schulterlinie gerade.</strong> Eine schiefe Schulter fällt sofort auf, auch wenn sie niemandem bewusst auffällt. Der Zuschnitt ist die letzte Gelegenheit, das zu korrigieren.</li>
+        <li><strong>Nichts, was aus dem Kopf wächst.</strong> Türrahmen, Regalkanten und Lampen hinter dem Kopf sind der häufigste Grund, warum ein sonst gutes Foto unprofessionell wirkt.</li>
+      </ul>
+
+      <h2>Für LinkedIn und andere Profile</h2>
+      <p>
+        Profilbilder werden meist rund angezeigt, das Bild selbst ist aber quadratisch. Der Kopf sollte
+        deshalb mittig und mit etwas Abstand zum Rand sitzen, sonst schneidet der Kreis Stirn oder
+        Kinn an. 800 × 800 Pixel sind ein guter Ausgangswert – mehr wird heruntergerechnet, weniger
+        kann bei großen Displays unscharf wirken.
+      </p>
+      <p>
+        Ein Punkt, der oft übersehen wird: Dasselbe Bild in Lebenslauf und Profil zu verwenden ist
+        kein Fehler, sondern erwünscht. Es stellt die Verbindung zwischen Papier und Profil her. Ein
+        deutlich älteres Foto im Lebenslauf neben einem aktuellen Profilbild fällt dagegen auf.
+      </p>
+
+      <h2>Nach dem Zuschnitt: Datei und Name</h2>
+      <p>
+        Ein Detail, das wenig Aufwand macht und einen professionellen Eindruck hinterlässt, ist der
+        Dateiname. Statt IMG_4821.jpg heißt die Datei besser Vorname_Nachname_Foto.jpg. Personalabteilungen
+        sehen oft dutzende Anhänge gleichzeitig; ein sprechender Name spart ihnen einen Klick und
+        vermeidet Verwechslungen.
+      </p>
+      <p>
+        Zur Dateigröße: Ohne Vorgabe des Portals ist alles unter 500 KB unproblematisch. Gibt es eine
+        harte Grenze, steht mit <a href="/bild-auf-500-kb-verkleinern/">Bild auf 500 KB verkleinern</a>
+        und <a href="/bild-auf-100-kb-verkleinern/">Bild auf 100 KB verkleinern</a> je eine Anleitung
+        mit den passenden Werten bereit. Für ein Foto, das tatsächlich die biometrischen Vorgaben
+        erfüllen muss, ist <a href="/passfoto-zuschneiden/">Passfoto zuschneiden</a> die richtige
+        Anleitung – dort stehen die Millimeter- und Pixelmaße, die Behörden prüfen.
+      </p>
+
+      <h2>Verwandte Anleitungen</h2>
+      <ul>
+        <li><a href="/passfoto-zuschneiden/">Passfoto zuschneiden</a> – die biometrischen Vorgaben für Personalausweis und Reisepass.</li>
+        <li><a href="/bild-zuschneiden/">Bild zuschneiden</a> – freies Seitenverhältnis für alles andere.</li>
+        <li><a href="/instagram-bild-zuschneiden/">Instagram-Bild zuschneiden</a> – Formate für Feed, Story und Reels.</li>
+        <li><a href="/bildgroessen-tabelle/">Bildgrößen-Tabelle</a> – alle Plattformmaße in einer Übersicht.</li>
+      </ul>
+    </div>
+  </ToolShell>
+
+  <script>
+    import '../scripts/tools/crop';
+  </script>
+</BaseLayout>

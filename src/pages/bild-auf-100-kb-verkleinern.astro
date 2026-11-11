@@ -1,0 +1,255 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import ToolShell from '../components/ToolShell.astro';
+import Icon from '../components/Icon.astro';
+import { breadcrumbSchema, faqSchema, howToSchema, softwareSchema, type Crumb, type FaqItem } from '../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bild komprimieren', href: '/bild-komprimieren/' },
+  { name: 'Bild auf 100 KB verkleinern', href: '/bild-auf-100-kb-verkleinern/' }
+];
+
+const steps = [
+  {
+    title: 'Bild auswählen',
+    text: 'Ziehe die Datei in das Feld oben. JPG, PNG und WebP bis 100 MB werden direkt im Browser geöffnet – es findet kein Upload statt.'
+  },
+  {
+    title: 'Erst die Pixelmaße begrenzen, nicht die Qualität',
+    text: 'Setze die Kantenlänge auf etwa 1000 bis 1200 Pixel. Bei 100 KB entscheidet fast immer die Auflösung, nicht die Qualitätsstufe: Ein 4000 Pixel breites Foto lässt sich nicht auf 100 KB drücken, ohne dass es sichtbar zerfällt.'
+  },
+  {
+    title: 'Qualitätsstufe nachziehen',
+    text: 'Beginne bei 75 Prozent und prüfe die angezeigte Dateigröße. Reicht das nicht, gehe in 5-Prozent-Schritten herunter. Unter 50 Prozent wird es bei Gesichtern unangenehm – dann lieber noch etwas Auflösung wegnehmen.'
+  },
+  {
+    title: 'Als JPG speichern und Größe prüfen',
+    text: 'Wähle JPG als Ausgabeformat – die meisten Formulare akzeptieren nur dieses. Die angezeigte Dateigröße muss unter deiner Grenze liegen, mit etwas Abstand: Ziel 95 KB statt exakt 100 KB.'
+  }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Reichen 100 KB, um ein Gesicht noch zu erkennen?',
+    a: 'Ja, für alles, was am Bildschirm betrachtet oder in einem Formular angezeigt wird. Ein Porträt mit 1000 Pixel Kantenlänge und 100 KB ist deutlich schärfer als ein 4000-Pixel-Foto, das mit 25 Prozent Qualität auf dieselbe Dateigröße gepresst wurde. Der Unterschied liegt darin, ob die Bytes in Auflösung oder in Kompression gespart werden.'
+  },
+  {
+    q: 'Warum sieht mein Bild bei 100 KB schlecht aus, obwohl ich die Qualität nur leicht gesenkt habe?',
+    a: 'Weil das Bild zu groß aufgelöst ist. Bei 4000 Pixel Breite bleiben bei 100 KB rechnerisch nur wenige Bits pro Pixel übrig – der Kompressor muss Blöcke zusammenfassen, und das sieht man als matschige Flächen und harte Kanten mit Kringeln. Verkleinere zuerst auf 1000 bis 1200 Pixel und komprimiere dann. Das Ergebnis ist bei gleicher Dateigröße sichtbar besser.'
+  },
+  {
+    q: 'Kann ich statt JPG auch WebP nehmen?',
+    a: 'Nur wenn das Zielsystem es akzeptiert. WebP ist bei gleicher Optik typischerweise 25 bis 35 Prozent kleiner als JPG, aber viele Behördenformulare, Bewerbungsportale und ältere Upload-Filter prüfen den Dateityp und lehnen alles außer JPG und PNG ab. Im Zweifel JPG – und erst dann WebP, wenn eine Fehlermeldung ausdrücklich grünes Licht gibt.'
+  },
+  {
+    q: 'Lässt sich ein PNG auf 100 KB bringen?',
+    a: 'Bei Screenshots mit Schrift und großen einfarbigen Flächen ja, bei Fotos praktisch nicht. PNG ist verlustfrei: Ein Foto mit 1000 Pixel Kantenlänge belegt als PNG meist 800 KB bis 2 MB. Für Fotos also immer JPG. Für Screenshots, Grafiken und alles mit Transparenz bleibt PNG die richtige Wahl – dort ist es dem JPG bei Text deutlich überlegen.'
+  },
+  {
+    q: 'Was ist besser: 100 KB oder 500 KB?',
+    a: 'Richte dich nach der Vorgabe des Empfängers, nicht nach einer allgemeinen Regel. Gibt das Portal 500 KB vor, hast du bei 500 KB mehr Spielraum für Auflösung. Gibt es 100 KB vor, ist das meist keine Willkür, sondern eine harte Prüfung der Byte-Größe. Lade im Zweifel die kleinere Datei hoch – Formulare prüfen die Obergrenze, nicht die Qualität.'
+  },
+  {
+    q: 'Werden meine Bilder hochgeladen?',
+    a: 'Nein. Die Verarbeitung läuft vollständig in deinem Browser. Es gibt keinen Server, der die Datei empfängt – deshalb ist das Werkzeug auch für Ausweiskopien, Zeugnisse und andere vertrauliche Dokumente geeignet.'
+  },
+  {
+    q: 'Kann ich mehrere Bilder gleichzeitig auf 100 KB bringen?',
+    a: 'Das Werkzeug verarbeitet immer eine Datei. Bei mehreren Dokumenten ist es meist schneller, jedes einzeln zu prüfen, weil die passende Auflösung je nach Motiv unterschiedlich ausfällt – ein Zeugnis-Scan braucht eine andere Behandlung als ein Porträt.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'Bild auf 100 KB verkleinern',
+    description:
+      'Fotos und Scans im Browser auf eine Zielgröße von 100 KB bringen: erst Pixelmaße begrenzen, dann Qualitätsstufe nachziehen, Ergebnis vor dem Download prüfen.',
+    path: '/bild-auf-100-kb-verkleinern/'
+  }),
+  howToSchema({
+    name: 'Bild auf 100 KB verkleinern',
+    description:
+      'Ein Bild auf unter 100 KB bringen, ohne es unnötig matschig zu machen – über angepasste Auflösung und Qualitätsstufe.',
+    path: '/bild-auf-100-kb-verkleinern/',
+    steps
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="Bild auf 100 KB verkleinern – ohne Upload"
+  description="Foto oder Scan auf unter 100 KB bringen: erst Auflösung begrenzen, dann Qualität nachziehen. Im Browser, ohne Upload, mit Größenanzeige vor dem Download."
+  path="/bild-auf-100-kb-verkleinern/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="Bild auf 100 KB verkleinern"
+    lead="100 KB ist die Grenze, an der Kompression allein nicht mehr reicht: Hier muss die Auflösung mit. Das Werkzeug zeigt dir beide Werte gleichzeitig, damit du siehst, wo die Bytes tatsächlich herkommen."
+    toolKey="compress"
+    crumbs={crumbs}
+    faq={faq}
+    steps={steps}
+  >
+    <div slot="tool" class="tool-panel">
+      <div class="dropzone" id="compress-zone">
+        <span class="dropzone__icon"><Icon name="compress" /></span>
+        <span class="dropzone__title">Bild hierher ziehen oder klicken</span>
+        <span class="dropzone__hint">JPG, PNG oder WebP · max. 100 MB</span>
+        <input type="file" id="compress-input" accept="image/png,image/jpeg,image/webp" aria-label="Bilddatei auswählen" />
+      </div>
+
+      <div id="compress-workspace" hidden>
+        <div class="preview">
+          <img id="compress-img" alt="Vorschau des zu komprimierenden Bildes" />
+        </div>
+
+        <div class="controls controls--split">
+          <div class="field" id="compress-quality-row">
+            <label for="compress-quality">Qualität <span class="field__value" id="compress-quality-value">80 %</span></label>
+            <input type="range" id="compress-quality" min="10" max="100" step="1" value="80" />
+          </div>
+          <div class="field">
+            <span class="field__label">Ausgabeformat</span>
+            <div class="segmented" id="compress-format" role="group" aria-label="Ausgabeformat">
+              <button type="button" data-format="image/jpeg" aria-pressed="true">JPG</button>
+              <button type="button" data-format="image/png" aria-pressed="false">PNG</button>
+              <button type="button" data-format="image/webp" aria-pressed="false">WebP</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3" id="compress-actions">
+          <button class="btn btn--primary" id="compress-apply" type="button">Komprimieren</button>
+          <a class="btn btn--download" id="compress-download" download hidden><Icon name="download" />Herunterladen</a>
+          <button class="btn btn--ghost" id="compress-reset" type="button">Anderes Bild</button>
+        </div>
+
+        <div class="result__stats mt-3" id="compress-stats" hidden></div>
+        <div class="notice mt-2" id="compress-notice" hidden role="status"></div>
+      </div>
+    </div>
+
+    <div class="prose mt-4">
+      <h2>Bei 100 KB entscheidet die Auflösung, nicht die Qualitätsstufe</h2>
+      <p>
+        Zwischen 2 MB und 500 KB kommt man fast immer allein über die Qualitätsstufe. Bei 100 KB hört
+        das auf: Ein Foto aus einem aktuellen Smartphone hat 4000 bis 6000 Pixel Kantenlänge und
+        belegt unkomprimiert mehrere Megabyte. Auf 100 KB gepresst bleiben pro Pixel nur noch wenige
+        Bits übrig – der Kompressor fasst dann 8×8-Blöcke zusammen, und genau das sieht man als
+        matschige Flächen, Kringel an harten Kanten und verschwindende Haarstrukturen.
+      </p>
+      <p>
+        Der Ausweg ist, zuerst die Pixelzahl zu reduzieren. Weniger Pixel bedeuten weniger Details,
+        die weggeworfen werden müssen – die verbleibenden Bytes werden gleichmäßiger verteilt. Ein
+        Porträt mit 1000 Pixel Kantenlänge und 70 Prozent Qualität sieht bei 100 KB deutlich besser
+        aus als dasselbe Bild in Originalauflösung mit 25 Prozent. Beide Dateien sind gleich groß; nur
+        die Verteilung des Verlusts ist eine andere.
+      </p>
+
+      <h2>Was 100 KB an Bildfläche hergeben</h2>
+      <p>
+        Wie viele Pixel in 100 KB passen, hängt vom Motiv ab: Laub, Stoffmuster und feine Texturen
+        brauchen deutlich mehr Daten als ein Porträt vor ruhigem Hintergrund. Die folgenden Werte sind
+        Erfahrungswerte für JPG bei einer Qualitätsstufe um 80 Prozent.
+      </p>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Pixelmaße</th>
+              <th>Dateigröße (JPG, Q 80)</th>
+              <th>Typischer Einsatz</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>800 × 600</td>
+              <td>etwa 40–70 KB</td>
+              <td>Vorschaubild, Formularfoto, Belegscan</td>
+            </tr>
+            <tr>
+              <td>1000 × 750</td>
+              <td>etwa 60–100 KB</td>
+              <td>Bewerbungsfoto, Zeugnis im Querformat</td>
+            </tr>
+            <tr>
+              <td>1200 × 900</td>
+              <td>etwa 90–150 KB</td>
+              <td>Bildschirmansicht in voller Größe</td>
+            </tr>
+            <tr>
+              <td>1600 × 1200</td>
+              <td>etwa 150–250 KB</td>
+              <td>für 100 KB zu groß – Auflösung weiter senken</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="small muted">
+        Die Werte schwanken je nach Bildinhalt um bis zu 50 Prozent. Ein dunkles Konzertfoto braucht
+        mehr Daten als ein helles Porträt, ein Screenshot mit viel Schrift mehr als eine Landschaft.
+        Deshalb zeigt das Werkzeug nach jedem Durchlauf die tatsächliche Größe an, statt einen
+        Schätzwert zu nennen.
+      </p>
+
+      <h2>Foto und Scan brauchen unterschiedliche Behandlung</h2>
+      <p>
+        Ein Scan mit überwiegend weißem Papier und schwarzer Schrift ist für den Kompressor ein
+        einfaches Motiv: große einfarbige Flächen, harte Kanten. Solche Dateien lassen sich stark
+        verkleinern, ohne dass die Lesbarkeit leidet – 100 KB reichen für eine gut lesbare
+        DIN-A4-Seite bei 150 dpi. Anders sieht es bei farbigen Stempeln, Unterschriften in Blau oder
+        Wasserzeichen aus: Dort bricht die Qualität früh ein, weil diese Details winzig sind.
+      </p>
+      <p>
+        Für Scans lohnt sich außerdem ein Blick auf die Farbtiefe. Ein reiner Textscan in Graustufen
+        ist etwa ein Drittel so groß wie derselbe Scan in Farbe. Wenn das Dokument keine farbigen
+        Elemente enthält, die unterschieden werden müssen, ist
+        <a href="/bild-in-graustufen/">Graustufen umwandeln</a> der wirksamere Schritt als weiteres
+        Herunterdrehen der Qualitätsstufe.
+      </p>
+
+      <h2>WebP spart Bytes – aber nicht überall</h2>
+      <p>
+        Bei gleicher Optik ist WebP typischerweise 25 bis 35 Prozent kleiner als JPG. Bei einer
+        Grenze von 100 KB ist das der Unterschied zwischen 1000 und 1300 Pixel Kantenlänge – also
+        durchaus relevant. Nur nützt es nichts, wenn das Zielsystem das Format ablehnt.
+        Behördenformulare, Bewerbungsportale und viele Upload-Filter prüfen die Dateiendung und
+        akzeptieren ausschließlich JPG oder PNG.
+      </p>
+      <p>
+        Praktische Reihenfolge: erst als JPG auf die Zielgröße bringen und hochladen. Nur wenn eine
+        Fehlermeldung ausdrücklich mehr Qualität bei gleicher Dateigröße verlangt, WebP zusätzlich
+        ausprobieren. Ein abgelehnter Upload kostet mehr Zeit als die paar Pixel, die WebP einbringt.
+      </p>
+
+      <h2>Wann 100 KB die falsche Zielgröße ist</h2>
+      <p>
+        Für den Druck. Bei 100 KB liegt die sinnvolle Kantenlänge bei etwa 1000 Pixel, das entspricht
+        einem Ausdruck von rund 8 × 6 cm bei 300 dpi. Für Bewerbungsfotos im klassischen
+        6 × 4,5-cm-Format reicht das knapp, für alles darüber wird es sichtbar weich. Wer drucken
+        will, behält die Originaldatei und erzeugt nur für die Online-Einreichung eine kleine Kopie.
+      </p>
+      <p>
+        Ebenfalls ungeeignet: Bilder, die später weiterbearbeitet werden. Jede JPG-Kompression
+        verliert Information, und wiederholtes Speichern summiert die Verluste. Bearbeite immer das
+        Original und komprimiere erst den finalen Export – nicht umgekehrt.
+      </p>
+
+      <h2>Verwandte Anleitungen</h2>
+      <ul>
+        <li><a href="/bild-auf-500-kb-verkleinern/">Bild auf 500 KB verkleinern</a> – die häufigste Portal-Grenze, meist ohne Auflösungsverlust erreichbar.</li>
+        <li><a href="/bild-komprimieren/">Bild komprimieren</a> – das Werkzeug ohne feste Zielgröße, mit Formatauswahl.</li>
+        <li><a href="/bildgroesse-aendern/">Bildgröße ändern</a> – Pixelmaße exakt setzen, bevor du komprimierst.</li>
+        <li><a href="/bild-in-graustufen/">Bild in Graustufen umwandeln</a> – bei Textscans oft wirksamer als stärkere Kompression.</li>
+      </ul>
+    </div>
+  </ToolShell>
+
+  <script>
+    import '../scripts/tools/compress';
+  </script>
+</BaseLayout>

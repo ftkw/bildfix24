@@ -1,0 +1,247 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import ToolShell from '../components/ToolShell.astro';
+import Icon from '../components/Icon.astro';
+import { breadcrumbSchema, faqSchema, howToSchema, softwareSchema, type Crumb, type FaqItem } from '../lib/seo';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Werkzeuge', href: '/werkzeuge/' },
+  { name: 'Bild komprimieren', href: '/bild-komprimieren/' },
+  { name: 'WhatsApp-Bild komprimieren', href: '/whatsapp-bild-komprimieren/' }
+];
+
+const steps = [
+  {
+    title: 'Bild auswählen',
+    text: 'Ziehe die Datei in das Feld oben. JPG, PNG und WebP bis 100 MB werden direkt im Browser geöffnet, ohne Upload auf einen Server.'
+  },
+  {
+    title: 'Entscheiden, was WhatsApp ohnehin tun würde',
+    text: 'Für einen schnellen Blick auf dem Handy reicht, was WhatsApp selbst erzeugt. Willst du Details erhalten – Vertragstext, Grundriss, Fotoabzug – dann komprimiere selbst kontrolliert und versende die Datei als Dokument.'
+  },
+  {
+    title: 'Qualität auf 80 Prozent, Format JPG',
+    text: 'Bei 1600 Pixel Kantenlänge und 80 Prozent landet ein typisches Foto bei 150 bis 350 KB. Das ist klein genug für schnelles Laden und groß genug, dass beim Empfänger nichts Wesentliches fehlt.'
+  },
+  {
+    title: 'Herunterladen und als Dokument senden',
+    text: 'Lade die Datei herunter und hänge sie in WhatsApp über die Büroklammer als Dokument an, nicht als Foto. Nur so bleibt sie unverändert – als Foto komprimiert WhatsApp sie ein zweites Mal.'
+  }
+];
+
+const faq: FaqItem[] = [
+  {
+    q: 'Komprimiert WhatsApp meine Bilder überhaupt?',
+    a: 'Ja, beim Versand als Foto wird jedes Bild neu berechnet. WhatsApp reduziert die Auflösung und rechnet mit einer eigenen Qualitätsstufe nach – unabhängig davon, wie die Datei vorher aussah. Was dabei übrig bleibt, ist auf dem Handy meist völlig ausreichend, für Ausdrucke oder Weiterverarbeitung aber zu wenig.'
+  },
+  {
+    q: 'Warum soll ich vorher selbst komprimieren, wenn WhatsApp das doch macht?',
+    a: 'Weil du die Kontrolle über das Ergebnis behältst. WhatsApp entscheidet allein, wie stark es reduziert – bei einem Foto mit feinen Details kann das zu viel sein. Komprimierst du selbst auf eine definierte Größe und versendest die Datei als Dokument, bleibt genau das erhalten, was du geprüft hast. Der zweite Grund ist das Datenvolumen: Ein vorab verkleinertes Bild lässt sich auch bei schwacher Verbindung zügig senden.'
+  },
+  {
+    q: 'Was ist der Unterschied zwischen Foto, HD und Dokument?',
+    a: 'Foto ist die Standardoption und die aggressivste Kompression. HD sendet eine höhere Auflösung, komprimiert aber weiterhin. Dokument sendet die Datei unverändert als Dateianhang – dafür erscheint sie im Chat nicht als Bildvorschau, sondern als Datei mit Namen und Größe.'
+  },
+  {
+    q: 'Verliert ein Bild beim mehrfachen Senden an Qualität?',
+    a: 'Ja, und dieser Effekt summiert sich. Jedes verlustbehaftete Speichern wirft Details weg, die beim nächsten Durchlauf nicht wieder auftauchen. Ein Foto, das fünfmal weitergeschickt und dabei jedes Mal neu komprimiert wurde, sieht am Ende deutlich schlechter aus als nach dem ersten Durchlauf. Wenn du eine Datei mehrfach brauchst, arbeite immer vom Original.'
+  },
+  {
+    q: 'Welche Größe braucht ein WhatsApp-Status?',
+    a: 'Statusbeiträge werden im Hochformat angezeigt, üblich sind 1080 × 1920 Pixel im Verhältnis 9:16. Alles, was außerhalb dieses Bereichs liegt, wird beschnitten – bei einem Querformatfoto also links und rechts. Wer Text oder Gesichter im Bild hat, sollte vorher selbst auf 9:16 zuschneiden, statt WhatsApp das überlassen.'
+  },
+  {
+    q: 'Und das Profilbild?',
+    a: 'Das Profilbild wird kreisförmig angezeigt. Lade ein quadratisches Bild hoch und halte den Kopf mittig – die Ecken fallen weg. 640 × 640 Pixel sind mehr als genug, da WhatsApp das Bild ohnehin für die Anzeige herunterskaliert.'
+  },
+  {
+    q: 'Werden meine Bilder hochgeladen?',
+    a: 'Nein. Die Verarbeitung läuft vollständig in deinem Browser. Es gibt keinen Server, der die Datei empfängt – das gilt auch für private Fotos, Ausweiskopien und Dokumente.'
+  }
+];
+
+const jsonLd = [
+  softwareSchema({
+    name: 'WhatsApp-Bild komprimieren',
+    description:
+      'Bilder für WhatsApp im Browser vorbereiten: passende Auflösung wählen, Dateigröße prüfen und die doppelte Kompression beim Versand vermeiden.',
+    path: '/whatsapp-bild-komprimieren/'
+  }),
+  howToSchema({
+    name: 'Bild für WhatsApp komprimieren',
+    description:
+      'Ein Foto so vorbereiten, dass es beim Versand über WhatsApp nicht unnötig an Qualität verliert.',
+    path: '/whatsapp-bild-komprimieren/',
+    steps
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="WhatsApp-Bild komprimieren – Qualität erhalten"
+  description="Bilder für WhatsApp richtig vorbereiten: passende Auflösung, kleine Datei und kein zweiter Qualitätsverlust beim Versand. Im Browser, ohne Upload."
+  path="/whatsapp-bild-komprimieren/"
+  jsonLd={jsonLd}
+>
+  <ToolShell
+    h1="WhatsApp-Bild komprimieren"
+    lead="WhatsApp rechnet jedes Foto beim Versand neu – auch ein bereits kleines. Wer selbst komprimiert und als Dokument sendet, behält die Kontrolle über das Ergebnis. Hier siehst du vorher, was tatsächlich rauskommt."
+    toolKey="compress"
+    crumbs={crumbs}
+    faq={faq}
+    steps={steps}
+  >
+    <div slot="tool" class="tool-panel">
+      <div class="dropzone" id="compress-zone">
+        <span class="dropzone__icon"><Icon name="compress" /></span>
+        <span class="dropzone__title">Bild hierher ziehen oder klicken</span>
+        <span class="dropzone__hint">JPG, PNG oder WebP · max. 100 MB</span>
+        <input type="file" id="compress-input" accept="image/png,image/jpeg,image/webp" aria-label="Bilddatei auswählen" />
+      </div>
+
+      <div id="compress-workspace" hidden>
+        <div class="preview">
+          <img id="compress-img" alt="Vorschau des zu komprimierenden Bildes" />
+        </div>
+
+        <div class="controls controls--split">
+          <div class="field" id="compress-quality-row">
+            <label for="compress-quality">Qualität <span class="field__value" id="compress-quality-value">80 %</span></label>
+            <input type="range" id="compress-quality" min="10" max="100" step="1" value="80" />
+          </div>
+          <div class="field">
+            <span class="field__label">Ausgabeformat</span>
+            <div class="segmented" id="compress-format" role="group" aria-label="Ausgabeformat">
+              <button type="button" data-format="image/jpeg" aria-pressed="true">JPG</button>
+              <button type="button" data-format="image/png" aria-pressed="false">PNG</button>
+              <button type="button" data-format="image/webp" aria-pressed="false">WebP</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row mt-3" id="compress-actions">
+          <button class="btn btn--primary" id="compress-apply" type="button">Komprimieren</button>
+          <a class="btn btn--download" id="compress-download" download hidden><Icon name="download" />Herunterladen</a>
+          <button class="btn btn--ghost" id="compress-reset" type="button">Anderes Bild</button>
+        </div>
+
+        <div class="result__stats mt-3" id="compress-stats" hidden></div>
+        <div class="notice mt-2" id="compress-notice" hidden role="status"></div>
+      </div>
+    </div>
+
+    <div class="prose mt-4">
+      <h2>Was WhatsApp beim Senden tatsächlich macht</h2>
+      <p>
+        WhatsApp ist kein Dateitransport, sondern ein Nachrichtendienst mit eigener Bildverarbeitung.
+        Beim Versand als Foto wird jedes Bild neu berechnet: Die Auflösung wird auf Bildschirmgröße
+        reduziert, danach greift eine eigene Qualitätsstufe. Das passiert unabhängig davon, wie groß
+        die Datei vorher war – ein bereits auf 200 KB gebrachtes Foto wird also ein zweites Mal
+        komprimiert.
+      </p>
+      <p>
+        Für einen schnellen Blick auf dem Handy ist das kein Problem, oft sogar erwünscht. Zum Problem
+        wird es in drei Fällen: wenn feine Details erhalten bleiben sollen (Vertragstext, technische
+        Zeichnung, Rezept), wenn das Bild später gedruckt oder weiterbearbeitet wird, und wenn es um
+        Dokumente geht, bei denen die Lesbarkeit über den Zweck entscheidet.
+      </p>
+
+      <h2>Drei Wege, ein Bild zu verschicken</h2>
+      <div style="overflow-x: auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>Versandart</th>
+              <th>Was passiert</th>
+              <th>Geeignet für</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Als Foto</td>
+              <td>Auflösung reduziert, eigene Qualitätsstufe, Datei deutlich kleiner</td>
+              <td>Alltagsfotos, die nur angesehen werden</td>
+            </tr>
+            <tr>
+              <td>Als HD-Foto</td>
+              <td>höhere Auflösung als Standard, aber weiterhin neu berechnet</td>
+              <td>Fotos, die man später noch ansehen will</td>
+            </tr>
+            <tr>
+              <td>Als Dokument</td>
+              <td>Datei bleibt unverändert, erscheint als Anhang mit Namen</td>
+              <td>Dokumente, Ausdrucke, alles mit Details</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Die dritte Zeile ist der eigentliche Hebel: Als Dokument versendet WhatsApp die Datei
+        unverändert. Damit entscheidet ausschließlich deine eigene Vorbereitung über Größe und
+        Qualität – und genau dafür ist das Werkzeug oben gedacht.
+      </p>
+
+      <h2>Wann es sich lohnt, vorher selbst zu komprimieren</h2>
+      <p>
+        Nicht immer. Für ein Foto, das jemand einmal anschaut und wieder vergisst, ist der Umweg über
+        ein Werkzeug reine Zeitverschwendung – WhatsApp erledigt das ausreichend gut. Sinnvoll wird es
+        bei drei Gelegenheiten:
+      </p>
+      <ul>
+        <li><strong>Dokumente und Schrift:</strong> Ein abfotografierter Brief oder ein Grundriss verliert bei starker Kompression genau die Kanten, die man zum Lesen braucht.</li>
+        <li><strong>Schwache Verbindung:</strong> Ein vorab auf 200 KB gebrachtes Bild geht auch im Zug oder im Ausland durch, ohne dass der Versand abbricht oder Datenvolumen frisst.</li>
+        <li><strong>Mehrere Bilder auf einmal:</strong> Zehn Fotos in Originalgröße zu verschicken dauert spürbar länger als zehn vorbereitete Dateien.</li>
+      </ul>
+      <p>
+        Ein brauchbarer Ausgangspunkt für Fotos ist eine Kantenlänge von 1600 Pixeln bei 80 Prozent
+        Qualität. Das landet bei den meisten Motiven zwischen 150 und 350 KB – klein genug für den
+        Versand, groß genug, dass der Empfänger beim Hineinzoomen noch etwas erkennt.
+      </p>
+
+      <h2>Status und Profilbild haben feste Formate</h2>
+      <p>
+        Der Statusbereich ist konsequent im Hochformat: 1080 × 1920 Pixel, Verhältnis 9:16. Ein
+        Querformatfoto wird dort beschnitten, und zwar links und rechts – also genau dort, wo bei
+        Gruppenaufnahmen die äußeren Personen stehen. Wer vorher selbst
+        <a href="/bild-zuschneiden/">auf 9:16 zuschneidet</a>, bestimmt, was wegfällt, statt es
+        WhatsApp zu überlassen.
+      </p>
+      <p>
+        Das Profilbild ist dagegen quadratisch angelegt und wird kreisförmig angezeigt. Wer ein
+        Hochformatfoto hochlädt, verliert oben und unten deutlich mehr als erwartet. Ein quadratischer
+        Zuschnitt mit mittig sitzendem Kopf löst das Problem zuverlässig. Eine Übersicht der Formate
+        für alle Plattformen steht in der
+        <a href="/bildgroessen-tabelle/">Bildgrößen-Tabelle</a>.
+      </p>
+
+      <h2>Der häufigste Fehler: doppelt komprimieren</h2>
+      <p>
+        Ein Foto, das schon einmal stark komprimiert wurde, lässt sich nicht wiederherstellen. Wird es
+        erneut gespeichert, kommen neue Artefakte zu den alten hinzu. Nach dem dritten Durchlauf sind
+        Gesichter weich und Flächen fleckig, obwohl die Datei noch gar nicht besonders klein ist.
+      </p>
+      <p>
+        Die Regel daraus ist einfach: Immer vom Original arbeiten. Wer verschiedene Größen braucht –
+        eine für WhatsApp, eine für die Website, eine für den Druck – erzeugt jede aus der
+        Originaldatei und nicht aus der vorherigen kleinen Version. Die Originaldatei aufzubewahren
+        kostet Speicher, aber sie ist die einzige Quelle, aus der sich alle anderen Größen sauber
+        ableiten lassen.
+      </p>
+
+      <h2>Verwandte Anleitungen</h2>
+      <ul>
+        <li><a href="/bild-komprimieren/">Bild komprimieren</a> – das Werkzeug ohne feste Zielgröße.</li>
+        <li><a href="/bild-auf-500-kb-verkleinern/">Bild auf 500 KB verkleinern</a> – wenn eine Portal-Grenze im Spiel ist.</li>
+        <li><a href="/bild-auf-100-kb-verkleinern/">Bild auf 100 KB verkleinern</a> – für strenge Formulare und kleine Anhänge.</li>
+        <li><a href="/instagram-bild-zuschneiden/">Instagram-Bild zuschneiden</a> – die Formate für Feed, Story und Reels.</li>
+      </ul>
+    </div>
+  </ToolShell>
+
+  <script>
+    import '../scripts/tools/compress';
+  </script>
+</BaseLayout>
