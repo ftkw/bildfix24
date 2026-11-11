@@ -14,7 +14,7 @@ const crumbs: Crumb[] = [
 const steps = [
   {
     title: 'Bild auswählen',
-    text: 'Ziehe die Datei in das Feld oben. JPG, PNG und WebP bis 30 MB werden direkt im Browser geöffnet – es findet kein Upload statt.'
+    text: 'Ziehe die Datei in das Feld oben. JPG, PNG und WebP bis 100 MB werden direkt im Browser geöffnet – es findet kein Upload statt.'
   },
   {
     title: 'Qualitätsstufe senken, bis die Größe passt',
@@ -98,7 +98,7 @@ const jsonLd = [
       <div class="dropzone" id="compress-zone">
         <span class="dropzone__icon"><Icon name="compress" /></span>
         <span class="dropzone__title">Bild hierher ziehen oder klicken</span>
-        <span class="dropzone__hint">JPG, PNG oder WebP · max. 30 MB</span>
+        <span class="dropzone__hint">JPG, PNG oder WebP · max. 100 MB</span>
         <input type="file" id="compress-input" accept="image/png,image/jpeg,image/webp" aria-label="Bilddatei auswählen" />
       </div>
 

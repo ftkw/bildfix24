@@ -6,6 +6,7 @@ import {
   formatBytes,
   hideNotice,
   loadImage,
+  MAX_TOTAL_BYTES,
   must,
   revokeDownload,
   showNotice,
@@ -141,6 +142,11 @@ function invalidate(): void {
   if (stats) stats.hidden = true;
 }
 
+/** Summe der Dateigrößen aller bereits geladenen Bilder. */
+function totalBytes(): number {
+  return items.reduce((sum, item) => sum + item.image.bytes, 0);
+}
+
 async function addFiles(files: FileList | File[]): Promise<void> {
   const incoming = [...files];
   if (incoming.length === 0) return;
@@ -150,6 +156,12 @@ async function addFiles(files: FileList | File[]): Promise<void> {
   const skipped: string[] = [];
 
   for (const file of accepted) {
+    // Einzeldateien dürfen bis 100 MB groß sein – die Summe aller Dateien aber
+    // nicht, weil alle Bilder gleichzeitig dekodiert im Speicher liegen.
+    if (totalBytes() + file.size > MAX_TOTAL_BYTES) {
+      skipped.push(`${file.name}: zusammen höchstens 200 MB – nicht übernommen.`);
+      continue;
+    }
     try {
       items.push({ id: nextId++, image: await loadImage(file) });
     } catch (error) {

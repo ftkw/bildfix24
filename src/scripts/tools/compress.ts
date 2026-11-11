@@ -43,6 +43,12 @@ let format = 'image/jpeg';
 let quality = 0.8;
 let timer = 0;
 let busy = false;
+/**
+ * Bei großen Dateien dauert die Vorschau nach dem Laden ein bis zwei Sekunden.
+ * Ein Klick auf „Komprimieren“ in diesem Fenster darf nicht verpuffen – er wird
+ * gemerkt und ausgeführt, sobald die laufende Berechnung fertig ist.
+ */
+let queued = false;
 
 async function encode(): Promise<Blob> {
   if (!image) throw new Error('Kein Bild geladen.');
@@ -84,12 +90,24 @@ async function render(_download = false): Promise<void> {
     showNotice(notice, (error as Error).message, 'error');
   } finally {
     busy = false;
+    drain();
   }
+}
+
+/** Holt einen gemerkten Klick nach, sobald nichts mehr läuft. */
+function drain(): void {
+  if (!queued || busy) return;
+  queued = false;
+  void process();
 }
 
 /** Erzeugt das Ergebnis, ohne es automatisch zu speichern. */
 async function process(): Promise<void> {
-  if (!image || busy) return;
+  if (!image) return;
+  if (busy) {
+    queued = true;
+    return;
+  }
   busy = true;
   applyBtn.disabled = true;
   try {
@@ -106,6 +124,7 @@ async function process(): Promise<void> {
   } finally {
     busy = false;
     applyBtn.disabled = false;
+    drain();
   }
 }
 

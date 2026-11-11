@@ -7,6 +7,7 @@ import {
   formatBytes,
   hideNotice,
   loadImage,
+  MAX_TOTAL_BYTES,
   must,
   revokeDownload,
   showNotice,
@@ -95,6 +96,11 @@ function render(): void {
   if (stats) stats.hidden = true;
 }
 
+/** Summe der Dateigrößen aller bereits geladenen Seiten. */
+function totalBytes(): number {
+  return items.reduce((sum, item) => sum + item.image.bytes, 0);
+}
+
 async function addFiles(files: FileList | File[]): Promise<void> {
   const incoming = [...files];
   if (incoming.length === 0) return;
@@ -105,6 +111,10 @@ async function addFiles(files: FileList | File[]): Promise<void> {
   const skipped: string[] = [];
 
   for (const file of accepted) {
+    if (totalBytes() + file.size > MAX_TOTAL_BYTES) {
+      skipped.push(`${file.name}: zusammen höchstens 200 MB – nicht übernommen.`);
+      continue;
+    }
     try {
       const image = await loadImage(file);
       items.push({ id: nextId++, image });

@@ -69,7 +69,7 @@ const jsonLd = [
     crumbs={crumbs}
     faq={faq}
     steps={[
-      { title: 'Bild auswählen', text: 'Datei hineinziehen oder anklicken. Unterstützt werden JPG, PNG und WebP bis 30 MB.' },
+      { title: 'Bild auswählen', text: 'Datei hineinziehen oder anklicken. Unterstützt werden JPG, PNG und WebP bis 100 MB.' },
       { title: 'Qualität und Format wählen', text: 'Verschiebe den Regler und beobachte, wie die geschätzte Dateigröße sinkt. WebP liefert meist die kleinste Datei.' },
       { title: 'Herunterladen', text: 'Klicke auf „Komprimieren“ und lade das Ergebnis herunter. Die Originaldatei bleibt unverändert.' }
     ]}
@@ -78,7 +78,7 @@ const jsonLd = [
       <div class="dropzone" id="compress-zone">
         <span class="dropzone__icon"><Icon name="compress" /></span>
         <span class="dropzone__title">Bild hierher ziehen oder klicken</span>
-        <span class="dropzone__hint">JPG, PNG oder WebP · max. 30 MB</span>
+        <span class="dropzone__hint">JPG, PNG oder WebP · max. 100 MB</span>
         <input type="file" id="compress-input" accept="image/png,image/jpeg,image/webp" aria-label="Bilddatei auswählen" />
       </div>
 

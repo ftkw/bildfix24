@@ -1,3 +1,5 @@
+import { readDimensions } from './dimensions';
+
 export interface LoadedImage {
   bitmap: ImageBitmap;
   file: File;
@@ -9,7 +11,41 @@ export interface LoadedImage {
   url: string;
 }
 
-export const MAX_BYTES = 30 * 1024 * 1024;
+export const MAX_BYTES = 100 * 1024 * 1024;
+
+/** Obergrenze für die Summe aller Dateien bei Werkzeugen mit mehreren Bildern. */
+export const MAX_TOTAL_BYTES = 200 * 1024 * 1024;
+
+/**
+ * Pixel-Budget: die Dateigröße ist nicht die eigentliche Grenze, die Fläche ist es.
+ *
+ * Gemessen in Chromium (Desktop): ein 12000 × 9000 großes JPEG mit 68 MB braucht
+ * 444 ms zum Dekodieren, 2 ms zum Zeichnen und lässt sich fehlerfrei wieder
+ * ausgeben (108 Megapixel). Der Speicherbedarf auf der Leinwand ist aber
+ * Breite × Höhe × 4 Byte – bei 108 MP sind das 432 MB.
+ *
+ * Auf Mobilgeräten ist die Leinwandfläche kleiner, und wenn sie überschritten
+ * wird, schlägt das Zeichnen **still** fehl: kein Fehler, nur ein leeres Bild.
+ * Deshalb hier eine konservative Obergrenze je Geräteklasse, statt sich auf den
+ * Browser zu verlassen.
+ */
+function pixelBudget(): number {
+  const coarse = window.matchMedia?.('(pointer: coarse)').matches ?? false;
+  return (coarse ? 40 : 110) * 1e6;
+}
+
+function tooManyPixels(width: number, height: number): Error {
+  const megapixel = (width * height) / 1e6;
+  const budget = pixelBudget() / 1e6;
+  // Ganze Zahlen ohne Nachkommastelle: „40 Megapixel“ statt „40,0 Megapixel“.
+  const format = (value: number) =>
+    Number.isInteger(value) ? String(value) : value.toFixed(1).replace('.', ',');
+  return new Error(
+    `Dieses Bild hat ${format(megapixel)} Megapixel (${width} × ${height}). ` +
+      `Dein Browser verarbeitet hier bis ${format(budget)} Megapixel in einem Schritt. ` +
+      'Verkleinere es zuerst mit „Bildgröße ändern“ und lade die kleinere Datei erneut.'
+  );
+}
 
 export function $<T extends Element = HTMLElement>(selector: string, root: ParentNode = document): T | null {
   return root.querySelector<T>(selector);
@@ -68,7 +104,16 @@ export async function loadImage(file: File): Promise<LoadedImage> {
     throw new Error('Bitte wähle eine Bilddatei (JPG, PNG oder WebP).');
   }
   if (file.size > MAX_BYTES) {
-    throw new Error('Die Datei ist zu groß. Maximal 30 MB werden unterstützt.');
+    throw new Error(
+      'Die Datei ist zu groß. Maximal 100 MB werden unterstützt.'
+    );
+  }
+
+  // Vor dem Dekodieren prüfen: ein 100-MB-JPEG belegt beim Dekodieren über
+  // 400 MB. Danach zu prüfen wäre auf Smartphones zu spät – dort stirbt der Tab.
+  const known = await readDimensions(file);
+  if (known && known.width * known.height > pixelBudget()) {
+    throw tooManyPixels(known.width, known.height);
   }
 
   let bitmap: ImageBitmap;
@@ -76,6 +121,13 @@ export async function loadImage(file: File): Promise<LoadedImage> {
     bitmap = await createImageBitmap(file);
   } catch {
     bitmap = await decodeFallback(file);
+  }
+
+  if (bitmap.width * bitmap.height > pixelBudget()) {
+    // close() setzt Breite und Höhe auf 0 – die Meldung muss vorher entstehen.
+    const error = tooManyPixels(bitmap.width, bitmap.height);
+    bitmap.close();
+    throw error;
   }
 
   return {
@@ -208,7 +260,43 @@ export function canvasOf(width: number, height: number): HTMLCanvasElement {
   const canvas = document.createElement('canvas');
   canvas.width = Math.max(1, Math.round(width));
   canvas.height = Math.max(1, Math.round(height));
+  assertDrawable(canvas);
   return canvas;
+}
+
+/**
+ * Prüft, ob die Leinwand wirklich Pixel annimmt.
+ *
+ * Hintergrund: überschreitet eine Leinwand die Flächengrenze des Browsers –
+ * auf Mobilgeräten deutlich früher als auf dem Desktop –, dann wirft das
+ * Zeichnen keinen Fehler. Man bekommt stillschweigend ein leeres Bild und der
+ * Nutzer lädt eine weiße Datei herunter. Deshalb wird hier ein einzelnes Pixel
+ * gesetzt und zurückgelesen; erst danach wird das Bild gezeichnet und
+ * überdeckt die Prüfmarke wieder.
+ */
+function assertDrawable(canvas: HTMLCanvasElement): void {
+  let pixel: Uint8ClampedArray | null = null;
+  try {
+    const probe = canvas.getContext('2d');
+    if (probe) {
+      probe.fillStyle = '#010203';
+      probe.fillRect(0, 0, 1, 1);
+      pixel = probe.getImageData(0, 0, 1, 1).data;
+      probe.clearRect(0, 0, 1, 1);
+    }
+  } catch {
+    pixel = null;
+  }
+
+  const works = pixel !== null && pixel[0] === 1 && pixel[1] === 2 && pixel[2] === 3;
+  if (works) return;
+
+  canvas.width = 0;
+  canvas.height = 0;
+  throw new Error(
+    'Für dieses Bild reicht der Arbeitsspeicher deines Browsers nicht. ' +
+      'Verkleinere es zuerst mit „Bildgröße ändern“ und lade die kleinere Datei erneut.'
+  );
 }
 
 export function context2d(canvas: HTMLCanvasElement): CanvasRenderingContext2D {
