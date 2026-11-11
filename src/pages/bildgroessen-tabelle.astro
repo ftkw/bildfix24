@@ -1,0 +1,384 @@
+---
+import BaseLayout from '../components/BaseLayout.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import AdSlot from '../components/AdSlot.astro';
+import { articleSchema, breadcrumbSchema, faqSchema, type Crumb, type FaqItem } from '../lib/seo';
+import { SITE } from '../data/tools';
+
+const crumbs: Crumb[] = [
+  { name: 'Start', href: '/' },
+  { name: 'Bildgrößen-Tabelle', href: '/bildgroessen-tabelle/' }
+];
+
+const published = '2026-11-11';
+const checked = 'November 2026';
+
+const faq: FaqItem[] = [
+  {
+    q: 'Welche Bildgröße ist für Social Media am besten?',
+    a: 'Für die meisten Netzwerke gilt: 1080 Pixel in der Breite, hochkant im Verhältnis 4:5 – also 1080 × 1350 Pixel. Vollbild-Formate wie Story, Reel und TikTok liegen bei 1080 × 1920 Pixeln (9:16). Wer nur eine Datei produzieren will, fährt mit 1080 × 1350 am breitesten.'
+  },
+  {
+    q: 'Warum ist 1080 Pixel die gemeinsame Breite?',
+    a: 'Weil die Netzhaut-Displays der meisten Smartphones etwa 390 bis 430 CSS-Pixel breit sind und mit dem Faktor 2,5 bis 3 abbilden – daraus ergeben sich rund 1080 Gerätepixel. Instagram, TikTok, Facebook und Pinterest zeigen Bilder deshalb in dieser Breite an. Eine breitere Datei wird heruntergerechnet, eine schmalere bleibt unscharf.'
+  },
+  {
+    q: 'Welche Bildgröße brauche ich für ein biometrisches Passfoto?',
+    a: 'Das Format ist 35 × 45 Millimeter. Bei 300 dpi – dem Fotostandard – entspricht das 413 × 531 Pixeln. Zusätzlich gelten Vorgaben an Kopfhöhe (32 bis 36 Millimeter von Kinn bis Scheitel), Hintergrund und Ausleuchtung. Diese Tabelle nennt nur die Maße; die inhaltlichen Vorgaben stehen auf der Seite Passfoto zuschneiden.'
+  },
+  {
+    q: 'Was ist wichtiger: Pixel oder Dateigröße?',
+    a: 'Beides prüft etwas anderes. Die Pixelzahl entscheidet über Schärfe und Ausschnitt, die Dateigröße über Upload-Grenzen. Ein 1080 × 1350 Pixel großes Foto kann als JPG 120 KB oder als PNG 4 MB groß sein – bei identischen Maßen. Erst die Pixel einstellen, dann die Dateigröße drücken.'
+  },
+  {
+    q: 'Kann ich ein Bild vergrößern, ohne Qualität zu verlieren?',
+    a: 'Nein. Beim Vergrößern werden keine Details erfunden, die nicht in der Datei stehen – das Bild wird weicher. Ein 600 Pixel breites Bild bleibt auch bei 1080 Pixeln Breite ein 600-Pixel-Bild, nur größer gerechnet. Wenn eine höhere Auflösung gebraucht wird, hilft nur eine neue Aufnahme oder eine Datei mit mehr Pixeln.'
+  },
+  {
+    q: 'Welche Bildgröße ist für eine Website sinnvoll?',
+    a: 'Für Inhaltsbilder reichen 1200 bis 1600 Pixel Breite; alles darüber wird auf dem Bildschirm ohnehin verkleinert und kostet nur Ladezeit. Für Produktbilder, die sich zoomen lassen sollen, sind 1600 bis 2000 Pixel sinnvoll. Ein Hero-Bild über die volle Breite braucht 1920 Pixel, mehr nicht.'
+  },
+  {
+    q: 'Wird das Bild beim Hochladen ohnehin verkleinert?',
+    a: 'In der Regel ja – jede Plattform rechnet Uploads auf ihre Zielgröße herunter und komprimiert erneut. Das ist aber kein Grund, eine 6000 Pixel breite Datei hochzuladen: die Neukomprimierung fällt bei bereits passend dimensionierten Dateien sichtbar besser aus, und der Upload ist schneller.'
+  }
+];
+
+const platforms: { name: string; format: string; px: string; ratio: string; note: string; tool?: { href: string; label: string } }[] = [
+  {
+    name: 'Instagram',
+    format: 'Feed, quadratisch',
+    px: '1080 × 1080',
+    ratio: '1:1',
+    note: 'Sicherste Form für Zitate, Produkte und Raster.',
+    tool: { href: '/instagram-bild-zuschneiden/', label: 'zuschneiden' }
+  },
+  {
+    name: 'Instagram',
+    format: 'Feed, hochkant',
+    px: '1080 × 1350',
+    ratio: '4:5',
+    note: 'Standard für Fotos: füllt im Feed 25 % mehr Höhe als ein Quadrat.',
+    tool: { href: '/instagram-bild-zuschneiden/', label: 'zuschneiden' }
+  },
+  {
+    name: 'Instagram',
+    format: 'Feed, maximal hoch',
+    px: '1080 × 1440',
+    ratio: '3:4',
+    note: 'Die höchste Form, die Instagram im Feed unbeschnitten annimmt.',
+    tool: { href: '/instagram-bild-zuschneiden/', label: 'zuschneiden' }
+  },
+  {
+    name: 'Instagram',
+    format: 'Story und Reels',
+    px: '1080 × 1920',
+    ratio: '9:16',
+    note: 'Text nicht in die oberen und unteren 250 Pixel legen – dort liegen Bedienelemente.'
+  },
+  {
+    name: 'Instagram',
+    format: 'Reel-Cover',
+    px: '420 × 654',
+    ratio: 'etwa 1:1,55',
+    note: 'Wird im Profilraster beschnitten; Motiv mittig halten.'
+  },
+  {
+    name: 'TikTok',
+    format: 'Foto- und Videobeitrag',
+    px: '1080 × 1920',
+    ratio: '9:16',
+    note: 'Sehr starke Neukomprimierung. JPG oder WebP, keine PNG-Screenshots.'
+  },
+  {
+    name: 'Pinterest',
+    format: 'Standard-Pin',
+    px: '1000 × 1500',
+    ratio: '2:3',
+    note: 'Höher als 2:3 wird im Feed abgeschnitten. Datei max. 20 MB.'
+  },
+  {
+    name: 'Pinterest',
+    format: 'Idea Pin',
+    px: '1080 × 1920',
+    ratio: '9:16',
+    note: 'Vollbild-Format, wie Story.'
+  },
+  {
+    name: 'Facebook',
+    format: 'Feed-Beitrag',
+    px: '1080 × 1350',
+    ratio: '4:5',
+    note: 'Nimmt dieselbe Datei an wie Instagram – kein zweiter Export nötig.'
+  },
+  {
+    name: 'Facebook',
+    format: 'Seiten-Titelbild',
+    px: '851 × 315',
+    ratio: 'etwa 2,7:1',
+    note: 'Wird auf dem Smartphone seitlich beschnitten; Inhalt mittig platzieren.'
+  },
+  {
+    name: 'LinkedIn',
+    format: 'Beitragsbild und Link-Vorschau',
+    px: '1200 × 627',
+    ratio: '1,91:1',
+    note: 'Für die Link-Vorschau zählt das og:image der Zielseite, nicht der Upload.'
+  },
+  {
+    name: 'LinkedIn',
+    format: 'Profil-Hintergrund',
+    px: '1584 × 396',
+    ratio: '4:1',
+    note: 'Sehr flach – Kontaktinformationen ins untere Drittel.'
+  },
+  {
+    name: 'X',
+    format: 'Beitragsbild',
+    px: '1600 × 900',
+    ratio: '16:9',
+    note: 'Ohne Premium-Abo starke Neukomprimierung; Flächen mit Text als PNG hochladen.'
+  },
+  {
+    name: 'X',
+    format: 'Header',
+    px: '1500 × 500',
+    ratio: '3:1',
+    note: 'Oben und unten wird je nach Gerät beschnitten.'
+  },
+  {
+    name: 'YouTube',
+    format: 'Vorschaubild',
+    px: '1280 × 720',
+    ratio: '16:9',
+    note: 'Mindestens 640 Pixel breit, JPG oder PNG, Datei max. 2 MB.'
+  },
+  {
+    name: 'YouTube',
+    format: 'Kanalbanner',
+    px: '2560 × 1440',
+    ratio: '16:9',
+    note: 'Nur die mittlere Fläche ist auf allen Geräten sichtbar – Text dort bündeln.'
+  }
+];
+
+const printRows: { use: string; size: string; px: string; note: string }[] = [
+  { use: 'Passfoto (biometrisch)', size: '35 × 45 mm', px: '413 × 531', note: 'Zusätzlich gelten Vorgaben an Kopfhöhe und Hintergrund.' },
+  { use: 'Bewerbungsfoto', size: '45 × 60 mm', px: '531 × 709', note: 'Kein amtliches Format, aber der übliche Bewerbungsstandard.' },
+  { use: 'Fotoabzug klein', size: '10 × 15 cm', px: '1181 × 1772', note: 'Das klassische Drogeriemarkt-Format.' },
+  { use: 'DIN A4', size: '21 × 29,7 cm', px: '2480 × 3508', note: 'Volle Seite randlos, etwa für Anschreiben oder Portfolio.' }
+];
+
+const jsonLd = [
+  articleSchema({
+    headline: 'Bildgrößen für Social Media, Druck und Behörden – eine Tabelle',
+    description:
+      'Alle relevanten Bildgrößen in Pixeln, mit Seitenverhältnis und dem, was die Plattform sonst mit dem Upload macht. Stand November 2026.',
+    path: '/bildgroessen-tabelle/',
+    datePublished: published
+  }),
+  faqSchema(faq),
+  breadcrumbSchema(crumbs)
+];
+---
+
+<BaseLayout
+  title="Bildgrößen für Social Media – Tabelle"
+  description="Bildgrößen für Instagram, TikTok, Pinterest, LinkedIn und YouTube in einer Tabelle: Pixel, Seitenverhältnis und Plattformgrenzen. Stand November 2026."
+  path="/bildgroessen-tabelle/"
+  jsonLd={jsonLd}
+  ogType="article"
+>
+  <section class="section" style="padding-top: 2.2rem;">
+    <div class="container">
+      <Breadcrumbs items={crumbs} />
+
+      <div class="prose">
+        <h1>Bildgrößen: eine Tabelle für Social Media, Druck und Behörden</h1>
+        <p class="lead">
+          Die richtige Pixelzahl ist selten eine Geschmacksfrage – sie folgt aus dem Verhältnis,
+          das eine Plattform zulässt, und der Breite, mit der sie Bilder anzeigt. Diese Tabelle
+          nennt beides, dazu was passiert, wenn ein Bild nicht passt.
+        </p>
+        <p class="small muted">Zuletzt geprüft: {checked}. Quellen sind die Hilfeseiten der Anbieter.</p>
+
+        <h2>Die drei Formate, die fast überall funktionieren</h2>
+        <p>
+          Wer nicht für jedes Netzwerk einen eigenen Export bauen will, kommt mit drei Dateien
+          sehr weit. Sie decken Instagram, Facebook, LinkedIn, Pinterest und TikTok ab:
+        </p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Format</th>
+                <th>Pixel</th>
+                <th>Verhältnis</th>
+                <th>Wofür</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Hochkant</td><td>1080 × 1350</td><td>4:5</td><td>Feed-Beiträge mit Foto – der beste Kompromiss</td></tr>
+              <tr><td>Vollbild</td><td>1080 × 1920</td><td>9:16</td><td>Story, Reel, TikTok, Idea Pin</td></tr>
+              <tr><td>Quer</td><td>1200 × 628</td><td>1,91:1</td><td>Link-Vorschauen in Beiträgen und Chats</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2>Alle Plattformgrößen im Überblick</h2>
+        <p>
+          Sortiert nach Netzwerk, nicht nach Beliebtheit – die Zeilen mit demselben Anbieter
+          gehören zusammen. Die Spalte „Was passiert sonst“ beschreibt das Verhalten der
+          Plattform, wenn ein Bild nicht exakt passt.
+        </p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Plattform</th>
+                <th>Format</th>
+                <th>Pixel</th>
+                <th>Verhältnis</th>
+                <th>Was passiert sonst</th>
+                <th>Werkzeug</th>
+              </tr>
+            </thead>
+            <tbody>
+              {platforms.map((row) => (
+                <tr>
+                  <td>{row.name}</td>
+                  <td>{row.format}</td>
+                  <td class="num"><strong>{row.px}</strong></td>
+                  <td>{row.ratio}</td>
+                  <td>{row.note}</td>
+                  <td>
+                    {row.tool ? <a href={row.tool.href}>{row.tool.label}</a> : <span class="muted">–</span>}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p class="small muted">
+          Pinterest gibt für den Standard-Pin 1000 × 1500 Pixel als Empfehlung an und schneidet
+          alles ab, was deutlich höher ist. Instagram akzeptiert Breiten von 320 bis 1080 Pixeln
+          und Verhältnisse zwischen 1,91:1 und 3:4 – alles darüber wird heruntergerechnet und
+          alles außerhalb dieses Bereichs beschnitten. Das erklärt, warum 1080 × 1440 die
+          höchste Form ist, die dort unbeschnitten durchkommt.
+        </p>
+
+        <h2>Warum 1080 Pixel die gemeinsame Breite ist</h2>
+        <p>
+          Smartphones melden dem Browser etwa 390 bis 430 CSS-Pixel Breite. Weil ihre Displays
+          mit dem Faktor 2,5 bis 3 abbilden, sind das rund 1080 echte Gerätepixel. Wer ein Bild in
+          dieser Breite hochlädt, gibt der Plattform genau so viele Pixel, wie sie anzeigt – nicht
+          mehr und nicht weniger.
+        </p>
+        <p>
+          Daraus folgen zwei praktische Regeln. Erstens: eine breitere Datei bringt nichts, weil
+          sie ohnehin heruntergerechnet wird; sie kostet nur Upload-Zeit. Zweitens: eine schmalere
+          Datei lässt sich nicht retten, weil Hochrechnen keine Details erzeugt. Ein Foto aus einer
+          600 Pixel breiten Quelle bleibt auch nach dem Skalieren auf 1080 Pixel weich – das ist
+          kein Fehler des Werkzeugs, sondern Physik.
+        </p>
+
+        <h2>Druck und Behörden: hier zählt dpi, nicht Pixel</h2>
+        <p>
+          Auf dem Bildschirm ist die Pixelzahl das Maß. Im Druck kommt die Auflösung dazu: 300 dpi
+          gelten als Fotostandard, das sind 118 Pixel pro Zentimeter. Erst mit dieser Zahl wird aus
+          Pixeln eine Zentimeterangabe – und umgekehrt. Die folgende Tabelle rechnet für 300 dpi:
+        </p>
+        <div class="table-scroll">
+          <table>
+            <thead>
+              <tr>
+                <th>Verwendung</th>
+                <th>Maße</th>
+                <th>Pixel bei 300 dpi</th>
+                <th>Hinweis</th>
+              </tr>
+            </thead>
+            <tbody>
+              {printRows.map((row) => (
+                <tr>
+                  <td>{row.use}</td>
+                  <td>{row.size}</td>
+                  <td class="num"><strong>{row.px}</strong></td>
+                  <td>{row.note}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p>
+          Für ein Passfoto reicht es nicht, die Maße zu treffen: Gesichtshöhe, Hintergrund und
+          Ausleuchtung sind ebenfalls vorgeschrieben. Die Details stehen unter
+          <a href="/passfoto-zuschneiden/">Passfoto zuschneiden</a>. Für jedes andere Maß in
+          Zentimetern oder Zoll – etwa 13 × 18 cm oder DIN A5 – lässt sich die Umrechnung direkt in
+          <a href="/bildgroesse-aendern/">Bildgröße ändern</a> vornehmen, inklusive dpi-Auswahl.
+        </p>
+
+        <h2>Pixel und Dateigröße sind zwei verschiedene Grenzen</h2>
+        <p>
+          Viele Upload-Fehler entstehen, weil beides verwechselt wird. Ein Bild mit 1080 × 1350
+          Pixeln kann als JPG 120 KB groß sein – oder als PNG mit voller Farbtiefe über 4 MB. Die
+          Maße sind identisch, die Datei ist es nicht. Prüfe deshalb immer in dieser Reihenfolge:
+          erst die Pixel, dann das Format, dann die Kompression.
+        </p>
+        <p>
+          Wenn eine Seite eine Obergrenze in Kilobyte nennt – Bewerbungsportale und
+          Behördenformulare tun das oft –, hilft <a href="/bild-auf-500-kb-verkleinern/">Bild auf
+          500 KB verkleinern</a> oder <a href="/bild-komprimieren/">Bild komprimieren</a>. Wichtig:
+          erst herunterrechnen, dann komprimieren. Umgekehrt verliert man Qualität an zwei Stellen
+          gleichzeitig.
+        </p>
+
+        <h2>Häufige Fragen</h2>
+        {faq.map((item) => (
+          <Fragment>
+            <h3>{item.q}</h3>
+            <p>{item.a}</p>
+          </Fragment>
+        ))}
+
+        <h2>Diese Tabelle zitieren</h2>
+        <p>
+          Die Werte dürfen mit Quellenangabe übernommen werden. Vorschlag für den Quellennachweis:
+        </p>
+        <blockquote>
+          <p>
+            bildfix24: Bildgrößen für Social Media, Druck und Behörden – eine Tabelle.
+            Stand {checked}. <code>{SITE.url}/bildgroessen-tabelle/</code>
+          </p>
+        </blockquote>
+        <p class="small muted">
+          Alle Angaben sind an den Hilfeseiten der Anbieter geprüft. Plattformen ändern Vorgaben
+          ohne Vorankündigung – wenn eine Grenze nicht greift, ist die Angabe des Anbieters die
+          verbindliche. Korrekturen gern über <a href="/kontakt/">Kontakt</a>.
+        </p>
+      </div>
+
+      <AdSlot />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .table-scroll {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  /* Pixelmaße dürfen nicht über drei Zeilen umbrechen – „1080 × 1080" ist eine
+     Einheit, kein Fließtext. Auf schmalen Geräten scrollt stattdessen die Tabelle. */
+  .table-scroll table {
+    min-width: 680px;
+  }
+  .table-scroll td.num {
+    white-space: nowrap;
+  }
+  /* Der Quellennachweis enthält eine URL ohne Trennstelle. Ohne diese Regel
+     schiebt sie auf 320 px das ganze Dokument 96 px nach rechts. */
+  .prose blockquote code {
+    overflow-wrap: anywhere;
+  }
+</style>
