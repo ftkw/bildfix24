@@ -3,7 +3,7 @@
 Kostenlose Bildwerkzeuge, die vollständig im Browser laufen. Kein Upload, kein
 Konto, kein Server, der die Dateien zu sehen bekommt.
 
-**Live:** <https://bildfix24.de>
+**Live:** <https://bildfix24.pages.dev>
 
 ## Was drin ist
 
@@ -85,7 +85,7 @@ Mehrfach-Uploads hält.
 
 Gedacht zum Weiterverwenden – in eigenen Projekten, Tabellen, Dokumentationen.
 Maßgebliche Fassung immer unter
-<https://bildfix24.de/bildgroessen-tabelle/>.
+<https://bildfix24.pages.dev/bildgroessen-tabelle/>.
 
 ## Lizenz
 
@@ -96,7 +96,7 @@ Für den Datensatz ist Namensnennung Bedingung. Die einfachste Form ist ein Link
 auf die Quelle:
 
 > bildfix24: Bildgrößen für Social Media, Druck und Behörden – eine Tabelle.
-> <https://bildfix24.de/bildgroessen-tabelle/>
+> <https://bildfix24.pages.dev/bildgroessen-tabelle/>
 
 Einzelne Komponenten von Drittanbietern stehen unter eigenen Lizenzen, siehe
 [CREDITS.md](CREDITS.md).

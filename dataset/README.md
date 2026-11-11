@@ -6,7 +6,7 @@ Weiterverwenden – in eigenen Projekten, in Tabellen, in Dokumentationen.
 
 **Stand: 2026-11. Lizenz: [CC BY 4.0](LICENSE) – Nutzung frei, Namensnennung erforderlich.**
 
-Quelle und laufend geprüfte Fassung: <https://bildfix24.de/bildgroessen-tabelle/>
+Quelle und laufend geprüfte Fassung: <https://bildfix24.pages.dev/bildgroessen-tabelle/>
 
 ## Warum es diese Tabelle gibt
 
@@ -75,7 +75,7 @@ note          Verhalten der Plattform bei abweichendem Format
 
 ```
 bildfix24: Bildgrößen für Social Media, Druck und Behörden – eine Tabelle.
-Stand 2026-11. https://bildfix24.de/bildgroessen-tabelle/
+Stand 2026-11. https://bildfix24.pages.dev/bildgroessen-tabelle/
 ```
 
 Bei Verwendung in einem Artikel, einer App oder einem Datensatz genügt ein sichtbarer Link auf
