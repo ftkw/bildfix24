@@ -76,7 +76,11 @@ const adsClient = import.meta.env.PUBLIC_ADSENSE_CLIENT;
       <slot />
     </main>
     <Footer />
-    <CookieConsent />
+    {/* Der Hinweis existiert nur, wenn es überhaupt etwas einzuwilligen gibt.
+        Ohne Publisher-ID lädt die Seite keine Werbung und setzt keine Cookies –
+        dann wäre ein Einwilligungsbanner eine Behauptung ohne Gegenstand und
+        würde bei jedem Erstbesuch das erste Bildschirmdrittel verdecken. */}
+    {adsClient && <CookieConsent />}
 
     {adsClient && (
       <script is:inline define:vars={{ adsClient }}>

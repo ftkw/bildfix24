@@ -2,6 +2,9 @@
 import { tools, guides, SITE } from '../data/tools';
 
 const year = new Date().getFullYear();
+// Der Widerrufslink gehört zum Einwilligungsbanner. Ohne eingebundene Werbung
+// gibt es nichts zu widerrufen – ein Knopf ohne Funktion ist schlechter als keiner.
+const adsEnabled = Boolean(import.meta.env.PUBLIC_ADSENSE_CLIENT);
 // Endung nur zeigen, wenn sie auch wirklich ausgeliefert wird (siehe Header).
 const [brandName, brandTld] = SITE.domain ? SITE.domain.split(/\.(?=[^.]+$)/) : [SITE.name, null];
 ---
@@ -44,11 +47,13 @@ const [brandName, brandTld] = SITE.domain ? SITE.domain.split(/\.(?=[^.]+$)/) : 
         <ul>
           <li><a href="/impressum/">Impressum</a></li>
           <li><a href="/datenschutz/">Datenschutz</a></li>
-          <li>
-            <button type="button" class="footer__consent" data-open-consent>
-              Cookie-Einstellungen
-            </button>
-          </li>
+          {adsEnabled && (
+            <li>
+              <button type="button" class="footer__consent" data-open-consent>
+                Cookie-Einstellungen
+              </button>
+            </li>
+          )}
           <li><a href="/ueber-uns/">Über uns</a></li>
           <li><a href="/kontakt/">Kontakt</a></li>
         </ul>
