@@ -25,8 +25,12 @@ const ENDPOINT = 'https://api.indexnow.org/indexnow';
 
 const argv = process.argv.slice(2);
 const DRY = argv.includes('--dry');
-const singleIdx = argv.indexOf('--url');
-const SINGLE = singleIdx !== -1 ? argv[singleIdx + 1] : null;
+// Mehrere --url sind erlaubt: bei kleinen Änderungen ist das der Normalfall,
+// und ein Aufruf je Adresse würde nur das Ratenlimit treten.
+const SINGLES = argv.reduce((acc, value, index) => {
+  if (value === '--url' && argv[index + 1]) acc.push(argv[index + 1]);
+  return acc;
+}, []);
 
 // key 从 public/ 下的 32 位 hex 文件名自动发现，避免换 key 时改脚本
 function findKey() {
@@ -43,9 +47,17 @@ function findKey() {
 
 // URL 来源：优先读构建产物里的 sitemap，保证推的就是线上真实存在的地址
 function readUrls() {
-  if (SINGLE) return [SITE + (SINGLE.startsWith('/') ? SINGLE : `/${SINGLE}`)];
-  const sitemap = path.join(ROOT, 'dist', 'sitemap-0.xml');
-  if (!fs.existsSync(sitemap)) throw new Error('dist/sitemap-0.xml 不存在，先 npm run build');
+  if (SINGLES.length) {
+    return SINGLES.map((u) => SITE + (u.startsWith('/') ? u : `/${u}`));
+  }
+  // `flat-sitemap.mjs`  führt seit dem 11.11. alles in `sitemap.xml` zusammen
+  // und löscht die Kacheln. Die alte Datei bleibt als Rückfall, falls das
+  // Zusammenführen einmal abgeschaltet wird.
+  const candidates = ['sitemap.xml', 'sitemap-0.xml'].map((name) =>
+    path.join(ROOT, 'dist', name)
+  );
+  const sitemap = candidates.find((file) => fs.existsSync(file));
+  if (!sitemap) throw new Error('dist/sitemap.xml 不存在，先 npm run build');
   const xml = fs.readFileSync(sitemap, 'utf8');
   const urls = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1].trim());
   if (!urls.length) throw new Error('sitemap 里没有解析到 URL');
